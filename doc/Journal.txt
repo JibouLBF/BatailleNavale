@@ -1,0 +1,19 @@
+Séance du 09/04/2014
+- Diagramme de cas d'utilisation.
+- Diagramme Etat/Ttransition.
+- Diagramme de séquence.
+
+- Début analyse statique
+
+Séance du 16/04/2014
+- Diagramme de séquence
+- Elaboration du schéma conceptuel
+-> Briefing d'avancement de l'analyse
+
+Séance du 23/04/2014
+- Validation architecture 
+-> Briefing de répartition des tâches
+- Création de la base de donnée
+- Début de l'implémantation de l'interface graphique  
+- Début de l'implémantation du modèle
+- Préparation de la fabrique JDBC
