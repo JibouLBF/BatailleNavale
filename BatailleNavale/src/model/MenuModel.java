@@ -10,8 +10,12 @@ import database.DataFactory;
 import database.JDBCAsker;
 import database.JDBCFactory;
 import database.JDBCUpdater;
+import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,7 +40,17 @@ public class MenuModel extends Observable {
         System.out.println(Pseudo + " " + Nom + " " + Prenom + " " + Email + " " + Numero + " " + Rue + " " + CodePostal + " " + Ville + " " + DateNaissance);
 
         // si le joueur n'est pas déjà inscrit
-        if (!asker.PlayerExist(Pseudo)) {
+        boolean ret = false;
+        try{
+                ret = asker.PlayerExist(Pseudo);
+            } catch (SQLRecoverableException ex){
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("Connection Exception");
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("SQL Exception");
+            } 
+        if (!ret) {
             updater.addPlayer(Pseudo, Nom, Prenom, Email, Numero, Rue, CodePostal, Ville, DateNaissance);
             isConnected = false;
             notifyChanges("sign up");
@@ -51,7 +65,17 @@ public class MenuModel extends Observable {
         // si on est pas déjà connecté
         if (!isConnected) {
             // si le pseudo est bien inscrit --> on affiche logged
-            if (asker.PlayerExist(Pseudo)) {
+            boolean ret = false;
+            try{
+                ret = asker.PlayerExist(Pseudo);
+            } catch (SQLRecoverableException ex){
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("Connection Exception");
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("SQL Exception");
+            } 
+            if (ret) {
                 isConnected = true;
                 pseudo = Pseudo;
                 notifyChanges("connected");
