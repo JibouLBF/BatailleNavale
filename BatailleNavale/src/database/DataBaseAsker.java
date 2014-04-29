@@ -6,11 +6,14 @@
 
 package database;
 
+import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
+
 /**
  *
  * @author jb
  */
 public interface DataBaseAsker {
-        public boolean PlayerExist(String Pseudo) ;
+        public boolean PlayerExist(String Pseudo) throws SQLRecoverableException, SQLException;
 
 }
