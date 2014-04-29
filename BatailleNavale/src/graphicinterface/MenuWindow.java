@@ -252,6 +252,35 @@ public class MenuWindow extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        switch ((String) (arg)) {
+            case "sign up":
+                JOptionPane.showMessageDialog(this, "Sign up successful", "Sign up", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "login already used":
+                JOptionPane.showMessageDialog(this, "Login already used. \n Please select another one", "Sign up", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "connected":
+                JOptionPane.showMessageDialog(this, "Connection successful", "Connection", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "not signed up":
+                JOptionPane.showMessageDialog(this, "Connection failed : invalid login. \n Please retype it or sign up", "Connection", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "already connected":
+                JOptionPane.showMessageDialog(this, "You are already connected", "Connection", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "play":
+                JOptionPane.showMessageDialog(this, "You are going to play against another player", "Play", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "not connected":
+                JOptionPane.showMessageDialog(this, "You are not connected. \n Please sign in to play or observe", "Play/Observe", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "observe":
+                JOptionPane.showMessageDialog(this, "You are going to watch a game", "Observe", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "disconnect":
+                JOptionPane.showMessageDialog(this, "You are now unlogged", "Disconnect", JOptionPane.INFORMATION_MESSAGE);
+                break;
+        }
         System.out.println("obervé!!");
         if (mm.isIsConnected()) {
             // changement du texte logged
@@ -267,7 +296,7 @@ public class MenuWindow extends JFrame implements Observer {
 
                 }
             }
-            
+
             tableGame.setModel(dm);
             tableGame.getColumn("Replay").setCellRenderer(new ButtonRenderer());
             tableGame.getColumn("Replay").setCellEditor(new ButtonEditor(new JCheckBox(), this));

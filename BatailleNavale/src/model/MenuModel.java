@@ -40,10 +40,10 @@ public class MenuModel extends Observable {
         if (!asker.PlayerExist(Pseudo)) {
             updater.addPlayer(Pseudo, Nom, Prenom, Email, Numero, Rue, CodePostal, Ville, DateNaissance);
             isConnected = false;
-            notifyChanges();
+            notifyChanges("sign up");
         } //s'il est déjà inscrit --> message d'erreur à afficher ?
         else {
-            notifyChanges();
+            notifyChanges("login already used");
         }
 
     }
@@ -55,14 +55,14 @@ public class MenuModel extends Observable {
             if (asker.PlayerExist(Pseudo)) {
                 isConnected = true;
                 pseudo = Pseudo;
-                notifyChanges();
+                notifyChanges("connected");
             } // si on est pas inscrit --> affichage d'un message 
             else {
-                notifyChanges();
+                notifyChanges("not signed up");
             }
         } // si on est déjà connecté --> affichage d'un message 
         else {
-            notifyChanges();
+            notifyChanges("already connected");
         }
 
     }
@@ -71,10 +71,10 @@ public class MenuModel extends Observable {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
             GameModel game = new GameModel(true);
-            notifyChanges();
+            notifyChanges("play");
         } // si on est pas connecté --> affichage d'un message
         else {
-            notifyChanges();
+            notifyChanges("not connected");
         }
 
     }
@@ -83,10 +83,10 @@ public class MenuModel extends Observable {
         //si on est connecté on lance la partie à observer dans une fenetre
         if (isConnected) {
             GameModel game = new GameModel(false);
-            notifyChanges();
+            notifyChanges("observe");
         } //si on est pas connecté --> affichage d'un message
         else {
-            notifyChanges();
+            notifyChanges("not connected");
         }
 
     }
@@ -94,14 +94,14 @@ public class MenuModel extends Observable {
     public void disconnect() {
         isConnected = false;
         pseudo = null;
-        notifyChanges();
+        notifyChanges("disconnect");
     }
 
-    private void notifyChanges() { //PATTERN OBSERVER
+    private void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub
         //System.err.println("notification...");
         setChanged();
-        notifyObservers();
+        notifyObservers(s);
     }
 
     public ArrayList<Partie> getGameInProgress() {
