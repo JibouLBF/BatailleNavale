@@ -4,6 +4,8 @@
  */
 package controler;
 
+import graphicinterface.GameWindow;
+import graphicinterface.PlayerWindow;
 import java.awt.event.MouseListener;
 import model.GameModel;
 

@@ -7,6 +7,7 @@ package graphicinterface;
 import controler.LiveControler;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.Observable;
 import javax.swing.*;
 import model.GameModel;
 
@@ -24,7 +25,9 @@ public class ObserverWindow extends GameWindow {
     JButton prec = new JButton("Prec");
     
     public ObserverWindow (){
-        super("Observer Window", new GameModel (false));
+        super("Observer Window");
+        gm = new GameModel(false);
+        //gc = new LiveControler(gm);
         mainPanelLeft = new JPanel(new GridLayout(3,1, 30, 10));
         control = new JPanel (new GridLayout (3,1));
         control.add(begin);
@@ -34,9 +37,9 @@ public class ObserverWindow extends GameWindow {
         mainPanelLeft.add(playerC);
         mainPanelLeft.add(control);
         
-        begin.addMouseListener(new LiveControler(new GameModel(true)));
-        next.addMouseListener(new LiveControler(new GameModel(true)));
-        prec.addMouseListener(new LiveControler(new GameModel(true)));
+     /*  begin.addMouseListener(new LiveControler(new GameModel(true), this));
+        next.addMouseListener(new LiveControler(new GameModel(true), this));
+        prec.addMouseListener(new LiveControler(new GameModel(true), this));*/
         
         gridJ1 = new JLabel [10][10];
         gridJ2 = new JLabel [10][10];
@@ -67,6 +70,11 @@ public class ObserverWindow extends GameWindow {
     
     public static void main (String args []){
         GameWindow gw = new ObserverWindow();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

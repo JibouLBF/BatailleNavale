@@ -24,7 +24,7 @@ public class GameModel extends Observable {
     private boolean playerGame;
     private String playerName;
     private String opponent;
-    private int IdPartie;
+    private int IdPartie = -1;
 
     public GameModel(boolean b, int IdPartie, String playerName) {
         this.playerGame = b;
@@ -48,30 +48,42 @@ public class GameModel extends Observable {
     }
 
     public void moveBoat(Joueur j, Bateau b, Sens s) {
-        notifyChanges();
+        notifyChanges("");
     }
 
     public void fire(Joueur j, Bateau b, Case c) {
-        notifyChanges();
+        notifyChanges("");
     }
 
     public void placeBoat(Joueur j, Bateau b, Case c, Orientation o) {
 
-        notifyChanges();
+        notifyChanges("");
     }
 
     public void chooseNumberEscort(Joueur j, int n) {
-        notifyChanges();
+        notifyChanges("");
     }
 
     public void nextRound() {
-        notifyChanges();
+        notifyChanges("");
+    }
+    
+    public void startGame (int posX1, int posY1, int posX2, int posY2,
+            int posX3, int posY3){
+        //ajout des bateau
+        notifyChanges("start");
     }
 
-    private void notifyChanges() { //PATTERN OBSERVER
+    public boolean isStarted (){
+        if (IdPartie != -1)
+            return true;
+        return false;
+    }
+    
+    private void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub
         //System.err.println("notification...");
         setChanged();
-        notifyObservers();
+        notifyObservers(s);
     }
 }

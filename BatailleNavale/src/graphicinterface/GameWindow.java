@@ -4,6 +4,8 @@
  */
 package graphicinterface;
 
+import controler.GameControler;
+import controler.LiveControler;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -23,7 +26,7 @@ import model.GameModel;
  *
  * @author abikhatv
  */
-public abstract class GameWindow extends JFrame {
+public abstract class GameWindow extends JFrame implements Observer{
 
     private final int WIDTH = 800;
     private final int HEIGHT = 800;
@@ -31,10 +34,11 @@ public abstract class GameWindow extends JFrame {
     protected JPanel player, opponent, playerC, console;
     protected JSplitPane js;
     protected GameModel gm;
+    protected GameControler gc;
     
-    public GameWindow(String windowName, GameModel gm) {
+    public GameWindow(String windowName) {
         super(windowName);
-        this.gm = gm;
+        
         setSize(WIDTH, HEIGHT);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,10 +53,8 @@ public abstract class GameWindow extends JFrame {
         opponent.setBackground(Color.red);
 
         playerC = new JPanel(new GridLayout(1, 1));
-        playerC.setBackground(Color.green);
 
         console = new JPanel(new GridLayout(1, 1));
-        console.setBackground(Color.CYAN);
 
      //   mainPanelLeft.add(console);
      //   mainPanelLeft.add(playerC);
@@ -78,7 +80,7 @@ public abstract class GameWindow extends JFrame {
 		    }
 		};
         
-        this.add(js);
+        this.add(js,0);
         setVisible(true);
         this.invalidate();
         this.validate();
