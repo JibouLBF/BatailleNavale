@@ -10,7 +10,6 @@ import database.DataFactory;
 import database.JDBCAsker;
 import database.JDBCFactory;
 import database.JDBCUpdater;
-import database.TheConnection;
 import java.util.ArrayList;
 import java.util.Observable;
 

@@ -22,7 +22,7 @@ public class MenuControler implements ActionListener {
     public MenuControler (MenuWindow mw){
         this.mw = mw;
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         //throw new UnsupportedOperationException("Not supported yet.");
