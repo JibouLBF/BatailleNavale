@@ -23,8 +23,8 @@ public class ObserverWindow extends GameWindow {
     JButton next = new JButton("Next");
     JButton prec = new JButton("Prec");
     
-    public ObserverWindow (GameModel gm){
-        super("Observer Window", gm);
+    public ObserverWindow (){
+        super("Observer Window", new GameModel (false));
         mainPanelLeft = new JPanel(new GridLayout(3,1, 30, 10));
         control = new JPanel (new GridLayout (3,1));
         control.add(begin);
@@ -66,7 +66,7 @@ public class ObserverWindow extends GameWindow {
     }
     
     public static void main (String args []){
-        //GameWindow gw = new ObserverWindow();
+        GameWindow gw = new ObserverWindow();
     }
     
 }

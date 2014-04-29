@@ -25,8 +25,9 @@ public class PlayerWindow extends GameWindow {
     private JButton turn;
     
 
-    public PlayerWindow(GameModel gm) {
-        super("Player Window", gm);
+    public PlayerWindow() {
+        
+        super("Player Window", new GameModel(true));
         mainPanelLeft = new JPanel(new GridLayout(2,1, 30, 10));
         mainPanelLeft.add(console);
         mainPanelLeft.add(playerC);
@@ -64,10 +65,13 @@ public class PlayerWindow extends GameWindow {
         playerC.add(turn);
         playerC.add(shoot);
         
+        move.addMouseListener(new LiveControler(new GameModel(true)));
+        shoot.addMouseListener(new LiveControler(new GameModel(true)));
+        turn.addMouseListener(new LiveControler(new GameModel(true)));
         addToFrame();
     }
 
     public static void main(String[] agrs) {
-        //GameWindow g = new PlayerWindow();
+        GameWindow g = new PlayerWindow();
     }
 }

@@ -30,7 +30,14 @@ public class GameModel extends Observable {
         this.playerGame = b;
         this.IdPartie = IdPartie;
         this.playerName = playerName;
-        this.opponent = opponent;
+        factory = new JDBCFactory();
+        asker = new JDBCAsker();
+        updater = new JDBCUpdater();
+    }
+
+    // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
+    public GameModel(boolean b) {
+        playerGame = b;
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
