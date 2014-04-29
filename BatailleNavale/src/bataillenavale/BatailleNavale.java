@@ -30,12 +30,12 @@ public class BatailleNavale {
     
     public void createGame (){
         gm = new GameModel(true);
-        gw = new PlayerWindow (gm);
+        gw = new PlayerWindow ();
     }
     
     public void createObserver (){
         gm = new GameModel(false);
-        gw = new PlayerWindow (gm);
+        gw = new PlayerWindow ();
     }
     
     public static void main (String [] args){

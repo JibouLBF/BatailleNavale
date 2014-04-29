@@ -11,6 +11,9 @@ import database.JDBCAsker;
 import database.JDBCFactory;
 import database.JDBCUpdater;
 import database.TheConnection;
+import graphicinterface.GameWindow;
+import graphicinterface.ObserverWindow;
+import graphicinterface.PlayerWindow;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class MenuModel extends Observable {
     private boolean isConnected = false;
     private String pseudo;
     private ArrayList<Partie> gamesInProgress;
+    private GameWindow gw;
 
     public MenuModel() {
         factory = new JDBCFactory();
@@ -94,7 +98,7 @@ public class MenuModel extends Observable {
     public void play() {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
-            GameModel game = new GameModel(true);
+            gw = new PlayerWindow();
             notifyChanges("play");
         } // si on est pas connecté --> affichage d'un message
         else {
@@ -106,7 +110,7 @@ public class MenuModel extends Observable {
     public void observe() {
         //si on est connecté on lance la partie à observer dans une fenetre
         if (isConnected) {
-            GameModel game = new GameModel(false);
+            gw = new ObserverWindow();
             notifyChanges("observe");
         } //si on est pas connecté --> affichage d'un message
         else {
