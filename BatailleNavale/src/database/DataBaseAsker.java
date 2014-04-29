@@ -11,6 +11,6 @@ package database;
  * @author jb
  */
 public interface DataBaseAsker {
-        public boolean PlayerExist(String Pseudo);
+        public boolean PlayerExist(String Pseudo) ;
 
 }

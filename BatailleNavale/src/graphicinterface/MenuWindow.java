@@ -90,7 +90,7 @@ public class MenuWindow extends JFrame implements Observer {
         right = new JPanel(new BorderLayout());
 
         js = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right) {
-            private final int location = 200;//largeur du JFrameMenu
+            private final int location = 300;//largeur du JFrameMenu
 
             {
                 setDividerLocation(location);
@@ -133,31 +133,41 @@ public class MenuWindow extends JFrame implements Observer {
 
         //SIGN UP FORMULARY
         Border borderSignUp = BorderFactory.createTitledBorder("Sign up");
-        JPanel signUp = new JPanel(new GridLayout(10, 1));
+        JPanel signUp = new JPanel(new GridLayout(10, 2));
         signUp.setBorder(borderSignUp);
 
-        pseudo = new JTextField("Pseudo");
-        firstName = new JTextField("First Name");
-        lastName = new JTextField("Last Name");
-        birthday = new JTextField("Birthday");
-        email = new JTextField("Email");
-        numero = new JTextField("Numero");
-        street = new JTextField("Street");
-        codePostal = new JTextField("Code Postal");
-        ville = new JTextField("Ville");
+        pseudo = new JTextField();
+        firstName = new JTextField();
+        lastName = new JTextField();
+        birthday = new JTextField();
+        email = new JTextField();
+        numero = new JTextField();
+        street = new JTextField();
+        codePostal = new JTextField();
+        ville = new JTextField();
+        
+        JLabel pseudoLabel = new JLabel("Pseudo");
+        JLabel firstNameLabel = new JLabel("First Name");
+        JLabel lastNameLabel = new JLabel("Last Name");
+        JLabel birthdayLabel = new JLabel("Birthday");
+        JLabel emailLabel = new JLabel("Email");
+        JLabel numeroLabel = new JLabel("Numero");
+        JLabel streetLabel = new JLabel("Street");
+        JLabel codePostalLabel = new JLabel("Code Postal");
+        JLabel villeLabel = new JLabel("Ville");
 
         JButton bSignUp = new JButton("Sign Up");
         bSignUp.addActionListener(new MenuControler(this));
-        signUp.add(pseudo);
-        signUp.add(firstName);
-        signUp.add(lastName);
-        signUp.add(birthday);
-        signUp.add(email);
-        signUp.add(numero);
-        signUp.add(street);
-        signUp.add(codePostal);
-        signUp.add(ville);
-        signUp.add(bSignUp);
+        signUp.add(pseudoLabel); signUp.add(pseudo);
+        signUp.add(firstNameLabel); signUp.add(firstName);
+        signUp.add(lastNameLabel); signUp.add(lastName);
+        signUp.add(birthdayLabel); signUp.add(birthday);
+        signUp.add(emailLabel); signUp.add(email);
+        signUp.add(numeroLabel); signUp.add(numero);
+        signUp.add(streetLabel); signUp.add(street);
+        signUp.add(codePostalLabel); signUp.add(codePostal);
+        signUp.add(villeLabel); signUp.add(ville);
+        signUp.add(new JLabel()); signUp.add(bSignUp);
         left.add(signUp);
 
         //SIGN IN
@@ -279,6 +289,9 @@ public class MenuWindow extends JFrame implements Observer {
                 break;
             case "disconnect":
                 JOptionPane.showMessageDialog(this, "You are now unlogged", "Disconnect", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "SQL Exception":
+                JOptionPane.showMessageDialog(this, "Database connection problem. Sorry", "SQL Exception", JOptionPane.ERROR_MESSAGE);
                 break;
         }
         System.out.println("obervé!!");

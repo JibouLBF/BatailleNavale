@@ -39,7 +39,7 @@ public class JDBCAsker implements DataBaseAsker {
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         return false;
 
     }
