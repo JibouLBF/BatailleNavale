@@ -8,6 +8,7 @@ package database;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -24,24 +25,24 @@ public class JDBCFactory implements DataFactory {
 
     @Override
     public ArrayList<Partie> getAllGames() {
-        ArrayList<Partie> gameList = new ArrayList<Partie> ();
+        ArrayList<Partie> gameList = new ArrayList<Partie>();
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
             String STMT = "SELECT * FROM Partie WHERE IdPartie NOT IN (SELECT IdPartie FROM AGagne)";
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
-            while(rset.next()) {
-               gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), null));
+            while (rset.next()) {
+                gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), null));
             }
             rset.close();
             stmt.close();
-            
+
             STMT = "(SELECT Partie.IdPartie,Joueur1,Joueur2,DateDemarrage,Vainqueur FROM Partie,AGagne WHERE Partie.IdPartie = AGagne.IdPartie)";
             stmt = conn.createStatement();
             rset = stmt.executeQuery(STMT);
-            while(rset.next()) {
-               gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), rset.getString("Vainqueur")));
+            while (rset.next()) {
+                gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), rset.getString("Vainqueur")));
             }
             rset.close();
             stmt.close();
@@ -53,7 +54,28 @@ public class JDBCFactory implements DataFactory {
 
         return null;
     }
-    
+
+    @Override
+    public Partie startAGame(String Pseudo) throws SQLRecoverableException, SQLException {
+        Partie game;
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+
+        String STMT = "SELECT * FROM Partie WHERE IdPartie NOT IN (SELECT IdPartie FROM AGagne) AND (Joueur1 = '" + Pseudo + "' OR Joueur2 = '" + Pseudo + "')";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        if (rset.next()) {
+            game = new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), null);
+            rset.close();
+            stmt.close();
+        } else {
+            return null;
+        }
+        theConnection.close();
+        return game;
+
+    }
+
     public JDBCFactory() {
         this.theConnection = new TheConnection();
     }

@@ -18,42 +18,44 @@ import java.util.logging.Logger;
  * @author jb
  */
 public class JDBCAsker implements DataBaseAsker {
+
     TheConnection theConnection;
 
     @Override
-    public boolean PlayerExist(String Pseudo) throws SQLRecoverableException, SQLException {
+    public boolean playerExist(String Pseudo) throws SQLRecoverableException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
-        
-            String STMT = "SELECT * FROM Joueur WHERE Pseudo =" + "'" + Pseudo + "'";
-            Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(STMT);
-            boolean exist = rset.next();
-            rset.close();
-            stmt.close();
-            theConnection.close();
-            if(exist)
-                System.out.println(Pseudo +" existe dans la BD");
-            else
-                System.out.println(Pseudo +" n'existe pas dans la BD");
-            return exist;
 
-        
+        String STMT = "SELECT * FROM Joueur WHERE Pseudo =" + "'" + Pseudo + "'";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        boolean exist = rset.next();
+        rset.close();
+        stmt.close();
+        theConnection.close();
+        if (exist) {
+            System.out.println(Pseudo + " existe dans la BD");
+        } else {
+            System.out.println(Pseudo + " n'existe pas dans la BD");
+        }
+        return exist;
+
         //return false;
-
     }
+
+    
 
     public JDBCAsker() {
         this.theConnection = new TheConnection();
     }
 
     public static void main(String[] agrs) {
-        
-     /*   JDBCAsker asker = new JDBCAsker();
-        if (asker.PlayerExist("abikhatv")) {
-            System.out.println("abikhatv existe !!!");
-        } else {
-            System.out.println("abikhatv existe pas :(");
-        }*/
+
+        /*   JDBCAsker asker = new JDBCAsker();
+         if (asker.PlayerExist("abikhatv")) {
+         System.out.println("abikhatv existe !!!");
+         } else {
+         System.out.println("abikhatv existe pas :(");
+         }*/
     }
 }

@@ -14,6 +14,7 @@ import java.sql.SQLRecoverableException;
  * @author jb
  */
 public interface DataBaseAsker {
-        public boolean PlayerExist(String Pseudo) throws SQLRecoverableException, SQLException;
+        public boolean playerExist(String Pseudo) throws SQLRecoverableException, SQLException;
+        
 
 }
