@@ -25,11 +25,14 @@ public class GameModel extends Observable {
     private String playerName;
     private String opponent;
     private int IdPartie = -1;
+    private String date;
 
-    public GameModel(boolean b, int IdPartie, String playerName) {
-        this.playerGame = b;
+    public GameModel(boolean playerGame, int IdPartie, String date, String playerName, String opponent) {
+        this.playerGame = playerGame;
         this.IdPartie = IdPartie;
         this.playerName = playerName;
+        this.opponent = opponent;
+        this.date = date;
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();

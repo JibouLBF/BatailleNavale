@@ -6,6 +6,8 @@
 
 package database;
 
+import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
 import model.Partie;
 
@@ -16,4 +18,5 @@ import model.Partie;
 public interface DataFactory {
     public ArrayList<Partie> getAllGames();
     
+    public Partie startAGame(String Pseudo) throws SQLRecoverableException, SQLException;
 }

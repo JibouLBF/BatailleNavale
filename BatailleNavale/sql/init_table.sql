@@ -105,6 +105,9 @@ FROM Joueur;
 INSERT INTO Joueur
 VALUES ('abikhat','Abikhattar','Vincent','abikhatv@ensimag.fr','200','avenue des taillees','38000','Grenoble','04-feb-91');
 
+INSERT INTO Joueur
+VALUES ('lavignje','Lavigne','JB','lavignje@imag.fr','12','rue Alfred Kastler','38000','Grenoble','29-feb-92');
+
 SELECT *
 FROM Joueur;
 
@@ -113,19 +116,17 @@ INSERT INTO Partie
 VALUES('0',CURRENT_DATE,'abikhatv','abikhat');
 
 INSERT INTO Partie
-VALUES('1',CURRENT_DATE,'abikhatv','abikhat');
+VALUES('1',CURRENT_DATE,'lavignje','abikhatv');
 
 INSERT INTO Partie
 VALUES('2',CURRENT_DATE,'abikhatv','abikhat');
-
-INSERT INTO Partie
-VALUES('3',CURRENT_DATE,'abikhatv','abikhat');
 
 INSERT INTO AGagne
 VALUES('0','abikhatv');
 
 INSERT INTO AGagne
-VALUES('3','abikhat');
+VALUES('2','abikhat');
+
 
 SELECT * 
 FROM Partie
@@ -135,8 +136,6 @@ SELECT Partie.IdPartie,Joueur1,Joueur2,DateDemarrage,Vainqueur
 FROM Partie, AGagne
 WHERE Partie.IdPartie = AGagne.IdPartie;
 
--- INSERT INTO Bateau
--- VALUES ('0','0','3','abikhatv','3','9','O','2','3','9');
-
--- SELECT *
--- FROM Bateau;
+SELECT * 
+FROM Partie
+WHERE (Joueur1 = 'abikhatv' OR Joueur2 = 'abikhatv') AND (IdPartie NOT IN(SELECT IdPartie FROM AGagne));

@@ -48,7 +48,7 @@ public class MenuModel extends Observable {
         // si le joueur n'est pas déjà inscrit
         boolean ret = false;
         try{
-                ret = asker.PlayerExist(Pseudo);
+                ret = asker.playerExist(Pseudo);
             } catch (SQLRecoverableException ex){
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
@@ -73,7 +73,7 @@ public class MenuModel extends Observable {
             // si le pseudo est bien inscrit --> on affiche logged
             boolean ret = false;
             try{
-                ret = asker.PlayerExist(Pseudo);
+                ret = asker.playerExist(Pseudo);
             } catch (SQLRecoverableException ex){
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
@@ -96,9 +96,11 @@ public class MenuModel extends Observable {
 
     }
 
-    public void play() {
+    public void play() throws SQLRecoverableException, SQLException {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
+           Partie game = factory.startAGame(pseudo);
+                
             gw = new PlayerWindow();
             notifyChanges("play");
         } // si on est pas connecté --> affichage d'un message
