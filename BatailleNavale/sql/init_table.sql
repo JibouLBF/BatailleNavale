@@ -139,3 +139,25 @@ WHERE Partie.IdPartie = AGagne.IdPartie;
 SELECT * 
 FROM Partie
 WHERE (Joueur1 = 'abikhatv' OR Joueur2 = 'abikhatv') AND (IdPartie NOT IN(SELECT IdPartie FROM AGagne));
+
+--SELECT Joueur, COUNT(*)
+--FROM ((SELECT IdPartie,Joueur1 AS Joueur FROM Partie) UNION (SELECT IdPartie,Joueur2 AS Joueur FROM Partie)) AS ListeJoueur
+--GROUP BY Joueur;
+
+SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie;
+
+SELECT Joueur, COUNT(*)
+FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
+GROUP BY Joueur;
+
+SELECT MIN(COUNT(*))
+FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
+GROUP BY Joueur;
+
+SELECT Joueur, COUNT(*) AS CNT
+FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
+HAVING COUNT(*) = 
+	(SELECT MIN(COUNT(*))
+	 FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
+	 GROUP BY Joueur)
+GROUP BY Joueur;

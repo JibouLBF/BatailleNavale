@@ -47,15 +47,15 @@ public class MenuModel extends Observable {
 
         // si le joueur n'est pas déjà inscrit
         boolean ret = false;
-        try{
-                ret = asker.playerExist(Pseudo);
-            } catch (SQLRecoverableException ex){
-                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("Connection Exception");
-            } catch (SQLException ex) {
-                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("SQL Exception");
-            } 
+        try {
+            ret = asker.playerExist(Pseudo);
+        } catch (SQLRecoverableException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("Connection Exception");
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL Exception");
+        }
         if (!ret) {
             updater.addPlayer(Pseudo, Nom, Prenom, Email, Numero, Rue, CodePostal, Ville, DateNaissance);
             isConnected = false;
@@ -72,15 +72,15 @@ public class MenuModel extends Observable {
         if (!isConnected) {
             // si le pseudo est bien inscrit --> on affiche logged
             boolean ret = false;
-            try{
+            try {
                 ret = asker.playerExist(Pseudo);
-            } catch (SQLRecoverableException ex){
+            } catch (SQLRecoverableException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("SQL Exception");
-            } 
+            }
             if (ret) {
                 isConnected = true;
                 pseudo = Pseudo;
@@ -96,15 +96,23 @@ public class MenuModel extends Observable {
 
     }
 
-    public void play() throws SQLRecoverableException, SQLException {
+    public void play() {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
-           Partie game = factory.startAGame(pseudo);
-                
-            gw = new PlayerWindow();
-            notifyChanges("play");
-        } // si on est pas connecté --> affichage d'un message
-        else {
+            try {
+                Partie game = factory.startAGame(pseudo);
+
+                gw = new PlayerWindow();
+                notifyChanges("play");
+                // si on est pas connecté --> affichage d'un message
+            } catch (SQLRecoverableException ex) {
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("Connection Exception");
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("SQL Exception");
+            }
+        } else {
             notifyChanges("not connected");
         }
 
