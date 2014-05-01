@@ -35,6 +35,7 @@ public abstract class GameWindow extends JFrame implements Observer{
     protected JSplitPane js;
     protected GameModel gm;
     protected GameControler gc;
+    protected JButton refresh;
     
     public GameWindow(String windowName) {
         super(windowName);
@@ -44,6 +45,7 @@ public abstract class GameWindow extends JFrame implements Observer{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh = new JButton ("Refresh");
         
         setSize(WIDTH, HEIGHT);
         

@@ -29,10 +29,11 @@ public class ObserverWindow extends GameWindow {
         gm = new GameModel(false);
         //gc = new LiveControler(gm);
         mainPanelLeft = new JPanel(new GridLayout(3,1, 30, 10));
-        control = new JPanel (new GridLayout (3,1));
+        control = new JPanel (new GridLayout (4,1));
         control.add(begin);
         control.add(next);
         control.add(prec);
+        control.add(refresh);
         mainPanelLeft.add(console);
         mainPanelLeft.add(playerC);
         mainPanelLeft.add(control);
