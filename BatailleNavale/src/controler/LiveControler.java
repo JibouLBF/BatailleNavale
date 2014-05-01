@@ -9,6 +9,7 @@ import graphicinterface.PlayerWindow;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import model.GameModel;
 
 /**
@@ -17,25 +18,40 @@ import model.GameModel;
  */
 public class LiveControler extends GameControler {
     
-    public LiveControler(GameModel gm) {
-        super(gm);
+    public LiveControler(GameModel gm, PlayerWindow pw) {
+        this.gm=gm;
+        this.pw=pw;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("but "+((JButton)(e.getSource())).getText());
+        //System.out.println("but "+((JButton)(e.getSource())).getText());
         switch (((JButton)(e.getSource())).getText()){
             case "Start" :
-                gm.startGame(0, 0, 0, 0, 0, 0); //to be changed
+                try{
+                    gm.startGame(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(),
+                        Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(),
+                        Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString()); 
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
+            case "Turn" :
+                break;
+            case "Move" :
+                break;
+            case "Shoot" :
+                break ;
+            default :
+                if(gm.isStarted())
+                    ((JButton)(e.getSource())).setBackground(Color.GREEN);
         }
-        //gm.
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
@@ -46,13 +62,35 @@ public class LiveControler extends GameControler {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
+        switch (((JButton)(e.getSource())).getText()){
+            case "Start" :
+                break;
+            case "Turn" :
+                break;
+            case "Move" :
+                break;
+            case "Shoot" :
+                break ;
+            default :
+                if(gm.isStarted())
+                    ((JButton)(e.getSource())).setText(((JButton)(e.getSource())).getName());
+        }
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
+    public void mouseExited(MouseEvent e) { 
+        switch (((JButton)(e.getSource())).getText()){
+            case "Start" :
+                break;
+            case "Turn" :
+                break;
+            case "Move" :
+                break;
+            case "Shoot" :
+                break ;
+            default :
+                if(gm.isStarted())
+                    ((JButton)(e.getSource())).setText("");
+        }
     }
 }

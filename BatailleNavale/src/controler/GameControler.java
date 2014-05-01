@@ -5,6 +5,7 @@
 package controler;
 
 import graphicinterface.GameWindow;
+import graphicinterface.ObserverWindow;
 import graphicinterface.PlayerWindow;
 import java.awt.event.MouseListener;
 import model.GameModel;
@@ -16,9 +17,7 @@ import model.GameModel;
 public abstract class GameControler implements MouseListener {
     
     protected GameModel gm;
-    
-    public GameControler(GameModel gm) {
-        this.gm = gm;
-    }
+    protected PlayerWindow pw;
+    protected ObserverWindow ow;
 
 }

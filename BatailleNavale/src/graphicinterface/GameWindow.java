@@ -28,7 +28,7 @@ import model.GameModel;
  */
 public abstract class GameWindow extends JFrame implements Observer{
 
-    private final int WIDTH = 800;
+    private final int WIDTH = 900;
     private final int HEIGHT = 800;
     protected JPanel mainPanelLeft, mainPanelRight;
     protected JPanel player, opponent, playerC, console;
@@ -39,6 +39,12 @@ public abstract class GameWindow extends JFrame implements Observer{
     public GameWindow(String windowName) {
         super(windowName);
         
+        try {
+            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         setSize(WIDTH, HEIGHT);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,10 +53,8 @@ public abstract class GameWindow extends JFrame implements Observer{
         mainPanelRight = new JPanel(new GridLayout(2,1, 30, 10));
 
         player = new JPanel(new GridLayout(10, 10));
-        player.setBackground(Color.blue);
         
         opponent = new JPanel(new GridLayout(10, 10));
-        opponent.setBackground(Color.red);
 
         playerC = new JPanel(new GridLayout(1, 1));
 

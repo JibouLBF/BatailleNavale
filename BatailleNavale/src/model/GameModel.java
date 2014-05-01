@@ -11,6 +11,7 @@ import database.JDBCAsker;
 import database.JDBCFactory;
 import database.JDBCUpdater;
 import java.util.Observable;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -25,6 +26,7 @@ public class GameModel extends Observable {
     private String playerName;
     private String opponent;
     private int IdPartie = -1;
+    private boolean isStarted = false;
 
     public GameModel(boolean b, int IdPartie, String playerName) {
         this.playerGame = b;
@@ -68,16 +70,15 @@ public class GameModel extends Observable {
         notifyChanges("");
     }
     
-    public void startGame (int posX1, int posY1, int posX2, int posY2,
-            int posX3, int posY3){
-        //ajout des bateau
-        notifyChanges("start");
+    public void startGame(int boatX1, int boatY1, String boatOrientation1, 
+            int boatX2, int boatY2, String boatOrientation2, 
+            int boatX3, int boatY3, String boatOrientation3) {
+         notifyChanges("start");
+         isStarted = true;
     }
 
     public boolean isStarted (){
-        if (IdPartie != -1)
-            return true;
-        return false;
+        return isStarted;
     }
     
     private void notifyChanges(String s) { //PATTERN OBSERVER
@@ -86,4 +87,8 @@ public class GameModel extends Observable {
         setChanged();
         notifyObservers(s);
     }
+
+    
+
+
 }
