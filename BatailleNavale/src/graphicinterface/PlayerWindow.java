@@ -54,14 +54,12 @@ public class PlayerWindow extends GameWindow {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                     playerGrid[i][j] = new JButton();
-                    playerGrid[i][j].setSize(38, 58);
                     playerGrid[i][j].setBackground(Color.RED);
                     playerGrid[i][j].setName(""+(i+1)+", "+(j+1));
                     playerGrid[i][j].addMouseListener(gc);
                     player.add(playerGrid[i][j]);
                     
                     opponentGrid[i][j] = new JButton();
-                    opponentGrid[i][j].setSize(38, 58);
                     opponentGrid[i][j].setBackground(Color.BLUE);
                     opponentGrid[i][j].setName(""+(i+1)+", "+(j+1));
                     opponentGrid[i][j].addMouseListener(gc);

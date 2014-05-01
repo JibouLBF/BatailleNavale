@@ -49,7 +49,6 @@ public abstract class GameWindow extends JFrame implements Observer{
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-      //  mainPanelLeft = new JPanel(new GridLayout(2,1, 30, 10));
         mainPanelRight = new JPanel(new GridLayout(2,1, 30, 10));
 
         player = new JPanel(new GridLayout(10, 10));
@@ -60,8 +59,7 @@ public abstract class GameWindow extends JFrame implements Observer{
 
         console = new JPanel(new GridLayout(1, 1));
 
-     //   mainPanelLeft.add(console);
-     //   mainPanelLeft.add(playerC);
+
         mainPanelRight.add(player);
         mainPanelRight.add(opponent);
 

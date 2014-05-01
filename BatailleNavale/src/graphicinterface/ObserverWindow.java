@@ -4,8 +4,8 @@
  */
 package graphicinterface;
 
-import controler.LiveControler;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.Observable;
 import javax.swing.*;
@@ -48,13 +48,16 @@ public class ObserverWindow extends GameWindow {
         
         for (int i = 0; i< 10; i++){
             for (int j = 0; j<10; j++){
-                gridJ1[i][j] = new JLabel (""+i+","+j);
-                gridJ2[i][j] = new JLabel (""+i+","+j);
-                gridJ1[i][j].setSize(38,58);
-                gridJ2[i][j].setSize(38,58);
+                gridJ1[i][j] = new JLabel (""+i+","+j, JLabel.CENTER);
+                gridJ2[i][j] = new JLabel (""+i+","+j, JLabel.CENTER);
+                gridJ1[i][j].setOpaque(true);
+                gridJ2[i][j].setOpaque(true);
                 
-                player.add(gridJ1[i][j], BorderLayout.CENTER);
-                opponent.add(gridJ2[i][j], BorderLayout.CENTER);
+                gridJ1[i][j].setBackground(Color.RED);
+                gridJ2[i][j].setBackground(Color.BLUE);
+                
+                player.add(gridJ1[i][j]);
+                opponent.add(gridJ2[i][j]);
             }
         }
         consoleJ1 = new JTextArea("Console J1");
