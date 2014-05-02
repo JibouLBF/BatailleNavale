@@ -68,6 +68,7 @@ public class GameModel extends Observable {
     }
     
     public void turnBoat(int x, int y, Sens s) {
+        System.out.println("turn "+x+" "+y+" "+s.toString());
         notifyChanges("");
     }
     
@@ -91,15 +92,29 @@ public class GameModel extends Observable {
         notifyChanges("");
     }
     
-    public void startGame(int boatX1, int boatY1, String boatOrientation1,
-            int boatX2, int boatY2, String boatOrientation2,
-            int boatX3, int boatY3, String boatOrientation3) {
+    public void startGame() {
         
         notifyChanges("start");
         isStarted = true;
     }
     
-    public void addBoat(int boatX, int boatY, Orientation boatOrientation, int size) {
+    public void addBoat(int boatX, int boatY, String orientation, int size) {
+        Orientation boatOrientation = Orientation.NORD;
+        switch (orientation){
+            case "N":
+                boatOrientation = Orientation.NORD;
+                break;
+            case "S":
+                boatOrientation = Orientation.SUD;
+                break;
+            case "E":
+                boatOrientation = Orientation.EST;
+                break;
+            case "O":
+                boatOrientation = Orientation.OUEST;
+                break;
+        }
+        
         try {
             updater.addBoat(IdPartie, size, playerName, boatX, boatY, boatOrientation, size);
             notifyChanges("boat added");

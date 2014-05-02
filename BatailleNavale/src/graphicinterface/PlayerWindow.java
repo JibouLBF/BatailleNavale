@@ -227,14 +227,17 @@ public class PlayerWindow extends GameWindow {
 
     @Override
     public void drawBoat() {
+        
          for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 opponentGrid[i][j].setBackground(Color.BLUE);
+                playerGrid[i][j].setBackground(Color.RED);
             }
         }
+         consoleField.setText("Life Boat\n");
         for (int i = 0; i<gm.getBoatList().size(); i++){
             opponentGrid[gm.getBoatList().get(i).getPosX()][gm.getBoatList().get(i).getPosY()].setBackground(Color.ORANGE);
-            System.out.println("coucou "+gm.getBoatList().get(i).getOrientation().toString());
+            consoleField.append("Boat "+(i+1)+" : "+gm.getBoatList().get(i).getVie()+"\n");
             switch (gm.getBoatList().get(i).getOrientation().getName()){
                 case "N": 
                     for (int j =1; j< gm.getBoatList().get(i).getTaille(); j++)
@@ -254,6 +257,16 @@ public class PlayerWindow extends GameWindow {
                     break;
             }
         }
-        consoleField.setText("");
+        
     }
+
+    public JButton[][] getPlayerGrid() {
+        return playerGrid;
+    }
+
+    public JButton[][] getOpponentGrid() {
+        return opponentGrid;
+    }
+    
+    
 }
