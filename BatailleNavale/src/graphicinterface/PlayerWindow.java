@@ -181,7 +181,7 @@ public class PlayerWindow extends GameWindow {
                 startGame();
                 break;
             case "boat":
-                System.out.println("coucou");
+                drawBoat();
                 break;
 
         }

@@ -30,20 +30,21 @@ public class GameModel extends Observable {
     private boolean isStarted = false;
     private String date;
     private ArrayList<Bateau> boatList;
+    private boolean isPlayer2;
 
-    public GameModel(boolean playerGame, int IdPartie, String date, String playerName, String opponent) {
+    public GameModel(boolean playerGame, int IdPartie, String date, String playerName, String opponent, boolean isPlayer2) {
         this.playerGame = playerGame;
         this.IdPartie = IdPartie;
         this.playerName = playerName;
         this.opponent = opponent;
         this.date = date;
+        this.isPlayer2= isPlayer2;
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
         boatList = new ArrayList<Bateau> ();
         boatList.add(new Bateau(1, IdPartie, 3, playerName, 7, 7, Orientation.NORD, 3, 1,1));
-        boatList.add(new Bateau(2, IdPartie, 3, playerName, 2, 7, Orientation.EST, 3, 1,8));
-
+        boatList.add(new Bateau(2, IdPartie, 3, playerName, 2, 7, Orientation.EST, 3, 1,8));    
     }
 
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
@@ -82,7 +83,7 @@ public class GameModel extends Observable {
     public void startGame(int boatX1, int boatY1, String boatOrientation1, 
             int boatX2, int boatY2, String boatOrientation2, 
             int boatX3, int boatY3, String boatOrientation3) {
-         
+            
             notifyChanges("start");
             isStarted = true;
     }
@@ -101,6 +102,7 @@ public class GameModel extends Observable {
     
     public ArrayList<Bateau> getBoatList (){
         //appel à factory
+        //boatList = factory.getAllBoat(IdPartie);
         return boatList;
     }
     
