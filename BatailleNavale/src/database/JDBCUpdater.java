@@ -8,7 +8,6 @@ package database;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Case;
 import model.Orientation;
 import model.Sens;
 
@@ -75,7 +74,7 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addShot(int IdPartie, int IdCoup, int IdBateau, Case c) {
+    public void addShot(int IdPartie, int IdCoup, int IdBateau, int x, int y) {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
@@ -83,7 +82,7 @@ public class JDBCUpdater implements DataBaseUpdater {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            STMT = "INSERT INTO Tir VALUES ('" + IdPartie + "','" + IdCoup + "','" + c.getX() + "','" + c.getY() + "')";
+            STMT = "INSERT INTO Tir VALUES ('" + IdPartie + "','" + IdCoup + "','" + x + "','" + y + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
