@@ -35,8 +35,7 @@ public class LiveControler extends GameControler {
         JButton but = ((JButton)(e.getSource()));
         switch (but.getText()){
             case "Start" :
-                gm.startGame();
-               /* try{
+                try{
                     gm.addBoat(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3);
                     gm.addBoat(Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 2);
                     if(0<Integer.parseInt(pw.getPosXBoat3().getText()) && Integer.parseInt(pw.getPosXBoat3().getText())<=10
@@ -45,7 +44,8 @@ public class LiveControler extends GameControler {
                     }
                 } catch (NumberFormatException ex){
                     JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
-                }*/
+                }
+                gm.startGame();
                 gm.refresh();
                 break;
             case "Turn" :
