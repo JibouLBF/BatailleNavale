@@ -24,7 +24,7 @@ public interface DataBaseUpdater {
 
     public void addMove(int IdPartie, int IdCoup, int IdBateau, Sens s);
 
-    public void addShot(int IdPartie, int IdCoup, int IdBateau, int x, int y);
+    public void addShot(int IdPartie, int IdBateau, int x, int y);
     
     
     

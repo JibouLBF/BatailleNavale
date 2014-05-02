@@ -74,14 +74,24 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addShot(int IdPartie, int IdCoup, int IdBateau, int x, int y) {
+    public void addShot(int IdPartie, int IdBateau, int x, int y) {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
-            String STMT = "INSERT INTO Coup VALUES ('" + IdPartie + "','" + IdCoup + "','" + IdBateau + "')";
+
+            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + IdPartie + "')";
             Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(STMT);
+            rset.next();
+            int IdCoup = rset.getInt(1);
+            rset.close();
+            stmt.close();
+            
+            STMT = "INSERT INTO Coup VALUES ('" + IdPartie + "','" + IdCoup + "','" + IdBateau + "')";
+            stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
+            
             STMT = "INSERT INTO Tir VALUES ('" + IdPartie + "','" + IdCoup + "','" + x + "','" + y + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);

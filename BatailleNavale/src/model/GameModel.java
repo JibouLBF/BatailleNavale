@@ -70,10 +70,17 @@ public class GameModel extends Observable {
         notifyChanges("");
     }
     
-    public void fire(Joueur j, Bateau b, int x, int y) {
-        notifyChanges("");
+    public void fire(int boatX, int boatY, int x, int y) {
+        int i = 0;
+        while (i < boatList.size()) {
+            if (boatList.get(i).getPosX() == boatX && boatList.get(i).getPosY() == boatY && boatList.get(i).getProprietaire().equals(playerName)) {
+                updater.addShot(IdPartie,boatList.get(i).getIdBateau(), x, y);
+                notifyChanges("shot added");
+                return;
+            }
+        }
+        notifyChanges("invalid boat selection");
     }
-    
     
     public void chooseNumberEscort(Joueur j, int n) {
         notifyChanges("");
@@ -101,6 +108,7 @@ public class GameModel extends Observable {
             
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL exception");
         }
     }
     
