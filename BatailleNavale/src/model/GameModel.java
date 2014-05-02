@@ -10,6 +10,7 @@ import database.DataFactory;
 import database.JDBCAsker;
 import database.JDBCFactory;
 import database.JDBCUpdater;
+import java.util.ArrayList;
 import java.util.Observable;
 import javax.swing.JComboBox;
 
@@ -28,6 +29,7 @@ public class GameModel extends Observable {
     private int IdPartie = -1;
     private boolean isStarted = false;
     private String date;
+    private ArrayList<Bateau> boatList;
 
     public GameModel(boolean playerGame, int IdPartie, String date, String playerName, String opponent) {
         this.playerGame = playerGame;
@@ -76,8 +78,9 @@ public class GameModel extends Observable {
     public void startGame(int boatX1, int boatY1, String boatOrientation1, 
             int boatX2, int boatY2, String boatOrientation2, 
             int boatX3, int boatY3, String boatOrientation3) {
-         notifyChanges("start");
-         isStarted = true;
+         
+            notifyChanges("start");
+            isStarted = true;
     }
 
     public boolean isStarted (){
@@ -88,6 +91,10 @@ public class GameModel extends Observable {
         return opponent;
     }
     
+    public ArrayList<Bateau> getBoatList (){
+        //appel à factory
+        return boatList;
+    }
     
     
     private void notifyChanges(String s) { //PATTERN OBSERVER

@@ -105,7 +105,6 @@ public class MenuModel extends Observable {
                 // s'il n'a pas de partie en cours on cherche un adversaire libre
                 if (game == null) {
                     Joueur opponent = factory.findAnOpponent(pseudo);
-                    System.out.println("JE VAIS JOUER CONTRE " +opponent.getPseudo());
                     // si on a pas trouvé d'adversaire libre --> message
                     if (opponent == null) {
                         notifyChanges("no opponent");
