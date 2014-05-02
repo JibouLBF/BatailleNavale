@@ -54,15 +54,16 @@ public class LiveControler extends GameControler {
                 break ;
             default :
                 if(gm.isStarted()){
+                   // System.out.println("pos "+((JButton)(e.getSource())).getco(posX));
                     ((JButton)(e.getSource())).setBackground(Color.GREEN);
                     switch(((JButton)(e.getSource())).getParent().getName()){
                         case "opponent" :
                             posXInit = ((JButton)(e.getSource())).getParent().getX();
-                            posYInit = ((JButton)(e.getSource())).getParent().getX();
+                            posYInit = ((JButton)(e.getSource())).getParent().getY();
                             break;
                         case "player" :
                             posX = ((JButton)(e.getSource())).getParent().getX();
-                            posY = ((JButton)(e.getSource())).getParent().getX();
+                            posY = ((JButton)(e.getSource())).getParent().getY();
                             break;
                     }
                 }
