@@ -42,6 +42,9 @@ public class LiveControler extends GameControler {
                 break;
             case "Shoot" :
                 break ;
+            case "Refresh" :
+                gm.refresh();
+                break ;
             default :
                 if(gm.isStarted())
                     ((JButton)(e.getSource())).setBackground(Color.GREEN);
@@ -71,6 +74,8 @@ public class LiveControler extends GameControler {
                 break;
             case "Shoot" :
                 break ;
+            case "Refresh" :
+                break ;
             default :
                 if(gm.isStarted())
                     ((JButton)(e.getSource())).setText(((JButton)(e.getSource())).getName());
@@ -87,6 +92,8 @@ public class LiveControler extends GameControler {
             case "Move" :
                 break;
             case "Shoot" :
+                break ;
+            case "Refresh" :
                 break ;
             default :
                 if(gm.isStarted())

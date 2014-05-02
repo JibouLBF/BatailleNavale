@@ -131,7 +131,7 @@ public class PlayerWindow extends GameWindow {
         move.addMouseListener(gc);
         shoot.addMouseListener(gc);
         turn.addMouseListener(gc);
-      //  refresh.addMouseListener(gc);
+        refresh.addMouseListener(gc);
         
         mainPanelLeft.remove(1);
         mainPanelLeft.add(playerC, 1);
@@ -180,6 +180,9 @@ public class PlayerWindow extends GameWindow {
             case "start":
                 startGame();
                 break;
+            case "boat":
+                System.out.println("coucou");
+                break;
 
         }
     }
@@ -188,5 +191,10 @@ public class PlayerWindow extends GameWindow {
         GameModel gm = new GameModel(true);
         GameWindow g = new PlayerWindow(gm);
 
+    }
+
+    @Override
+    public void drawBoat() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -89,6 +89,8 @@ public abstract class GameWindow extends JFrame implements Observer{
         this.validate();
         this.repaint();
     }
+    
+    public abstract void drawBoat();
 
     public static void main(String[] agrs) {
        // GameWindow g1 = new ObserverWindow();

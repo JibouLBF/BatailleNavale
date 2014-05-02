@@ -40,6 +40,10 @@ public class GameModel extends Observable {
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
+        boatList = new ArrayList<Bateau> ();
+        boatList.add(new Bateau(1, IdPartie, 3, playerName, 7, 7, Orientation.NORD, 3, 1,1));
+        boatList.add(new Bateau(2, IdPartie, 3, playerName, 2, 7, Orientation.EST, 3, 1,8));
+
     }
 
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
@@ -89,6 +93,10 @@ public class GameModel extends Observable {
 
     public String getOpponent() {
         return opponent;
+    }
+    
+    public void refresh (){
+        notifyChanges("boat");
     }
     
     public ArrayList<Bateau> getBoatList (){
