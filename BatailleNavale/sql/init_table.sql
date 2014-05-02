@@ -227,3 +227,7 @@ HAVING COUNT(*) =
 GROUP BY Pseudo;
 
 
+INSERT INTO  Bateau
+VALUES((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '1'),'1','3','abikhatv','2','3','E','3','2','3');
+
+

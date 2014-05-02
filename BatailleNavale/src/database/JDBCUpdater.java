@@ -40,21 +40,17 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public boolean addBoat(int IdBateau, int IdPartie, int Taille, String Proprietaire, Case c, Orientation o, int Vie) {
-        try {
-            theConnection.open();
-            Connection conn = theConnection.getConn();
-            String STMT = "INSERT INTO Bateau VALUES ('" + IdBateau + "','" + IdPartie + "','" + Taille + "','" + Proprietaire + "','" + c.getX() + "','" + c.getY() + "','" + o.getName() + "','" + Vie + "','" + c.getX() + "','" + c.getY() + "')";
-            Statement stmt = conn.createStatement();
-            int nb = stmt.executeUpdate(STMT);
-            stmt.close();
-            theConnection.close();
+    public boolean addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLIntegrityConstraintViolationException, SQLException {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        String STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + Taille + "','" + Proprietaire + "','" + PosX + "','" + PosY + "','" + o.getName() + "','" + Vie + "','" + PosX + "','" + PosY + "')";
+        Statement stmt = conn.createStatement();
+        int nb = stmt.executeUpdate(STMT);
+        stmt.close();
+        theConnection.close();
 
-            return nb == 1;
-        } catch (SQLException ex) {
-            Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        return nb == 1;
+
     }
 
     @Override

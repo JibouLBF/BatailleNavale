@@ -19,7 +19,7 @@ public interface DataBaseUpdater {
     
     public boolean addPlayer(String Pseudo, String Nom, String Prenom, String Email, int Numero, String Rue, String CodePostal, String Ville, String DateNaissance);
 
-    public boolean addBoat(int IdBateau, int IdPartie, int Taille, String Proprietaire, Case c, Orientation o, int Vie);
+    public boolean addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie);
 
     public void addMove(int IdPartie, int IdCoup, int IdBateau, Sens s);
 

@@ -133,11 +133,10 @@ public class JDBCFactory implements DataFactory {
     }
 
     @Override
-    public ArrayList<Bateau> getAllBoat(int IdPartie) {
+    public ArrayList<Bateau> getAllBoat(int IdPartie) throws SQLRecoverableException, SQLException{
         ArrayList<Bateau> boatList = new ArrayList<Bateau>();
         theConnection.open();
         Connection conn = theConnection.getConn();
-        try {
             String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" +IdPartie +"')";
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
@@ -148,11 +147,6 @@ public class JDBCFactory implements DataFactory {
             stmt.close();
             theConnection.close();
             return boatList;
-        } catch (SQLException ex) {
-            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
     }
 
     public JDBCFactory() {
