@@ -115,9 +115,9 @@ public class MenuModel extends Observable {
                 }
                 // Instanciation du modèle et de la fenetre de jeu
                 if (game.getPlayer1().equals(pseudo)) {
-                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer2());
+                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer2(), false);
                 } else {
-                    gm = gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer1());
+                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer1(), true);
                 }
                 
                 gw = new PlayerWindow(gm);
