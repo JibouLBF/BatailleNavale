@@ -13,7 +13,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Bateau;
 import model.Joueur;
+import model.Orientation;
 import model.Partie;
 
 /**
@@ -128,6 +130,29 @@ public class JDBCFactory implements DataFactory {
         stmt.close();
         theConnection.close();
         return opponent;
+    }
+
+    @Override
+    public ArrayList<Bateau> getAllBoat(int IdPartie) {
+        ArrayList<Bateau> boatList = new ArrayList<Bateau>();
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        try {
+            String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" +IdPartie +"')";
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(STMT);
+            while (rset.next()) {
+                boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"),rset.getInt("PosX"), rset.getInt("PosY"), Orientation.valueOf(rset.getString("Orientation")), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+            }
+            rset.close();
+            stmt.close();
+            theConnection.close();
+            return boatList;
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 
     public JDBCFactory() {
