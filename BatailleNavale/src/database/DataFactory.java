@@ -9,8 +9,9 @@ package database;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
-import model.Partie;
+import model.Bateau;
 import model.Joueur;
+import model.Partie;
 /**
  *
  * @author jb
@@ -42,4 +43,6 @@ public interface DataFactory {
      * @throws SQLException 
      */
     public Joueur findAnOpponent(String Pseudo) throws SQLRecoverableException, SQLException;
+    
+    public ArrayList<Bateau> getAllBoat(int IdPartie);
 }
