@@ -59,7 +59,7 @@ public class GameModel extends Observable {
         return playerGame;
     }
 
-    public void moveBoat(Joueur j, Bateau b, Sens s) {
+    public void moveBoat(int x, int y, Sens s) {
         notifyChanges("");
     }
 

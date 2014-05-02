@@ -13,6 +13,7 @@ import java.util.Observable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import model.GameModel;
+import model.Orientation;
 
 /**
  *
@@ -32,9 +33,13 @@ public class PlayerWindow extends GameWindow {
     private JTextField posXBoat3;
     private JTextField posYBoat3;
     private String[] comboText = {"N", "S", "E", "W"};
+    private String[] turning = {"Gauche", "Droite"};
+    private String[] moving = {"Avancer", "Reculer"};
     private JComboBox boatOrientation1 = new JComboBox(comboText);
     private JComboBox boatOrientation2 = new JComboBox(comboText);
     private JComboBox boatOrientation3 = new JComboBox(comboText);
+    private JComboBox boatTurning = new JComboBox (turning);
+    private JComboBox boatMoving = new JComboBox (moving);
 
     public PlayerWindow(GameModel gm) {
 
@@ -122,10 +127,28 @@ public class PlayerWindow extends GameWindow {
         move = new JButton ("Move");
         shoot = new JButton ("Shoot");
         turn = new JButton ("Turn");
-        playerC.add(new JLabel("player controler"));
-        playerC.add(move);
-        playerC.add(turn);
-        playerC.add(shoot);
+        playerC.add(new JLabel("Player Controler", JLabel.CENTER));
+        
+        Border borderMove = BorderFactory.createTitledBorder("Moving");
+        JPanel moveP = new JPanel(new GridLayout(1, 2));
+        moveP.setBorder(borderMove);
+        moveP.add(move);
+        moveP.add(boatMoving);
+        playerC.add(moveP);
+       
+        Border borderTurn = BorderFactory.createTitledBorder("Turning");
+        JPanel turnP = new JPanel(new GridLayout(1, 2));
+        turnP.setBorder(borderTurn);
+        turnP.add(turn);
+        turnP.add(boatTurning);
+        playerC.add(turnP);
+        
+        Border borderShoot = BorderFactory.createTitledBorder("Shooting");
+        JPanel shootP = new JPanel(new GridLayout(1, 1));
+        shootP.setBorder(borderShoot);
+        shootP.add(shoot);
+        playerC.add(shootP);
+        
         playerC.add(refresh);
         
         move.addMouseListener(gc);
@@ -174,6 +197,15 @@ public class PlayerWindow extends GameWindow {
         return boatOrientation3;
     }
 
+    public JComboBox getBoatTurning() {
+        return boatTurning;
+    }
+
+    public JComboBox getBoatMoving() {
+        return boatMoving;
+    }
+
+    
     @Override
     public void update(Observable o, Object arg) {
         switch ((String) (arg)) {
@@ -188,13 +220,40 @@ public class PlayerWindow extends GameWindow {
     }
 
     public static void main(String[] agrs) {
-        GameModel gm = new GameModel(true);
+        GameModel gm = new GameModel(true,  2, "", "test1", "test2", true);
         GameWindow g = new PlayerWindow(gm);
 
     }
 
     @Override
     public void drawBoat() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                opponentGrid[i][j].setBackground(Color.BLUE);
+            }
+        }
+        for (int i = 0; i<gm.getBoatList().size(); i++){
+            opponentGrid[gm.getBoatList().get(i).getPosX()][gm.getBoatList().get(i).getPosY()].setBackground(Color.ORANGE);
+            System.out.println("coucou "+gm.getBoatList().get(i).getOrientation().toString());
+            switch (gm.getBoatList().get(i).getOrientation().getName()){
+                case "N": 
+                    for (int j =1; j< gm.getBoatList().get(i).getTaille(); j++)
+                         opponentGrid[gm.getBoatList().get(i).getPosX()+j][gm.getBoatList().get(i).getPosY()].setBackground(Color.BLACK);
+                    break;
+                case "S" :
+                    for (int j =1; j< gm.getBoatList().get(i).getTaille(); j++)
+                        opponentGrid[gm.getBoatList().get(i).getPosX()-j][gm.getBoatList().get(i).getPosY()].setBackground(Color.BLACK);
+                    break;
+                case "E" :
+                    for (int j =1; j< gm.getBoatList().get(i).getTaille(); j++)
+                        opponentGrid[gm.getBoatList().get(i).getPosX()][gm.getBoatList().get(i).getPosY()+j].setBackground(Color.BLACK);
+                    break;
+                case "O" :
+                    for (int j =1; j< gm.getBoatList().get(i).getTaille(); j++)
+                        opponentGrid[gm.getBoatList().get(i).getPosX()][gm.getBoatList().get(i).getPosY()-j].setBackground(Color.BLACK);
+                    break;
+            }
+        }
+        consoleField.setText("");
     }
 }
