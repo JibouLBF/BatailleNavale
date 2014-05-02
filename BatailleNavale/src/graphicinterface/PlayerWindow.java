@@ -117,20 +117,22 @@ public class PlayerWindow extends GameWindow {
 
     }
 
-    public void startGame() {
-        playerC = new JPanel(new GridLayout(4, 1));
-        move = new JButton("Move");
-        shoot = new JButton("Shoot");
-        turn = new JButton("Turn");
+    public void startGame (){
+        playerC  = new JPanel(new GridLayout(5,1));
+        move = new JButton ("Move");
+        shoot = new JButton ("Shoot");
+        turn = new JButton ("Turn");
         playerC.add(new JLabel("player controler"));
         playerC.add(move);
         playerC.add(turn);
         playerC.add(shoot);
-
+        playerC.add(refresh);
+        
         move.addMouseListener(gc);
         shoot.addMouseListener(gc);
         turn.addMouseListener(gc);
-
+      //  refresh.addMouseListener(gc);
+        
         mainPanelLeft.remove(1);
         mainPanelLeft.add(playerC, 1);
         addToFrame();
