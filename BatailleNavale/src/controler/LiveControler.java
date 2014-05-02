@@ -11,12 +11,17 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.GameModel;
+import model.Sens;
 
 /**
  *
  * @author teikitel
  */
 public class LiveControler extends GameControler {
+    private int posXInit;
+    private int posYInit;
+    private int posX;
+    private int posY;
     
     public LiveControler(GameModel gm, PlayerWindow pw) {
         this.gm=gm;
@@ -37,8 +42,10 @@ public class LiveControler extends GameControler {
                 }
                 break;
             case "Turn" :
+                //gm.moveBoat(posXInit, posYInit, Sens.DROITE);
                 break;
             case "Move" :
+                gm.moveBoat(posXInit, posYInit, Sens.AVANCER);
                 break;
             case "Shoot" :
                 break ;
@@ -46,8 +53,20 @@ public class LiveControler extends GameControler {
                 gm.refresh();
                 break ;
             default :
-                if(gm.isStarted())
+                if(gm.isStarted()){
+                   // System.out.println("pos "+((JButton)(e.getSource())).getco(posX));
                     ((JButton)(e.getSource())).setBackground(Color.GREEN);
+                    switch(((JButton)(e.getSource())).getParent().getName()){
+                        case "opponent" :
+                            posXInit = ((JButton)(e.getSource())).getParent().getX();
+                            posYInit = ((JButton)(e.getSource())).getParent().getY();
+                            break;
+                        case "player" :
+                            posX = ((JButton)(e.getSource())).getParent().getX();
+                            posY = ((JButton)(e.getSource())).getParent().getY();
+                            break;
+                    }
+                }
         }
     }
 

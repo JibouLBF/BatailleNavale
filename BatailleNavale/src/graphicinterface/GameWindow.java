@@ -54,9 +54,9 @@ public abstract class GameWindow extends JFrame implements Observer{
         mainPanelRight = new JPanel(new GridLayout(2,1, 30, 10));
 
         player = new JPanel(new GridLayout(10, 10));
-        
+        player.setName("player");
         opponent = new JPanel(new GridLayout(10, 10));
-
+        opponent.setName("opponent");
         playerC = new JPanel(new GridLayout(1, 1));
 
         console = new JPanel(new GridLayout(1, 1));

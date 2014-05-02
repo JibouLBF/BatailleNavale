@@ -61,8 +61,9 @@ public class GameModel extends Observable {
     public boolean isPlayerGame() {
         return playerGame;
     }
-    
+
     public void moveBoat(int x, int y, Sens s) {
+        System.out.println("move "+x+" "+y+" "+s.toString());
         notifyChanges("");
     }
     
