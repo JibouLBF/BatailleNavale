@@ -43,19 +43,19 @@ CREATE TABLE Bateau (
 	PosY int NOT NULL,
 	Orientation char NOT NULL,
 	Vie int NOT NULL, CHECK(Vie >= 0 AND Vie <= Taille),
-	PosXInit int NOT NULL, CHECK( (PosXInit >= 0) AND (PosXInit <= 9)),
-	PosYInit int NOT NULL, CHECK( (PosYInit >= 0) AND (PosYInit <= 9)),
+	PosXInit int NOT NULL, CHECK( (PosXInit >= 1) AND (PosXInit <= 10)),
+	PosYInit int NOT NULL, CHECK( (PosYInit >= 1) AND (PosYInit <= 10)),
 	PRIMARY KEY(IdBateau, IdPartie),
 	CONSTRAINT fk_bateau_joueur FOREIGN KEY (Proprietaire) REFERENCES Joueur(Pseudo),
 	CONSTRAINT orientation_values CHECK(Orientation IN('N','S','E','O')),
 	CONSTRAINT taille_values CHECK(Taille IN(2,3)),
-	CONSTRAINT bateau_posX_valide CHECK( ((Orientation ='N' OR Orientation = 'S') AND (PosX >= 0) AND (PosX <= 9))
-										OR(Orientation ='E' AND (PosX >= 0) AND (PosX <= (10 - Taille)))
-										OR(Orientation ='O' AND (PosX >= (Taille-1)) AND (PosX <= 9))
+	CONSTRAINT bateau_posX_valide CHECK( ((Orientation ='N' OR Orientation = 'S') AND (PosX >= 1) AND (PosX <= 10))
+										OR(Orientation ='E' AND (PosX >= 1) AND (PosX <= (11 - Taille)))
+										OR(Orientation ='O' AND (PosX >= Taille) AND (PosX <= 10))
 										),
-	CONSTRAINT bateau_posY_valide CHECK( ((Orientation ='E' OR Orientation = 'O') AND (PosY >= 0) AND (PosY <= 9))
-										OR(Orientation ='N' AND (PosY >= 0) AND (PosY <= (10 - Taille)))
-										OR(Orientation ='S' AND (PosY >= (Taille-1)) AND (PosY <= 9))
+	CONSTRAINT bateau_posY_valide CHECK( ((Orientation ='E' OR Orientation = 'O') AND (PosY >= 1) AND (PosY <= 10))
+										OR(Orientation ='N' AND (PosY >= 1) AND (PosY <= (11 - Taille)))
+										OR(Orientation ='S' AND (PosY >= Taille) AND (PosY <= 10))
 										)
 );
 
@@ -81,8 +81,8 @@ CREATE TABLE Deplacement (
 CREATE TABLE Tir (
 	IdPartie int,
 	IdCoup int,
-	PosX int NOT NULL, CONSTRAINT tir_posx_valide CHECK( (PosX >= 0) AND (PosX <= 9)),
-	PosY int NOT NULL, CONSTRAINT tir_posy_valide CHECK( (PosY >= 0) AND (PosY <= 9)),
+	PosX int NOT NULL, CONSTRAINT tir_posx_valide CHECK( (PosX >= 1) AND (PosX <= 10)),
+	PosY int NOT NULL, CONSTRAINT tir_posy_valide CHECK( (PosY >= 1) AND (PosY <= 10)),
 	PRIMARY KEY(IdPartie, IdCoup),
 	CONSTRAINT fk_tir_partie_coup FOREIGN KEY (IdPartie,IdCoup) REFERENCES Coup(IdPartie,IdCoup)
 );
@@ -225,5 +225,9 @@ HAVING COUNT(*) =
 						(SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie) ON Joueur = Pseudo)
 				GROUP BY Pseudo)
 GROUP BY Pseudo;
+
+
+INSERT INTO  Bateau
+VALUES((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '1'),'1','3','abikhatv','2','3','E','3','2','3');
 
 

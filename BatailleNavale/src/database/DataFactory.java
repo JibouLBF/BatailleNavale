@@ -44,5 +44,5 @@ public interface DataFactory {
      */
     public Joueur findAnOpponent(String Pseudo) throws SQLRecoverableException, SQLException;
     
-    public ArrayList<Bateau> getAllBoat(int IdPartie);
+    public ArrayList<Bateau> getAllBoat(int IdPartie) throws SQLRecoverableException, SQLException;
 }
