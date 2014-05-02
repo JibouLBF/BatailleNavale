@@ -83,6 +83,12 @@ public class GameModel extends Observable {
     public boolean isStarted (){
         return isStarted;
     }
+
+    public String getOpponent() {
+        return opponent;
+    }
+    
+    
     
     private void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub

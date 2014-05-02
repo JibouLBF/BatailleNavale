@@ -62,7 +62,6 @@ public abstract class GameWindow extends JFrame implements Observer{
 
         mainPanelRight.add(player);
         mainPanelRight.add(opponent);
-
         
     }
     

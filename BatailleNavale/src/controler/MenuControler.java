@@ -26,7 +26,7 @@ public class MenuControler implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+
         System.out.println("button " + ((JButton) ae.getSource()).getText());
         switch (((JButton) ae.getSource()).getText()) {
             case "Start Game":

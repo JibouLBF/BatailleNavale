@@ -108,24 +108,30 @@ VALUES ('abikhat','Abikhattar','Vincent','abikhatv@ensimag.fr','200','avenue des
 INSERT INTO Joueur
 VALUES ('lavignje','Lavigne','JB','lavignje@imag.fr','12','rue Alfred Kastler','38000','Grenoble','29-feb-92');
 
+INSERT INTO Joueur
+VALUES ('teikitel','Tutu','Loic','teikitel@imag.fr','6','rue Paul','38000','Grenoble','12-nov-93');
+
+INSERT INTO Joueur
+VALUES ('lavignj','Lavigne','JB','lavignje@imag.fr','12','rue Alfred Kastler','38000','Grenoble','29-feb-92');
+
 SELECT *
 FROM Joueur;
 
 
 INSERT INTO Partie
-VALUES('0',CURRENT_DATE,'abikhatv','abikhat');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat');
 
 INSERT INTO Partie
-VALUES('1',CURRENT_DATE,'lavignje','abikhatv');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'teikitel','abikhatv');
 
 INSERT INTO Partie
-VALUES('2',CURRENT_DATE,'abikhatv','abikhat');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat');
 
 INSERT INTO AGagne
-VALUES('0','abikhatv');
+VALUES('1','abikhatv');
 
 INSERT INTO AGagne
-VALUES('2','abikhat');
+VALUES('3','abikhat');
 
 
 SELECT * 
@@ -140,20 +146,21 @@ SELECT *
 FROM Partie
 WHERE (Joueur1 = 'abikhatv' OR Joueur2 = 'abikhatv') AND (IdPartie NOT IN(SELECT IdPartie FROM AGagne));
 
---SELECT Joueur, COUNT(*)
---FROM ((SELECT IdPartie,Joueur1 AS Joueur FROM Partie) UNION (SELECT IdPartie,Joueur2 AS Joueur FROM Partie)) AS ListeJoueur
---GROUP BY Joueur;
 
+-- "FUSION DES COLONNES Joueur1 et Joueur2 en une seule"
 SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie;
 
+-- Joueur / Compte le nombre de parties jouées 
 SELECT Joueur, COUNT(*)
 FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
 GROUP BY Joueur;
 
+-- Minimum du nombre de parties jouées (sans pseudo)
 SELECT MIN(COUNT(*))
 FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
 GROUP BY Joueur;
 
+-- Pseudo du joueur qui a joué le moins de partie / nombre de partie
 SELECT Joueur, COUNT(*) AS CNT
 FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
 HAVING COUNT(*) = 
@@ -161,3 +168,62 @@ HAVING COUNT(*) =
 	 FROM (SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie)
 	 GROUP BY Joueur)
 GROUP BY Joueur;
+
+
+-- Joueurs inscrits qui ne sont pas en train de jouer
+SELECT Pseudo
+FROM Joueur
+WHERE Pseudo NOT IN(SELECT Joueur1 
+					FROM Partie
+					WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  AND Pseudo NOT IN(SELECT Joueur2 
+					FROM Partie
+					WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne));
+
+-- Joueur qui ne jouent pas / Nombre de parties jouées 
+SELECT Pseudo, COUNT(*)
+FROM ((SELECT Pseudo
+		FROM Joueur
+		WHERE Pseudo NOT IN(SELECT Joueur1 
+							FROM Partie
+							WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  		AND Pseudo NOT IN(SELECT Joueur2 
+							FROM Partie
+							WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  		)
+	LEFT OUTER JOIN
+	(SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie) ON Joueur = Pseudo)
+GROUP BY Pseudo;
+
+
+
+-- Tableau des joueurs ayant joué le moins de partie jusqu'a présent
+SELECT Pseudo, COUNT(*) AS CNT
+FROM ((SELECT Pseudo
+			FROM Joueur
+			WHERE Pseudo NOT IN(SELECT Joueur1 
+								FROM Partie
+								WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  			AND Pseudo NOT IN(SELECT Joueur2 
+								FROM Partie
+								WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  		)
+		LEFT OUTER JOIN
+		(SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie) ON Joueur = Pseudo)
+HAVING COUNT(*) = 
+				(SELECT MIN(COUNT(*))
+				 FROM ((SELECT Pseudo
+						FROM Joueur
+						WHERE Pseudo NOT IN(SELECT Joueur1 
+											FROM Partie
+											WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  						  AND Pseudo NOT IN(SELECT Joueur2 
+										  	FROM Partie
+											WHERE IdPartie NOT IN(SELECT IdPartie FROM AGagne))
+  						)
+						LEFT OUTER JOIN
+						(SELECT IdPartie,Joueur1 AS Joueur FROM Partie UNION SELECT IdPartie,Joueur2 AS Joueur FROM Partie) ON Joueur = Pseudo)
+				GROUP BY Pseudo)
+GROUP BY Pseudo;
+
+

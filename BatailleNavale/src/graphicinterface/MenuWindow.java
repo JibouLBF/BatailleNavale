@@ -145,7 +145,7 @@ public class MenuWindow extends JFrame implements Observer {
         street = new JTextField();
         codePostal = new JTextField();
         ville = new JTextField();
-        
+
         JLabel pseudoLabel = new JLabel("Pseudo");
         JLabel firstNameLabel = new JLabel("First Name");
         JLabel lastNameLabel = new JLabel("Last Name");
@@ -158,16 +158,26 @@ public class MenuWindow extends JFrame implements Observer {
 
         JButton bSignUp = new JButton("Sign Up");
         bSignUp.addActionListener(new MenuControler(this));
-        signUp.add(pseudoLabel); signUp.add(pseudo);
-        signUp.add(firstNameLabel); signUp.add(firstName);
-        signUp.add(lastNameLabel); signUp.add(lastName);
-        signUp.add(birthdayLabel); signUp.add(birthday);
-        signUp.add(emailLabel); signUp.add(email);
-        signUp.add(numeroLabel); signUp.add(numero);
-        signUp.add(streetLabel); signUp.add(street);
-        signUp.add(codePostalLabel); signUp.add(codePostal);
-        signUp.add(villeLabel); signUp.add(ville);
-        signUp.add(new JLabel()); signUp.add(bSignUp);
+        signUp.add(pseudoLabel);
+        signUp.add(pseudo);
+        signUp.add(firstNameLabel);
+        signUp.add(firstName);
+        signUp.add(lastNameLabel);
+        signUp.add(lastName);
+        signUp.add(birthdayLabel);
+        signUp.add(birthday);
+        signUp.add(emailLabel);
+        signUp.add(email);
+        signUp.add(numeroLabel);
+        signUp.add(numero);
+        signUp.add(streetLabel);
+        signUp.add(street);
+        signUp.add(codePostalLabel);
+        signUp.add(codePostal);
+        signUp.add(villeLabel);
+        signUp.add(ville);
+        signUp.add(new JLabel());
+        signUp.add(bSignUp);
         left.add(signUp);
 
         //SIGN IN
@@ -273,28 +283,31 @@ public class MenuWindow extends JFrame implements Observer {
                 JOptionPane.showMessageDialog(this, "Connection successful", "Connection", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case "not signed up":
-                JOptionPane.showMessageDialog(this, "Connection failed : invalid login. \n Please retype it or sign up", "Connection", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Connection failed : invalid login. \n Please retype it or sign up", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             case "already connected":
-                JOptionPane.showMessageDialog(this, "You are already connected", "Connection", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You are already connected", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
-            case "play":
-                JOptionPane.showMessageDialog(this, "You are going to play against another player", "Play", JOptionPane.INFORMATION_MESSAGE);
+            /*case "play":
+                JOptionPane.showMessageDialog(this, "You are going to play against", "Info", JOptionPane.INFORMATION_MESSAGE);
+                break;*/
+            case "no opponent":
+                JOptionPane.showMessageDialog(this, "There are no avalaible players.\n Please come back later.", "Info", JOptionPane.WARNING_MESSAGE);
                 break;
             case "not connected":
-                JOptionPane.showMessageDialog(this, "You are not connected. \n Please sign in to play or observe", "Play/Observe", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You are not connected. \n Please sign in to play or observe", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             case "observe":
-                JOptionPane.showMessageDialog(this, "You are going to watch a game", "Observe", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You are going to watch a game", "Info", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case "disconnect":
-                JOptionPane.showMessageDialog(this, "You are now unlogged", "Disconnect", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You are now unlogged", "Info", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case "SQL Exception":
-                JOptionPane.showMessageDialog(this, "SQL problem. Sorry", "SQL Exception", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "SQL problem. Sorry", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             case "Connection Exception":
-                JOptionPane.showMessageDialog(this, "Database connection problem. Sorry", "Connection Exception", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Database connection problem. Sorry", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
         }
         System.out.println("obervé!!");

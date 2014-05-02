@@ -8,6 +8,16 @@ package model;
  *
  * @author harbalk
  */
-class Joueur {
-    
+public class Joueur {
+
+    private String pseudo;
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public Joueur(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
 }

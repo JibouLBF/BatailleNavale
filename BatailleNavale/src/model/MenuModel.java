@@ -35,6 +35,7 @@ public class MenuModel extends Observable {
     private String pseudo;
     private ArrayList<Partie> gamesInProgress;
     private GameWindow gw;
+    private GameModel gm;
 
     public MenuModel() {
         factory = new JDBCFactory();
@@ -100,11 +101,28 @@ public class MenuModel extends Observable {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
             try {
-                Partie game = factory.startAGame(pseudo);
-
-                gw = new PlayerWindow();
+                Partie game = factory.getCurrentGame(pseudo);
+                // s'il n'a pas de partie en cours on cherche un adversaire libre
+                if (game == null) {
+                    Joueur opponent = factory.findAnOpponent(pseudo);
+                    System.out.println("JE VAIS JOUER CONTRE " +opponent.getPseudo());
+                    // si on a pas trouvé d'adversaire libre --> message
+                    if (opponent == null) {
+                        notifyChanges("no opponent");
+                        return;
+                    }
+                    updater.addGame(pseudo, opponent.getPseudo());
+                    game = factory.getCurrentGame(pseudo);
+                }
+                // Instanciation du modèle et de la fenetre de jeu
+                if (game.getPlayer1().equals(pseudo)) {
+                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer2());
+                } else {
+                    gm = gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer1());
+                }
+                
+                gw = new PlayerWindow(gm);
                 notifyChanges("play");
-                // si on est pas connecté --> affichage d'un message
             } catch (SQLRecoverableException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
@@ -112,7 +130,8 @@ public class MenuModel extends Observable {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("SQL Exception");
             }
-        } else {
+        }// si on est pas connecté --> affichage d'un message 
+        else {
             notifyChanges("not connected");
         }
 
