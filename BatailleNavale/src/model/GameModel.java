@@ -67,7 +67,7 @@ public class GameModel extends Observable {
 
     /**
      * Renvoie le bateau du joueur placé à la position (x,y) Renvoie NULL si il
-     * n'y pas de bateau à cette positions
+     * n'y pas de bateau à cette position
      *
      * @param x
      * @param y
@@ -90,32 +90,32 @@ public class GameModel extends Observable {
                 case "A":
                     switch (boat.getOrientation().getName()) {
                         case "N":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY()+1);
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() + 1);
                             break;
                         case "S":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY()-1);
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() - 1);
                             break;
                         case "E":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX()+1, boat.getPosY());
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() + 1, boat.getPosY());
                             break;
                         case "O":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX()-1, boat.getPosY());
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() - 1, boat.getPosY());
                             break;
                     }
                     break;
                 case "R":
                     switch (boat.getOrientation().getName()) {
                         case "N":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY()-1);
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() - 1);
                             break;
                         case "S":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY()+1);
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() + 1);
                             break;
                         case "E":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX()-1, boat.getPosY());
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() - 1, boat.getPosY());
                             break;
                         case "O":
-                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX()+1, boat.getPosY());
+                            updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() + 1, boat.getPosY());
                             break;
                     }
                     break;
