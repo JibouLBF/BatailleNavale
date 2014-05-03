@@ -133,20 +133,33 @@ public class JDBCFactory implements DataFactory {
     }
 
     @Override
-    public ArrayList<Bateau> getAllBoat(int IdPartie) throws SQLRecoverableException, SQLException{
+    public ArrayList<Bateau> getAllBoat(int IdPartie) throws SQLRecoverableException, SQLException {
         ArrayList<Bateau> boatList = new ArrayList<Bateau>();
         theConnection.open();
         Connection conn = theConnection.getConn();
-            String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" +IdPartie +"')";
-            Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(STMT);
-            while (rset.next()) {
-                boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"),rset.getInt("PosX"), rset.getInt("PosY"), Orientation.valueOf(rset.getString("Orientation")), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" + IdPartie + "'";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        while (rset.next()) {
+            switch (rset.getString("Orientation")) {
+                case "N":
+                    boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"), rset.getInt("PosX"), rset.getInt("PosY"), Orientation.NORD, rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+                    break;
+                case "S":
+                    boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"), rset.getInt("PosX"), rset.getInt("PosY"), Orientation.SUD, rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+                    break;
+                case "E":
+                    boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"), rset.getInt("PosX"), rset.getInt("PosY"), Orientation.EST, rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+                    break;
+                case "O":
+                    boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"), rset.getInt("PosX"), rset.getInt("PosY"), Orientation.OUEST, rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+                    break;
             }
-            rset.close();
-            stmt.close();
-            theConnection.close();
-            return boatList;
+        }
+        rset.close();
+        stmt.close();
+        theConnection.close();
+        return boatList;
     }
 
     public JDBCFactory() {

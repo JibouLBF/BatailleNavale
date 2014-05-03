@@ -32,7 +32,7 @@ public class PlayerWindow extends GameWindow {
     private JTextField posYBoat2;
     private JTextField posXBoat3;
     private JTextField posYBoat3;
-    private String[] comboText = {"N", "S", "E", "W"};
+    private String[] comboText = {"N", "S", "E", "O"};
     private String[] turning = {"Gauche", "Droite"};
     private String[] moving = {"Avancer", "Reculer"};
     private JComboBox boatOrientation1 = new JComboBox(comboText);
