@@ -11,7 +11,10 @@ import java.util.logging.Logger;
 public class TheConnection {
     
     private Connection conn;
-
+    
+    /**
+     * Récupère les drivers JDBC et ouvre la connexion avec la base
+     */
     public void open() {
         try {
             System.out.println("Loading Oracle driver ...");
@@ -26,6 +29,9 @@ public class TheConnection {
 
     }
 
+    /**
+     * Ferme la connexion avec la base
+     */
     public void close() {
         try {
             conn.close();
@@ -34,6 +40,10 @@ public class TheConnection {
         }
     }
 
+    /**
+     * Renvoie l'intance de la connexion avec la base
+     * @return Connection DBconnection
+     */
     public Connection getConn() {
         return conn;
     }

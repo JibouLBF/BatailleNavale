@@ -20,7 +20,7 @@ public class JDBCUpdater implements DataBaseUpdater {
     private TheConnection theConnection;
 
     @Override
-    public boolean addPlayer(String Pseudo, String Nom, String Prenom, String Email, int Numero, String Rue, String CodePostal, String Ville, String DateNaissance) {
+    public void addPlayer(String Pseudo, String Nom, String Prenom, String Email, int Numero, String Rue, String CodePostal, String Ville, String DateNaissance) {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
@@ -30,16 +30,13 @@ public class JDBCUpdater implements DataBaseUpdater {
             stmt.close();
             theConnection.close();
 
-            return nb == 1;
-
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
     }
 
     @Override
-    public boolean addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLIntegrityConstraintViolationException, SQLException {
+    public void addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLIntegrityConstraintViolationException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
         String STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + Taille + "','" + Proprietaire + "','" + PosX + "','" + PosY + "','" + o.getName() + "','" + Vie + "','" + PosX + "','" + PosY + "')";
@@ -47,9 +44,6 @@ public class JDBCUpdater implements DataBaseUpdater {
         int nb = stmt.executeUpdate(STMT);
         stmt.close();
         theConnection.close();
-
-        return nb == 1;
-
     }
 
     @Override
