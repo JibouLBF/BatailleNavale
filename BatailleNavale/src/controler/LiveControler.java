@@ -52,9 +52,9 @@ public class LiveControler extends GameControler {
             case "Turn":
                 if (posXInit != -1 && posYInit != -1) {
                     if (pw.getBoatTurning().getSelectedItem().toString() == "Droite") {
-                        gm.turnBoat(posXInit-1, posYInit-1, Sens.DROITE);
+                        gm.turnBoat(posYInit, posXInit, Sens.DROITE);
                     } else if (pw.getBoatTurning().getSelectedItem().toString() == "Gauche") {
-                        gm.turnBoat(posXInit-1, posYInit-1, Sens.GAUCHE);
+                        gm.turnBoat(posYInit, posXInit, Sens.GAUCHE);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -66,9 +66,9 @@ public class LiveControler extends GameControler {
             case "Move":
                 if (posXInit != -1 && posYInit != -1) {
                     if (pw.getBoatMoving().getSelectedItem().toString() == "Avancer") {
-                        gm.moveBoat(posXInit-1, posYInit-1, Sens.AVANCER);
+                        gm.moveBoat(posYInit, posXInit, Sens.AVANCER);
                     } else if (pw.getBoatMoving().getSelectedItem().toString() == "Reculer") {
-                        gm.moveBoat(posXInit-1, posYInit-1, Sens.RECULER);
+                        gm.moveBoat(posYInit, posXInit, Sens.RECULER);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -79,7 +79,7 @@ public class LiveControler extends GameControler {
                 break;
             case "Shoot":
                 if (posXInit != -1 && posYInit != -1 && posX != -1 && posY != -1) {
-                    gm.fire(posXInit-1, posYInit-1, posX-1, posY-1);
+                    gm.fire(posYInit, posXInit, posY, posX);
                 } else {
                     JOptionPane.showMessageDialog(pw, "Select a case in the up grid", "error", JOptionPane.ERROR_MESSAGE);
                 }
