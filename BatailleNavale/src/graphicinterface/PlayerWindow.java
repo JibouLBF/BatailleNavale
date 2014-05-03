@@ -47,9 +47,12 @@ public class PlayerWindow extends GameWindow {
         this.gm = gm;
         gc = new LiveControler(gm, this);
         this.gm.addObserver(this);
-
+        
         mainPanelLeft = new JPanel(new GridLayout(2, 1, 30, 10));
-        mainPanelLeft.add(console);
+        JPanel highPan = new JPanel(new BorderLayout());
+        mainPanelLeft.add(highPan);
+        highPan.add(turnLabel, BorderLayout.NORTH);
+        highPan.add(console, BorderLayout.CENTER);
         mainPanelLeft.add(playerC);
 
         playerGrid = new JButton[10][10];
@@ -217,7 +220,9 @@ public class PlayerWindow extends GameWindow {
             case "opponent turn":
                 JOptionPane.showMessageDialog(this, "Your opponent hasn't played yet.\n Please wait your turn.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 break;
-
+            case "refreshWindow" :
+                drawBoat();
+                break;
         }
     }
 

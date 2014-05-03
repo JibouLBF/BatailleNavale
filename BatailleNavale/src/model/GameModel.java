@@ -274,4 +274,8 @@ public class GameModel extends Observable {
         notifyObservers(s);
     }
 
+    public void refreshWindow() {
+        notifyChanges("refreshWindow");    
+    }
+
 }

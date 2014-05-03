@@ -90,7 +90,7 @@ public class LiveControler extends GameControler {
             default:
                 if (gm.isStarted()) {
                     System.out.println("pos " + ((but.getY()) / but.getHeight()) + " " + but.getY() + " " + but.getHeight());
-                    gm.refresh();
+                    gm.refreshWindow();
                     but.setBackground(Color.GREEN);
                     switch (but.getParent().getName()) {
                         case "opponent":

@@ -36,10 +36,10 @@ public abstract class GameWindow extends JFrame implements Observer{
     protected GameModel gm;
     protected GameControler gc;
     protected JButton refresh;
+    protected JLabel turnLabel = new JLabel ("Turn", JLabel.CENTER);
     
     public GameWindow(String windowName) {
         super(windowName);
-        
         try {
             UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
         } catch (Exception e) {
