@@ -22,9 +22,15 @@ public interface DataBaseUpdater {
 
     public boolean addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLException;
 
-    public void addMove(int IdPartie, int IdCoup, int IdBateau, Sens s);
+    public void addMove(int IdPartie, int IdBateau, Sens s);
 
     public void addShot(int IdPartie, int IdBateau, int x, int y);
+    
+    public void changeTurn(int IdPartie, String Pseudo);
+    
+    public void turnBoat(int IdPartie, int IdBateau, Orientation o);
+    
+    public void moveBoat(int IdPartie, int IdBateau, int posX, int posY);
     
     
     

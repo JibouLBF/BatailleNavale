@@ -28,9 +28,11 @@ CREATE TABLE Partie (
 	IdPartie int PRIMARY KEY,
 	DateDemarrage date NOT NULL,
 	Joueur1 varchar(20) NOT NULL,
-	Joueur2 varchar(20),
+	Joueur2 varchar(20) NOT NULL,
+	Tour varchar(20),
 	CONSTRAINT fk_joueur1_partie FOREIGN KEY (Joueur1) REFERENCES Joueur(Pseudo),
-	CONSTRAINT fk_joueur2_partie FOREIGN KEY (Joueur2) REFERENCES Joueur(Pseudo)
+	CONSTRAINT fk_joueur2_partie FOREIGN KEY (Joueur2) REFERENCES Joueur(Pseudo),
+	CONSTRAINT fk_tour_partie FOREIGN KEY (Tour) REFERENCES Joueur(Pseudo)
 );
 
 
@@ -119,13 +121,13 @@ FROM Joueur;
 
 
 INSERT INTO Partie
-VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat',NULL);
 
 INSERT INTO Partie
-VALUES(seqIdPartie.nextval,CURRENT_DATE,'teikitel','abikhatv');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'teikitel','abikhatv',NULL);
 
 INSERT INTO Partie
-VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat');
+VALUES(seqIdPartie.nextval,CURRENT_DATE,'abikhatv','abikhat',NULL);
 
 INSERT INTO AGagne
 VALUES('1','abikhatv');

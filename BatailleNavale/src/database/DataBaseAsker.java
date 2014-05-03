@@ -16,5 +16,7 @@ import java.sql.SQLRecoverableException;
 public interface DataBaseAsker {
         public boolean playerExist(String Pseudo) throws SQLRecoverableException, SQLException;
         
+        public boolean isTurnOf(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException;
+        
 
 }

@@ -40,10 +40,27 @@ public class JDBCAsker implements DataBaseAsker {
         }
         return exist;
 
-        //return false;
     }
 
-    
+    @Override
+    public boolean isTurnOf(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+
+        String STMT = "SELECT Tour FROM Partie WHERE IdPartie =" + "'" + IdPartie + "'";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        rset.next();
+        String playerName = rset.getString("Tour");
+        rset.close();
+        stmt.close();
+        theConnection.close();
+        if (playerName == null) {
+            return false;
+        } else {
+            return playerName.equals(Pseudo);
+        }
+    }
 
     public JDBCAsker() {
         this.theConnection = new TheConnection();
@@ -58,4 +75,5 @@ public class JDBCAsker implements DataBaseAsker {
          System.out.println("abikhatv existe pas :(");
          }*/
     }
+
 }

@@ -53,12 +53,20 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addMove(int IdPartie, int IdCoup, int IdBateau, Sens s) {
+    public void addMove(int IdPartie, int IdBateau, Sens s) {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
-            String STMT = "INSERT INTO Coup VALUES ('" + IdPartie + "','" + IdCoup + "','" + IdBateau + "')";
+            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + IdPartie + "')";
             Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(STMT);
+            rset.next();
+            int IdCoup = rset.getInt(1);
+            rset.close();
+            stmt.close();
+
+            STMT = "INSERT INTO Coup VALUES ('" + IdPartie + "','" + IdCoup + "','" + IdBateau + "')";
+            stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
 
@@ -86,12 +94,12 @@ public class JDBCUpdater implements DataBaseUpdater {
             int IdCoup = rset.getInt(1);
             rset.close();
             stmt.close();
-            
+
             STMT = "INSERT INTO Coup VALUES ('" + IdPartie + "','" + IdCoup + "','" + IdBateau + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            
+
             STMT = "INSERT INTO Tir VALUES ('" + IdPartie + "','" + IdCoup + "','" + x + "','" + y + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
@@ -109,7 +117,55 @@ public class JDBCUpdater implements DataBaseUpdater {
         Connection conn = theConnection.getConn();
         try {
 
-            String STMT = "INSERT INTO Partie VALUES ( seqIdPartie.nextval , CURRENT_DATE ,'" + Joueur1 + "','" + Joueur2 + "')";
+            String STMT = "INSERT INTO Partie VALUES ( seqIdPartie.nextval , CURRENT_DATE ,'" + Joueur1 + "','" + Joueur2 + "', NULL)";
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+            theConnection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void changeTurn(int IdPartie, String Pseudo) {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        try {
+            String STMT = "UPDATE Partie SET Tour = '" + Pseudo + "' WHERE IdPartie = " + IdPartie;
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+            theConnection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void turnBoat(int IdPartie, int IdBateau, Orientation o) {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        try {
+            String STMT = "UPDATE Bateau SET Orientation = '" + o.getName() + "' WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+            theConnection.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void moveBoat(int IdPartie, int IdBateau, int posX, int posY) {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        try {
+            String STMT = "UPDATE Bateau SET PosX =" + posX + ", PosY =" + posY + "WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
