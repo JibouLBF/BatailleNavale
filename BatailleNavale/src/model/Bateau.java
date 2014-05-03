@@ -16,7 +16,7 @@ public class Bateau {
     private String Proprietaire;
     private int PosX;
     private int PosY;
-    private Orientation orientation;
+    private String orientation;
     private int Vie;
     private int PosXInit;
     private int PosYInit;
@@ -45,7 +45,7 @@ public class Bateau {
         return PosY;
     }
 
-    public Orientation getOrientation() {
+    public String getOrientation() {
         return orientation;
     }
 
@@ -73,7 +73,7 @@ public class Bateau {
         this.Vie = Vie;
     }
 
-    public Bateau(int IdBateau, int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation orientation, int Vie, int PosXInit, int PosYInit) {
+    public Bateau(int IdBateau, int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, String orientation, int Vie, int PosXInit, int PosYInit) {
         this.IdBateau = IdBateau;
         this.IdPartie = IdPartie;
         this.Taille = Taille;

@@ -8,7 +8,6 @@ package database;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Orientation;
 import model.Sens;
 
 /**
@@ -28,22 +27,53 @@ public class JDBCUpdater implements DataBaseUpdater {
             Statement stmt = conn.createStatement();
             int nb = stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            theConnection.close();
         }
     }
 
     @Override
-    public void addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLIntegrityConstraintViolationException, SQLException {
+    public void addBoats(int IdPartie, String Proprietaire, int PosXB1, int PosYB1, int TailleB1, String oB1, int PosXB2, int PosYB2, int TailleB2, String oB2, int PosXB3, int PosYB3, int TailleB3, String oB3) throws SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
-        String STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + Taille + "','" + Proprietaire + "','" + PosX + "','" + PosY + "','" + o.getName() + "','" + Vie + "','" + PosX + "','" + PosY + "')";
-        Statement stmt = conn.createStatement();
-        int nb = stmt.executeUpdate(STMT);
-        stmt.close();
-        theConnection.close();
+        try {
+
+            conn.setAutoCommit(false);
+            String STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + TailleB1 + "','" + Proprietaire + "','" + PosXB1 + "','" + PosYB1 + "','" + oB1 + "','" + TailleB1 + "','" + PosXB1 + "','" + PosYB1 + "')";
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+
+            STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + TailleB2 + "','" + Proprietaire + "','" + PosXB2 + "','" + PosYB2 + "','" + oB2 + "','" + TailleB2 + "','" + PosXB2 + "','" + PosYB2 + "')";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+
+            if (0 != PosXB3 || PosYB3 != 0) {
+                STMT = "INSERT INTO Bateau VALUES ((SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + IdPartie + "'),'" + IdPartie + "','" + TailleB3 + "','" + Proprietaire + "','" + PosXB3 + "','" + PosYB3 + "','" + oB3 + "','" + TailleB3 + "','" + PosXB3 + "','" + PosYB3 + "')";
+                stmt = conn.createStatement();
+                stmt.executeUpdate(STMT);
+                stmt.close();
+            }
+
+            conn.commit();
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, e);
+            conn.rollback();
+            throw new SQLIntegrityConstraintViolationException();
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            conn.rollback();
+            throw new SQLException();
+        } finally {
+            conn.setAutoCommit(true);
+            theConnection.close();
+
+        }
     }
 
     @Override
@@ -68,10 +98,17 @@ public class JDBCUpdater implements DataBaseUpdater {
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
+
         }
     }
 
@@ -98,10 +135,16 @@ public class JDBCUpdater implements DataBaseUpdater {
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
         }
     }
 
@@ -109,16 +152,29 @@ public class JDBCUpdater implements DataBaseUpdater {
     public void addGame(String Joueur1, String Joueur2) {
         theConnection.open();
         Connection conn = theConnection.getConn();
+        Savepoint s1 = null;
         try {
-
+            conn.setAutoCommit(false);
+            s1 = conn.setSavepoint();
             String STMT = "INSERT INTO Partie VALUES ( seqIdPartie.nextval , CURRENT_DATE ,'" + Joueur1 + "','" + Joueur2 + "', NULL)";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
-
+            conn.commit();
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                conn.rollback(s1);
+            } catch (SQLException ex1) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
         }
     }
 
@@ -131,26 +187,38 @@ public class JDBCUpdater implements DataBaseUpdater {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
         }
     }
 
     @Override
-    public void turnBoat(int IdPartie, int IdBateau, Orientation o) {
+    public void turnBoat(int IdPartie, int IdBateau, String orientation) {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
-            String STMT = "UPDATE Bateau SET Orientation = '" + o.getName() + "' WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
+            String STMT = "UPDATE Bateau SET Orientation = '" + orientation + "' WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
         }
     }
 
@@ -163,10 +231,15 @@ public class JDBCUpdater implements DataBaseUpdater {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
-            theConnection.close();
-
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            theConnection.close();
         }
     }
 

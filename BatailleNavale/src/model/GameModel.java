@@ -88,7 +88,7 @@ public class GameModel extends Observable {
         if (boat != null) {
             switch (s.getName()) {
                 case "A":
-                    switch (boat.getOrientation().getName()) {
+                    switch (boat.getOrientation()) {
                         case "N":
                             updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() + 1);
                             break;
@@ -104,7 +104,7 @@ public class GameModel extends Observable {
                     }
                     break;
                 case "R":
-                    switch (boat.getOrientation().getName()) {
+                    switch (boat.getOrientation()) {
                         case "N":
                             updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() - 1);
                             break;
@@ -133,34 +133,34 @@ public class GameModel extends Observable {
         if (boat != null) {
             switch (s.getName()) {
                 case "G":
-                    switch (boat.getOrientation().getName()) {
+                    switch (boat.getOrientation()) {
                         case "N":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.OUEST);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "O");
                             break;
                         case "S":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.EST);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "E");
                             break;
                         case "E":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.NORD);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "N");
                             break;
                         case "O":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.SUD);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "S");
                             break;
                     }
                     break;
                 case "D":
-                    switch (boat.getOrientation().getName()) {
+                    switch (boat.getOrientation()) {
                         case "N":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.EST);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "E");
                             break;
                         case "S":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.OUEST);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "O");
                             break;
                         case "E":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.SUD);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "S");
                             break;
                         case "O":
-                            updater.turnBoat(IdPartie, boat.getIdBateau(), Orientation.NORD);
+                            updater.turnBoat(IdPartie, boat.getIdBateau(), "N");
                             break;
                     }
                     break;
@@ -195,38 +195,21 @@ public class GameModel extends Observable {
         isStarted = true;
     }
 
-    public void addBoat(int boatX, int boatY, String orientation, int size) {
-        Orientation boatOrientation = Orientation.NORD;
-        switch (orientation) {
-            case "N":
-                boatOrientation = Orientation.NORD;
-                break;
-            case "S":
-                boatOrientation = Orientation.SUD;
-                break;
-            case "E":
-                boatOrientation = Orientation.EST;
-                break;
-            case "O":
-                boatOrientation = Orientation.OUEST;
-                break;
-        }
-
+    public void addBoats(int boatX1, int boatY1, String orientation1, int size1, int boatX2, int boatY2, String orientation2, int size2, int boatX3, int boatY3, String orientation3, int size3) throws SQLIntegrityConstraintViolationException, SQLException {
         try {
-            updater.addBoat(IdPartie, size, playerName, boatX, boatY, boatOrientation, size);
+            updater.addBoats(IdPartie, playerName, boatX1, boatY1, size1, orientation1, boatX2, boatY2, size2, orientation2, boatX3, boatY3, size3, orientation3);
+            playerBoatList = factory.getAllBoat(IdPartie, playerName);
             notifyChanges("boat added");
 
         } catch (SQLIntegrityConstraintViolationException e) {
-            Logger.getLogger(GameModel.class
-                    .getName()).log(Level.SEVERE, null, e);
-            notifyChanges(
-                    "invalid position");
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
+            notifyChanges("invalid position");
+            throw new SQLIntegrityConstraintViolationException();
 
         } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            notifyChanges(
-                    "SQL exception");
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL exception");
+            throw new SQLException();
         }
     }
 
@@ -275,7 +258,7 @@ public class GameModel extends Observable {
     }
 
     public void refreshWindow() {
-        notifyChanges("refreshWindow");    
+        notifyChanges("refreshWindow");
     }
 
 }

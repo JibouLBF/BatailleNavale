@@ -8,10 +8,13 @@ import graphicinterface.GameWindow;
 import graphicinterface.PlayerWindow;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.GameModel;
-import model.Orientation;
 import model.Sens;
 
 /**
@@ -37,24 +40,22 @@ public class LiveControler extends GameControler {
         switch (but.getText()) {
             case "Start":
                 try {
-                    gm.addBoat(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3);
-                    gm.addBoat(Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 2);
-                    if (0 < Integer.parseInt(pw.getPosXBoat3().getText()) && Integer.parseInt(pw.getPosXBoat3().getText()) <= 10
-                            && 0 < Integer.parseInt(pw.getPosYBoat3().getText()) && Integer.parseInt(pw.getPosYBoat3().getText()) <= 10) {
-                        gm.addBoat(Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 2);
-                    }
+                    gm.addBoats(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3, Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(), 2, Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString(), 2);
+                    gm.startGame();
+                    gm.refreshWindow();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
-                }
-                gm.startGame();
-                gm.refresh();
+                } catch (SQLException ex) {
+            Logger.getLogger(LiveControler.class.getName()).log(Level.SEVERE, null, ex);
+        }
                 break;
             case "Turn":
                 if (posXInit != -1 && posYInit != -1) {
                     if (pw.getBoatTurning().getSelectedItem().toString() == "Droite") {
-                        gm.turnBoat(posXInit - 1, posYInit - 1, Sens.DROITE);
+
+                        gm.turnBoat(posYInit, posXInit, Sens.DROITE);
                     } else if (pw.getBoatTurning().getSelectedItem().toString() == "Gauche") {
-                        gm.turnBoat(posXInit - 1, posYInit - 1, Sens.GAUCHE);
+                        gm.turnBoat(posYInit, posXInit, Sens.GAUCHE);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -66,9 +67,10 @@ public class LiveControler extends GameControler {
             case "Move":
                 if (posXInit != -1 && posYInit != -1) {
                     if (pw.getBoatMoving().getSelectedItem().toString() == "Avancer") {
-                        gm.moveBoat(posXInit - 1, posYInit - 1, Sens.AVANCER);
+
+                        gm.moveBoat(posYInit, posXInit, Sens.AVANCER);
                     } else if (pw.getBoatMoving().getSelectedItem().toString() == "Reculer") {
-                        gm.moveBoat(posXInit - 1, posYInit - 1, Sens.RECULER);
+                        gm.moveBoat(posYInit, posXInit, Sens.RECULER);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -79,7 +81,7 @@ public class LiveControler extends GameControler {
                 break;
             case "Shoot":
                 if (posXInit != -1 && posYInit != -1 && posX != -1 && posY != -1) {
-                    gm.fire(posXInit - 1, posYInit - 1, posX - 1, posY - 1);
+                    gm.fire(posYInit, posXInit, posY, posX);
                 } else {
                     JOptionPane.showMessageDialog(pw, "Select a case in the up grid", "error", JOptionPane.ERROR_MESSAGE);
                 }

@@ -7,7 +7,6 @@ package database;
 
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
-import model.Orientation;
 import model.Sens;
 
 /**
@@ -37,19 +36,8 @@ public interface DataBaseUpdater {
      */
     public void addPlayer(String Pseudo, String Nom, String Prenom, String Email, int Numero, String Rue, String CodePostal, String Ville, String DateNaissance);
 
-    /**
-     * Ajoute un bateau à la table Bateau
-     * @param IdPartie
-     * @param Taille
-     * @param Proprietaire
-     * @param PosX
-     * @param PosY
-     * @param o
-     * @param Vie
-     * @throws SQLRecoverableException
-     * @throws SQLException 
-     */
-    public void addBoat(int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, Orientation o, int Vie) throws SQLRecoverableException, SQLException;
+    
+    public void addBoats(int IdPartie, String Proprietaire, int PosXB1, int PosYB1, int TailleB1, String oB1, int PosXB2, int PosYB2, int TailleB2, String oB2, int PosXB3, int PosYB3, int TailleB3, String oB3) throws SQLRecoverableException, SQLException;
 
     /**
      * Ajoute un coup à la table Coup ainsi qu'un déplacement à la table Deplacement
@@ -81,7 +69,7 @@ public interface DataBaseUpdater {
      * @param IdBateau
      * @param o 
      */
-    public void turnBoat(int IdPartie, int IdBateau, Orientation o);
+    public void turnBoat(int IdPartie, int IdBateau, String orientation);
     
     /**
      * Met à jour les attributs PosX et PosY du bateau "IdBateau"
