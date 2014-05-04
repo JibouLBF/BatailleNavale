@@ -61,8 +61,8 @@ public class ObserverWindow extends GameWindow {
                 opponent.add(gridJ2[i][j]);
             }
         }
-        consoleJ1 = new JTextArea("Console J1");
-        consoleJ2 = new JTextArea("Console J2");
+        consoleJ1 = new JTextArea("There are no informations");
+        consoleJ2 = new JTextArea("There are no informations");
         consoleJ1.setEditable(false);
         consoleJ2.setEditable(false);
         

@@ -4,6 +4,7 @@
  */
 package controler;
 
+import graphicinterface.ButtonGrid;
 import graphicinterface.GameWindow;
 import graphicinterface.PlayerWindow;
 import java.awt.Color;
@@ -22,11 +23,8 @@ import model.Sens;
  * @author teikitel
  */
 public class LiveControler extends GameControler {
-
-    private int posXInit = -1;
-    private int posYInit = -1;
-    private int posX = -1;
-    private int posY = -1;
+    private ButtonGrid selectedButtonPlayer;
+    private ButtonGrid selectedButtonOpponent;
 
     public LiveControler(GameModel gm, PlayerWindow pw) {
         this.gm = gm;
@@ -35,7 +33,6 @@ public class LiveControler extends GameControler {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //System.out.println("but "+((JButton)(e.getSource())).getText());
         JButton but = ((JButton) (e.getSource()));
         switch (but.getText()) {
             case "Start":
@@ -47,15 +44,14 @@ public class LiveControler extends GameControler {
                     JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
                 } catch (SQLException ex) {
             Logger.getLogger(LiveControler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                }
                 break;
             case "Turn":
-                if (posXInit != -1 && posYInit != -1) {
+                if (selectedButtonPlayer != null) {
                     if (pw.getBoatTurning().getSelectedItem().toString() == "Droite") {
-
-                        gm.turnBoat(posYInit, posXInit, Sens.DROITE);
+                        gm.turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.DROITE);
                     } else if (pw.getBoatTurning().getSelectedItem().toString() == "Gauche") {
-                        gm.turnBoat(posYInit, posXInit, Sens.GAUCHE);
+                        gm.turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.GAUCHE);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -65,12 +61,11 @@ public class LiveControler extends GameControler {
 
                 break;
             case "Move":
-                if (posXInit != -1 && posYInit != -1) {
+                if (selectedButtonPlayer != null) {
                     if (pw.getBoatMoving().getSelectedItem().toString() == "Avancer") {
-
-                        gm.moveBoat(posYInit, posXInit, Sens.AVANCER);
+                        gm.moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.AVANCER);
                     } else if (pw.getBoatMoving().getSelectedItem().toString() == "Reculer") {
-                        gm.moveBoat(posYInit, posXInit, Sens.RECULER);
+                        gm.moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.RECULER);
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -80,8 +75,8 @@ public class LiveControler extends GameControler {
 
                 break;
             case "Shoot":
-                if (posXInit != -1 && posYInit != -1 && posX != -1 && posY != -1) {
-                    gm.fire(posYInit, posXInit, posY, posX);
+                if (selectedButtonOpponent != null && selectedButtonPlayer != null) {
+                    gm.fire(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), selectedButtonOpponent.getPosX(), selectedButtonOpponent.getPosY());
                 } else {
                     JOptionPane.showMessageDialog(pw, "Select a case in the up grid", "error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -91,27 +86,24 @@ public class LiveControler extends GameControler {
                 break;
             default:
                 if (gm.isStarted()) {
-                    System.out.println("pos " + ((but.getY()) / but.getHeight()) + " " + but.getY() + " " + but.getHeight());
                     gm.refreshWindow();
                     but.setBackground(Color.GREEN);
                     switch (but.getParent().getName()) {
-                        case "opponent":
-                            if (posX != -1 && posY != -1) {
-                                pw.getPlayerGrid()[posX - 1][posY - 1].setBackground(Color.green);
-                            }
-                            posXInit = ((but.getY()) / but.getHeight()) + 1;
-                            posYInit = ((but.getX() - 4) / but.getWidth()) + 1;
-                            break;
                         case "player":
-                            if (posXInit != -1 && posXInit != -1) {
-                                pw.getOpponentGrid()[posXInit - 1][posYInit - 1].setBackground(Color.green);
+                            if (selectedButtonOpponent != null) {
+                                selectedButtonOpponent.setBackground(Color.green);
                             }
-                            posX = ((but.getY()) / but.getHeight()) + 1;
-                            posY = ((but.getX() - 4) / but.getWidth()) + 1;
+                            selectedButtonPlayer = (ButtonGrid)but; 
+                            break;
+                        case "opponent":
+                            if (selectedButtonPlayer != null) {
+                                selectedButtonPlayer.setBackground(Color.green);
+                            }
+                            selectedButtonOpponent = (ButtonGrid)but;
                             break;
                     }
-
                 }
+            break;
         }
     }
 
@@ -129,7 +121,8 @@ public class LiveControler extends GameControler {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        switch (((JButton) (e.getSource())).getText()) {
+        JButton tmp = ((JButton) (e.getSource()));
+        switch (tmp.getText()) {
             case "Start":
                 break;
             case "Turn":
@@ -142,7 +135,8 @@ public class LiveControler extends GameControler {
                 break;
             default:
                 if (gm.isStarted()) {
-                    ((JButton) (e.getSource())).setText(((JButton) (e.getSource())).getName());
+                    ButtonGrid tmpButtonGrid = ((ButtonGrid) (tmp));
+                    tmpButtonGrid.setText(tmpButtonGrid.getPosX()+", "+tmpButtonGrid.getPosY());
                 }
         }
     }

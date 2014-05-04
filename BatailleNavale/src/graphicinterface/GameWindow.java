@@ -46,7 +46,7 @@ public abstract class GameWindow extends JFrame implements Observer{
             e.printStackTrace();
         }
         refresh = new JButton ("Refresh");
-        
+        turnLabel.setOpaque(true);
         setSize(WIDTH, HEIGHT);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,10 +61,8 @@ public abstract class GameWindow extends JFrame implements Observer{
 
         console = new JPanel(new GridLayout(1, 1));
 
-
-        mainPanelRight.add(player);
         mainPanelRight.add(opponent);
-        
+        mainPanelRight.add(player);  
     }
     
     public void addToFrame(){

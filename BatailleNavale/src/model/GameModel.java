@@ -49,9 +49,7 @@ public class GameModel extends Observable {
         updater = new JDBCUpdater();
         playerBoatList = new ArrayList<Bateau>();
         opponentBoatList = new ArrayList<Bateau>();
-        // boatList.add(new Bateau(1, IdPartie, 3, playerName, 7, 7, Orientation.NORD, 3, 1, 1));
-        // boatList.add(new Bateau(2, IdPartie, 3, playerName, 2, 7, Orientation.EST, 3, 1, 8));
-    }
+        }
 
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
     public GameModel(boolean b) {

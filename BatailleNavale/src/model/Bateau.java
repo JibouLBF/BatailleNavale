@@ -86,4 +86,9 @@ public class Bateau {
         this.PosYInit = PosYInit;
     }
 
+    public int coupRestant() {
+        //to be completed
+        return 2;
+    }
+
 }

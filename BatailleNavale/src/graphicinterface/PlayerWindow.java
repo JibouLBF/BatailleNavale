@@ -38,7 +38,7 @@ public class PlayerWindow extends GameWindow {
     private JComboBox boatOrientation3 = new JComboBox(comboText);
     private JComboBox boatTurning = new JComboBox(turning);
     private JComboBox boatMoving = new JComboBox(moving);
-
+    
     public PlayerWindow(GameModel gm) {
 
         super("Player Window");
@@ -49,6 +49,7 @@ public class PlayerWindow extends GameWindow {
         mainPanelLeft = new JPanel(new GridLayout(2, 1, 30, 10));
         JPanel highPan = new JPanel(new BorderLayout());
         mainPanelLeft.add(highPan);
+        
         highPan.add(turnLabel, BorderLayout.NORTH);
         highPan.add(console, BorderLayout.CENTER);
         mainPanelLeft.add(playerC);
@@ -57,13 +58,13 @@ public class PlayerWindow extends GameWindow {
         opponentGrid = new JButton[10][10];
         for (int j = 9; j >= 0; j--) {
             for (int i = 0; i < 10; i++) {
-                playerGrid[i][j] = new JButton();
+                playerGrid[i][j] = new ButtonGrid(i+1, j+1);
                 playerGrid[i][j].setBackground(Color.RED);
                 playerGrid[i][j].setName("" + (i + 1) + ", " + (j + 1));
                 playerGrid[i][j].addMouseListener(gc);
                 player.add(playerGrid[i][j]);
 
-                opponentGrid[i][j] = new JButton();
+                opponentGrid[i][j] = new ButtonGrid(i+1, j+1);
                 opponentGrid[i][j].setBackground(Color.BLUE);
                 opponentGrid[i][j].setName("" + (i + 1) + ", " + (j + 1));
                 opponentGrid[i][j].addMouseListener(gc);
@@ -72,8 +73,7 @@ public class PlayerWindow extends GameWindow {
         }
         consoleField = new JTextArea("Ici sera console\n");
         console.add(consoleField);
-        consoleField.append("petit père\n");
-        consoleField.append("grand père\n");
+        consoleField.append("there are no informations");
         consoleField.setEditable(false);
 
         playerC.setLayout(new BorderLayout());
@@ -84,7 +84,7 @@ public class PlayerWindow extends GameWindow {
         posXBoat3 = new JTextField("0");
         posYBoat3 = new JTextField("0");
 
-        playerC.add(new JLabel("Choose your boat"), BorderLayout.NORTH);
+        playerC.add(new JLabel("Choose your boat", JLabel.CENTER), BorderLayout.NORTH);
         JPanel boat = new JPanel(new GridLayout(3, 1));
 
         Border borderBoat1 = BorderFactory.createTitledBorder("Destroyeur boat");
@@ -119,7 +119,7 @@ public class PlayerWindow extends GameWindow {
 
         addToFrame();
         JOptionPane.showMessageDialog(this, "You are going to play against " + gm.getOpponent(), "Info", JOptionPane.INFORMATION_MESSAGE);
-
+        
     }
 
     public void startGame() {
@@ -214,9 +214,13 @@ public class PlayerWindow extends GameWindow {
             case "your turn":
                 JOptionPane.showMessageDialog(this, "It's your turn, you can play", "Info", JOptionPane.INFORMATION_MESSAGE);
                 drawBoat();
+                turnLabel.setBackground(Color.GREEN);
+                turnLabel.setText("it is your turn");
                 break;
             case "opponent turn":
                 JOptionPane.showMessageDialog(this, "Your opponent hasn't played yet.\n Please wait your turn.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                turnLabel.setBackground(Color.RED);
+                turnLabel.setText("it is not your turn");
                 break;
             case "refreshWindow" :
                 drawBoat();
@@ -242,7 +246,7 @@ public class PlayerWindow extends GameWindow {
         consoleField.setText("Life Boat\n");
         for (int i = 0; i < gm.getPlayerBoatList().size(); i++) {
             opponentGrid[gm.getPlayerBoatList().get(i).getPosX()-1][gm.getPlayerBoatList().get(i).getPosY()-1].setBackground(Color.ORANGE);
-            consoleField.append("Boat " + (i + 1) + " : " + gm.getPlayerBoatList().get(i).getVie() + "\n");
+            consoleField.append("Boat " + (i + 1) + " : " + gm.getPlayerBoatList().get(i).getVie()+" "+ gm.getPlayerBoatList().get(i).coupRestant() + "\n");
             switch (gm.getPlayerBoatList().get(i).getOrientation()) {
                 case "N":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getTaille(); j++) {
