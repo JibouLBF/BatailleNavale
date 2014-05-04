@@ -36,7 +36,7 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addBoats(int IdPartie, String Proprietaire, int PosXB1, int PosYB1, int TailleB1, String oB1, int PosXB2, int PosYB2, int TailleB2, String oB2, int PosXB3, int PosYB3, int TailleB3, String oB3) throws SQLException {
+    public void addBoats(int IdPartie, String Proprietaire, int PosXB1, int PosYB1, int TailleB1, String oB1, int PosXB2, int PosYB2, int TailleB2, String oB2, int PosXB3, int PosYB3, int TailleB3, String oB3) throws SQLIntegrityConstraintViolationException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
@@ -81,7 +81,7 @@ public class JDBCUpdater implements DataBaseUpdater {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
-            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + IdPartie + "')";
+            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + IdPartie + "'";
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
             rset.next();
@@ -201,17 +201,22 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void turnBoat(int IdPartie, int IdBateau, String orientation) {
+    public void turnBoat(int IdPartie, int IdBateau, String orientation) throws SQLIntegrityConstraintViolationException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
+        conn.setAutoCommit(false);
         try {
             String STMT = "UPDATE Bateau SET Orientation = '" + orientation + "' WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
+            conn.commit();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, e);
+            conn.rollback();
+            throw new SQLIntegrityConstraintViolationException();
+
         } finally {
             try {
                 conn.setAutoCommit(true);
@@ -223,16 +228,20 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void moveBoat(int IdPartie, int IdBateau, int posX, int posY) {
+    public void moveBoat(int IdPartie, int IdBateau, int posX, int posY) throws SQLIntegrityConstraintViolationException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
+        conn.setAutoCommit(false);
         try {
             String STMT = "UPDATE Bateau SET PosX =" + posX + ", PosY =" + posY + "WHERE IdPartie = " + IdPartie + " AND IdBateau =" + IdBateau;
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
-            stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
+            conn.commit();
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, e);
+            conn.rollback();
+            throw new SQLIntegrityConstraintViolationException();
         } finally {
             try {
                 conn.setAutoCommit(true);

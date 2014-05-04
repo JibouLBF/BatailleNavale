@@ -38,18 +38,18 @@ public class PlayerWindow extends GameWindow {
     private JComboBox boatOrientation3 = new JComboBox(comboText);
     private JComboBox boatTurning = new JComboBox(turning);
     private JComboBox boatMoving = new JComboBox(moving);
-    
+
     public PlayerWindow(GameModel gm) {
 
         super("Player Window");
         this.gm = gm;
         gc = new LiveControler(gm, this);
         this.gm.addObserver(this);
-        
+
         mainPanelLeft = new JPanel(new GridLayout(2, 1, 30, 10));
         JPanel highPan = new JPanel(new BorderLayout());
         mainPanelLeft.add(highPan);
-        
+
         highPan.add(turnLabel, BorderLayout.NORTH);
         highPan.add(console, BorderLayout.CENTER);
         mainPanelLeft.add(playerC);
@@ -58,13 +58,13 @@ public class PlayerWindow extends GameWindow {
         opponentGrid = new JButton[10][10];
         for (int j = 9; j >= 0; j--) {
             for (int i = 0; i < 10; i++) {
-                playerGrid[i][j] = new ButtonGrid(i+1, j+1);
+                playerGrid[i][j] = new ButtonGrid(i + 1, j + 1);
                 playerGrid[i][j].setBackground(Color.RED);
                 playerGrid[i][j].setName("" + (i + 1) + ", " + (j + 1));
                 playerGrid[i][j].addMouseListener(gc);
                 player.add(playerGrid[i][j]);
 
-                opponentGrid[i][j] = new ButtonGrid(i+1, j+1);
+                opponentGrid[i][j] = new ButtonGrid(i + 1, j + 1);
                 opponentGrid[i][j].setBackground(Color.BLUE);
                 opponentGrid[i][j].setName("" + (i + 1) + ", " + (j + 1));
                 opponentGrid[i][j].addMouseListener(gc);
@@ -119,7 +119,7 @@ public class PlayerWindow extends GameWindow {
 
         addToFrame();
         JOptionPane.showMessageDialog(this, "You are going to play against " + gm.getOpponent(), "Info", JOptionPane.INFORMATION_MESSAGE);
-        
+
     }
 
     public void startGame() {
@@ -216,15 +216,47 @@ public class PlayerWindow extends GameWindow {
                 drawBoat();
                 turnLabel.setBackground(Color.GREEN);
                 turnLabel.setText("it is your turn");
+                move.setEnabled(true);
+                turn.setEnabled(true);
+                shoot.setEnabled(true);
+                refresh.setName("Validate");
+                refresh.setText("Validate");
                 break;
             case "opponent turn":
                 JOptionPane.showMessageDialog(this, "Your opponent hasn't played yet.\n Please wait your turn.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 turnLabel.setBackground(Color.RED);
                 turnLabel.setText("it is not your turn");
+                move.setEnabled(false);
+                turn.setEnabled(false);
+                shoot.setEnabled(false);
+                refresh.setName("Refresh");
+                refresh.setText("Refresh");
                 break;
-            case "refreshWindow" :
+            case "refreshWindow":
                 drawBoat();
                 break;
+            case "validate":
+                JOptionPane.showMessageDialog(this, "Your opponent hasn't played yet.\n Please wait your turn.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                turnLabel.setBackground(Color.RED);
+                turnLabel.setText("it is not your turn");
+                move.setEnabled(false);
+                turn.setEnabled(false);
+                shoot.setEnabled(false);
+                refresh.setName("Refresh");
+                refresh.setText("Refresh");
+            case "SQLException":
+                JOptionPane.showMessageDialog(this, "SQL Exception occurs. Sorry", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "invalid move":
+                JOptionPane.showMessageDialog(this, "You can't do this move because your boat will be out of the map", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "invalid boat selection":
+                JOptionPane.showMessageDialog(this, "Your selection is not a boat.\n Please retry.", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "no more moves":
+                JOptionPane.showMessageDialog(this, "The selected boat hasn't got any moves.\n Please select another one or validate your moves.", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+
         }
     }
 
@@ -243,29 +275,29 @@ public class PlayerWindow extends GameWindow {
                 playerGrid[i][j].setBackground(Color.RED);
             }
         }
-        consoleField.setText("Life Boat\n");
+        consoleField.setText("Boat | Pos | Life | Move\n");
         for (int i = 0; i < gm.getPlayerBoatList().size(); i++) {
-            opponentGrid[gm.getPlayerBoatList().get(i).getPosX()-1][gm.getPlayerBoatList().get(i).getPosY()-1].setBackground(Color.ORANGE);
-            consoleField.append("Boat " + (i + 1) + " : " + gm.getPlayerBoatList().get(i).getVie()+" "+ gm.getPlayerBoatList().get(i).coupRestant() + "\n");
+            opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.ORANGE);
+            consoleField.append("Boat" + (i + 1) + " : (" +gm.getPlayerBoatList().get(i).getPosX() +"," +gm.getPlayerBoatList().get(i).getPosY() +") | " + gm.getPlayerBoatList().get(i).getVie() + " | " + gm.getPlayerBoatList().get(i).getNbCoupRestant() + "\n");
             switch (gm.getPlayerBoatList().get(i).getOrientation()) {
                 case "N":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getTaille(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX()-1][gm.getPlayerBoatList().get(i).getPosY()-1+j].setBackground(Color.BLACK);
+                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 + j].setBackground(Color.BLACK);
                     }
                     break;
                 case "S":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getTaille(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() -1][gm.getPlayerBoatList().get(i).getPosY()-1-j].setBackground(Color.BLACK);
+                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 - j].setBackground(Color.BLACK);
                     }
                     break;
                 case "E":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getTaille(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX()-1+j][gm.getPlayerBoatList().get(i).getPosY() -1].setBackground(Color.BLACK);
+                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 + j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
                 case "O":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getTaille(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX()-1-j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
+                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 - j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
             }

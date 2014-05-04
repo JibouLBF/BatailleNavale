@@ -34,5 +34,13 @@ public interface DataBaseAsker {
      * @throws SQLException
      */
     public boolean isTurnOf(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException;
+    
+    /**
+     * Interroge la BD et renvoie True si le joueur "Pseudo" à déjà placé ses bateaux dans la partie IdPartie (utile dans la cas d'une reprise de partie)
+     * @param IdPartie
+     * @param Pseudo
+     * @return boolean
+     */
+    public boolean hasPlacedBoats(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException;
 
 }

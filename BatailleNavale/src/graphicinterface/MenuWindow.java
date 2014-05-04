@@ -199,7 +199,7 @@ public class MenuWindow extends JFrame implements Observer {
     public void createRightPanel() {
         dm = new DefaultTableModel();
 
-        dm.setColumnIdentifiers(new Object[]{"IdPartie", "Pseudo player 1", "Pseudo player 1", "Date", "Winner", "Replay", "Live"});
+        dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
 
         /*dm.setDataVector(new Object[][]{{"1","JB", "KEKE", "01/01/01", "", "Observe"},
          {"2","Tekitel", "bibi", "01/01/01", "", "Observe"}}, new Object[]{"IdPartie","Pseudo player 1", "Pseudo player 1", "Date", "Winner", ""});
@@ -317,7 +317,7 @@ public class MenuWindow extends JFrame implements Observer {
 
             // mise à jour de la table des parties
             dm = new DefaultTableModel();
-            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Pseudo player 1", "Pseudo player 1", "Date", "Winner", "Replay", "Live"});
+            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
             ArrayList<Partie> listGame = mm.getGameInProgress();
             if (!listGame.isEmpty()) {
                 for (Partie curGame : listGame) {
@@ -335,7 +335,7 @@ public class MenuWindow extends JFrame implements Observer {
         else {
             stateConnection.setText("Unlogged");
             dm = new DefaultTableModel();
-            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Pseudo player 1", "Pseudo player 1", "Date", "Winner", "Replay", "Live"});
+            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
             tableGame.setModel(dm);
         }
 

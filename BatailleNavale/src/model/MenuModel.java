@@ -119,9 +119,10 @@ public class MenuModel extends Observable {
                 } else {
                     gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer1(), true);
                 }
-                
                 gw = new PlayerWindow(gm);
-                notifyChanges("play");
+                if (asker.hasPlacedBoats(game.getiDPartie(), pseudo)) {
+                    gm.startGame();
+                }
             } catch (SQLRecoverableException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");

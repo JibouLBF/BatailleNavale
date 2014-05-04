@@ -62,6 +62,26 @@ public class JDBCAsker implements DataBaseAsker {
         }
     }
 
+    public boolean hasPlacedBoats(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException {
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+
+        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '"+IdPartie +"' AND Proprietaire ='" + Pseudo + "'";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        boolean placed = rset.next();
+        rset.close();
+        stmt.close();
+        theConnection.close();
+        if (placed) {
+            System.out.println(Pseudo + " a déjà placé ses bateaux");
+        } else {
+            System.out.println(Pseudo + " n'a pas encore placé ses bateaux");
+        }
+        return placed;
+
+    }
+
     public JDBCAsker() {
         this.theConnection = new TheConnection();
     }

@@ -20,6 +20,7 @@ public class Bateau {
     private int Vie;
     private int PosXInit;
     private int PosYInit;
+    private int nbCoupRestant;
 
     public int getIdBateau() {
         return IdBateau;
@@ -73,6 +74,34 @@ public class Bateau {
         this.Vie = Vie;
     }
 
+    public int getNbCoupRestant() {
+        return nbCoupRestant;
+    }
+
+    public void decrNbCoupRestant() {
+        this.nbCoupRestant--;
+    }
+
+    public void incrPosX() {
+        PosX++;
+    }
+
+    public void decrPosX() {
+        PosX--;
+    }
+
+    public void incrPosY() {
+        PosY++;
+    }
+
+    public void decrPosY() {
+        PosY--;
+    }
+
+    public void setOrientation(String o) {
+        orientation = o;
+    }
+
     public Bateau(int IdBateau, int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, String orientation, int Vie, int PosXInit, int PosYInit) {
         this.IdBateau = IdBateau;
         this.IdPartie = IdPartie;
@@ -84,11 +113,7 @@ public class Bateau {
         this.Vie = Vie;
         this.PosXInit = PosXInit;
         this.PosYInit = PosYInit;
-    }
-
-    public int coupRestant() {
-        //to be completed
-        return 2;
+        this.nbCoupRestant = Vie;
     }
 
 }
