@@ -79,58 +79,12 @@ public abstract class GameModel extends Observable {
      * @param y
      * @return Bateau boat
      */
-    protected abstract Boat getPlayerBoat(int x, int y);
+    protected abstract Boat getPlayerBoat(Player player, int x, int y);
+    public abstract void moveBoat(Player player, int x, int y, Sens s);
+    public abstract void turnBoat(Player player, int x, int y, Sens s);
+    public abstract void fire(Player player, int boatX, int boatY, int shotX, int shotY);
 
-    public abstract void moveBoat(int x, int y, Sens s);
-
-    public abstract void turnBoat(int x, int y, Sens s);
-
-    public abstract void fire(int boatX, int boatY, int shotX, int shotY);
-
-    public void validate() {
-        updater.changeTurn(game, opponent);
-        notifyChanges("validate");
-    }
-
-    public void startGame() {
-        isStarted = true;
-        notifyChanges("start");
-        if (isPlayer2) {
-            updater.changeTurn(game, opponent);
-        }
-        refresh();
-        try {
-            playerBoatList = factory.getAllBoat(game, player);
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        notifyChanges("refreshWindow");
-
-    }
-
-    public void addBoats(ArrayList<Boat> boatList) {
-        try {
-            updater.addBoats(game, player, boatList);
-            playerBoatList = boatList;
-            notifyChanges("boat added");
-
-        } catch (SQLIntegrityConstraintViolationException e) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
-            notifyChanges("invalid position");
-
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQL exception");
-        }
-    }
-
-    public boolean isStarted() {
-        return isStarted;
-    }
-
-    public Player getOpponent() {
-        return opponent;
-    }
+    
 
     public void refresh() {
         try {
@@ -167,6 +121,8 @@ public abstract class GameModel extends Observable {
         setChanged();
         notifyObservers(s);
     }
+    
+    public abstract void startGame();
 
     public void refreshWindow() {
         notifyChanges("refreshWindow");

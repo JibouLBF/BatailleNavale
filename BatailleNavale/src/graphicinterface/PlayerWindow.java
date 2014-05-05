@@ -12,6 +12,7 @@ import java.util.Observable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import model.GameModel;
+import model.PlayerModel;
 
 /**
  *
@@ -38,13 +39,14 @@ public class PlayerWindow extends GameWindow {
     private JComboBox boatOrientation3 = new JComboBox(comboText);
     private JComboBox boatTurning = new JComboBox(turning);
     private JComboBox boatMoving = new JComboBox(moving);
+    private PlayerModel pm;
 
     public PlayerWindow(GameModel gm) {
 
         super("Player Window");
-        this.gm = gm;
+        this.pm = (PlayerModel) gm;
         gc = new PlayControler(this);
-        this.gm.addObserver(this);
+        this.pm.addObserver(this);
 
         mainPanelLeft = new JPanel(new GridLayout(2, 1, 30, 10));
         JPanel highPan = new JPanel(new BorderLayout());
@@ -118,7 +120,7 @@ public class PlayerWindow extends GameWindow {
         start.addMouseListener(gc);
 
         addToFrame();
-        JOptionPane.showMessageDialog(this, "You are going to play against " + gm.getOpponent().getPseudo(), "Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "You are going to play against " + pm.getOpponent().getPseudo(), "Info", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
@@ -276,28 +278,28 @@ public class PlayerWindow extends GameWindow {
             }
         }
         consoleField.setText("Boat | Pos | Life | Move\n");
-        for (int i = 0; i < gm.getPlayerBoatList().size(); i++) {
-            playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.ORANGE);
-            consoleField.append("Boat" + (i + 1) + " : (" + gm.getPlayerBoatList().get(i).getPosX() + "," + gm.getPlayerBoatList().get(i).getPosY() + ") | " + gm.getPlayerBoatList().get(i).getLife() + " | " + gm.getPlayerBoatList().get(i).getNbCoupRestant() + "\n");
-            switch (gm.getPlayerBoatList().get(i).getOrientation()) {
+        for (int i = 0; i < pm.getPlayerBoatList().size(); i++) {
+            playerGrid[pm.getPlayerBoatList().get(i).getPosX() - 1][pm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.ORANGE);
+            consoleField.append("Boat" + (i + 1) + " : (" + pm.getPlayerBoatList().get(i).getPosX() + "," + pm.getPlayerBoatList().get(i).getPosY() + ") | " + pm.getPlayerBoatList().get(i).getLife() + " | " + pm.getPlayerBoatList().get(i).getNbCoupRestant() + "\n");
+            switch (pm.getPlayerBoatList().get(i).getOrientation()) {
                 case "N":
-                    for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 + j].setBackground(Color.BLACK);
+                    for (int j = 1; j < pm.getPlayerBoatList().get(i).getSize(); j++) {
+                        playerGrid[pm.getPlayerBoatList().get(i).getPosX() - 1][pm.getPlayerBoatList().get(i).getPosY() - 1 + j].setBackground(Color.BLACK);
                     }
                     break;
                 case "S":
-                    for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 - j].setBackground(Color.BLACK);
+                    for (int j = 1; j < pm.getPlayerBoatList().get(i).getSize(); j++) {
+                        playerGrid[pm.getPlayerBoatList().get(i).getPosX() - 1][pm.getPlayerBoatList().get(i).getPosY() - 1 - j].setBackground(Color.BLACK);
                     }
                     break;
                 case "E":
-                    for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 + j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
+                    for (int j = 1; j < pm.getPlayerBoatList().get(i).getSize(); j++) {
+                        playerGrid[pm.getPlayerBoatList().get(i).getPosX() - 1 + j][pm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
                 case "O":
-                    for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 - j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
+                    for (int j = 1; j < pm.getPlayerBoatList().get(i).getSize(); j++) {
+                        playerGrid[pm.getPlayerBoatList().get(i).getPosX() - 1 - j][pm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
             }
@@ -311,6 +313,10 @@ public class PlayerWindow extends GameWindow {
 
     public JButton[][] getOpponentGrid() {
         return opponentGrid;
+    }
+    
+    public PlayerModel getGameModel() {
+        return pm;
     }
 
 }

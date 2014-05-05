@@ -29,22 +29,27 @@ public class ObserverModel extends GameModel {
     }
 
     @Override
-    protected Boat getPlayerBoat(int x, int y) {
+    protected Boat getPlayerBoat(Player player, int x, int y) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void moveBoat(int x, int y, Sens s) {
+    public void moveBoat(Player player, int x, int y, Sens s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void turnBoat(int x, int y, Sens s) {
+    public void turnBoat(Player player, int x, int y, Sens s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void fire(int boatX, int boatY, int shotX, int shotY) {
+    public void fire(Player player, int boatX, int boatY, int shotX, int shotY) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void startGame() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

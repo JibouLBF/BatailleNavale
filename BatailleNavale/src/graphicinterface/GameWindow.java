@@ -33,7 +33,7 @@ public abstract class GameWindow extends JFrame implements Observer {
     protected JPanel mainPanelLeft, mainPanelRight;
     protected JPanel player, opponent, playerC, console;
     protected JSplitPane js;
-    protected GameModel gm;
+  //  protected GameModel gm;
     protected GameControler gc;
     protected JButton refresh;
     protected JLabel turnLabel = new JLabel("Turn", JLabel.CENTER);
@@ -93,9 +93,7 @@ public abstract class GameWindow extends JFrame implements Observer {
 
     public abstract void drawBoat();
 
-    public GameModel getGameModel() {
-        return gm;
-    }
+    
 
     public static void main(String[] agrs) {
         // GameWindow g1 = new ObserverWindow();

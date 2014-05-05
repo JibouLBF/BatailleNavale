@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.Boat;
 import model.GameModel;
+import model.PlayerModel;
 import model.Sens;
 
 /**
@@ -28,6 +29,7 @@ public class PlayControler extends GameControler {
 
     private ButtonGrid selectedButtonPlayer;
     private ButtonGrid selectedButtonOpponent;
+    private PlayerWindow pw;
 
     public PlayControler(PlayerWindow pw) {
         this.pw = pw;
