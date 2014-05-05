@@ -271,8 +271,8 @@ public class PlayerWindow extends GameWindow {
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                opponentGrid[i][j].setBackground(Color.BLUE);
-                playerGrid[i][j].setBackground(Color.RED);
+                playerGrid[i][j].setBackground(Color.BLUE);
+                opponentGrid[i][j].setBackground(Color.RED);
             }
         }
         consoleField.setText("Boat | Pos | Life | Move\n");
@@ -282,22 +282,22 @@ public class PlayerWindow extends GameWindow {
             switch (gm.getPlayerBoatList().get(i).getOrientation()) {
                 case "N":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 + j].setBackground(Color.BLACK);
+                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 + j].setBackground(Color.BLACK);
                     }
                     break;
                 case "S":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 - j].setBackground(Color.BLACK);
+                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1 - j].setBackground(Color.BLACK);
                     }
                     break;
                 case "E":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 + j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
+                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 + j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
                 case "O":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {
-                        opponentGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 - j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
+                        playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1 - j][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.BLACK);
                     }
                     break;
             }
