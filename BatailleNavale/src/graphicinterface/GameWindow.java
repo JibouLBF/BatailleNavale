@@ -5,7 +5,7 @@
 package graphicinterface;
 
 import controler.GameControler;
-import controler.LiveControler;
+import controler.PlayControler;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;

@@ -4,7 +4,7 @@
  */
 package graphicinterface;
 
-import controler.LiveControler;
+import controler.PlayControler;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -43,7 +43,7 @@ public class PlayerWindow extends GameWindow {
 
         super("Player Window");
         this.gm = gm;
-        gc = new LiveControler(this);
+        gc = new PlayControler(this);
         this.gm.addObserver(this);
 
         mainPanelLeft = new JPanel(new GridLayout(2, 1, 30, 10));

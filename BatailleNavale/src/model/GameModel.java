@@ -48,6 +48,18 @@ public class GameModel extends Observable {
         playerBoatList = new ArrayList<Boat>();
         opponentBoatList = new ArrayList<Boat>();
     }
+    
+    public GameModel(boolean playerGame, Game game) {//pour l'observeur
+        this.playerGame = playerGame;
+        this.game = game;
+        this.player = game.getPlayer1();
+        this.opponent = game.getPlayer2();
+        factory = new JDBCFactory();
+        asker = new JDBCAsker();
+        updater = new JDBCUpdater();
+        playerBoatList = new ArrayList<Boat>();
+        opponentBoatList = new ArrayList<Boat>();
+    }
 
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
     public GameModel(boolean b) {

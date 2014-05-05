@@ -38,9 +38,9 @@ public class ObserverWindow extends GameWindow {
         mainPanelLeft.add(playerC);
         mainPanelLeft.add(control);
         
-     /*  begin.addMouseListener(new LiveControler(new GameModel(true), this));
-        next.addMouseListener(new LiveControler(new GameModel(true), this));
-        prec.addMouseListener(new LiveControler(new GameModel(true), this));*/
+  /*     begin.addMouseListener(new ObserverControler(new GameModel(true)));
+        next.addMouseListener(new ObserverControler(new GameModel(true)));
+        prec.addMouseListener(new ObserverControler(new GameModel(true)));*/
         
         gridJ1 = new JLabel [10][10];
         gridJ2 = new JLabel [10][10];

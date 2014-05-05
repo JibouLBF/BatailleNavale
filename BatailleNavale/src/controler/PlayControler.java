@@ -24,12 +24,12 @@ import model.Sens;
  *
  * @author teikitel
  */
-public class LiveControler extends GameControler {
+public class PlayControler extends GameControler {
 
     private ButtonGrid selectedButtonPlayer;
     private ButtonGrid selectedButtonOpponent;
 
-    public LiveControler(PlayerWindow pw) {
+    public PlayControler(PlayerWindow pw) {
         this.pw = pw;
     }
 
@@ -149,7 +149,7 @@ public class LiveControler extends GameControler {
             default:
                 if (pw.getGameModel().isStarted()) {
                     ButtonGrid tmpButtonGrid = ((ButtonGrid) (tmp));
-                    tmpButtonGrid.setText(tmpButtonGrid.getPosX() + ", " + tmpButtonGrid.getPosY());
+                    tmpButtonGrid.setText(String.valueOf((char)(tmpButtonGrid.getPosX() + 64)) + "" + tmpButtonGrid.getPosY());
                 }
         }
     }
