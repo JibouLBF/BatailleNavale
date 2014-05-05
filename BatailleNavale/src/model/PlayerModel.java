@@ -21,8 +21,7 @@ import java.util.logging.Logger;
  */
 public class PlayerModel extends GameModel {
 
-    PriorityQueue<AbstractMove>  opponentLastMoves;
-    
+    PriorityQueue<AbstractMove> opponentLastMoves;
 
     public PlayerModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
         this.playerGame = playerGame;
@@ -38,18 +37,25 @@ public class PlayerModel extends GameModel {
         opponentLastMoves = new PriorityQueue<AbstractMove>();
     }
 
-    public void addBoats(ArrayList<Boat> boatList) {
+    public void addBoats(int posXB1, int posYB1, String orientationB1, int sizeB1, int posXB2, int posYB2, String orientationB2, int sizeB2, int posXB3, int posYB3, String orientationB3, int sizeB3) {
         try {
-            updater.addBoats(game, player, boatList);
-            playerBoatList = boatList;
+            playerBoatList.add(new Boat(game, sizeB1, player, posXB1, posYB1, orientationB1));
+            playerBoatList.add(new Boat(game, sizeB2, player, posXB2, posYB2, orientationB2));
+            if (posXB3 != 0 || posYB3 != 0) {
+                playerBoatList.add(new Boat(game, sizeB2, player, posXB2, posYB2, orientationB2));
+            }
+
+            updater.addBoats(playerBoatList);
             notifyChanges("boat added");
 
         } catch (SQLIntegrityConstraintViolationException e) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
+            playerBoatList.clear();
             notifyChanges("invalid position");
 
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            playerBoatList.clear();
             notifyChanges("SQL exception");
         }
     }

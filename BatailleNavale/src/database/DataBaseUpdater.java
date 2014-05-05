@@ -24,7 +24,7 @@ public interface DataBaseUpdater {
 
     public void addPlayer(Player player) throws SQLException;
 
-    public void addBoats(Game game, Player owner, ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException;
+    public void addBoats(ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException;
 
     public void addShot(Game game, Boat boat, int x, int y) throws SQLException;
 

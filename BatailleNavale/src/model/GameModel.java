@@ -116,7 +116,7 @@ public abstract class GameModel extends Observable {
 
     public void addBoats(ArrayList<Boat> boatList) {
         try {
-            updater.addBoats(game, player, boatList);
+            updater.addBoats(boatList);
             playerBoatList = boatList;
             notifyChanges("boat added");
 

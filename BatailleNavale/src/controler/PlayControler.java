@@ -40,13 +40,7 @@ public class PlayControler extends GameControler {
             switch (but.getText()) {
                 case "Start":
                     try {
-                        ArrayList<Boat> boatList = new ArrayList<Boat>();
-                        boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3));
-                        boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(), 2));
-                        if (Integer.parseInt(pw.getPosXBoat3().getText()) != 0 || Integer.parseInt(pw.getPosYBoat3().getText()) != 0) {
-                            boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString(), 2));
-                        }
-                        pw.getGameModel().addBoats(boatList);
+                        pw.getGameModel().addBoats(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3, Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(), 2, Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString(), 2);
                         pw.getGameModel().startGame();
                         pw.getGameModel().refreshWindow();
                     } catch (NumberFormatException ex) {

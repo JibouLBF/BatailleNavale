@@ -45,7 +45,7 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addBoats(Game game, Player owner, ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException {
+    public void addBoats(ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
@@ -53,7 +53,7 @@ public class JDBCUpdater implements DataBaseUpdater {
             conn.setAutoCommit(false);
 
             for (int i = 0; i < boatList.size(); i++) {
-                String STMT = "SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + game.getGameID() + "'";
+                String STMT = "SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + boatList.get(i).getGameID() + "'";
                 Statement stmt = conn.createStatement();
                 ResultSet rset = stmt.executeQuery(STMT);
                 rset.next();
@@ -61,7 +61,7 @@ public class JDBCUpdater implements DataBaseUpdater {
                 rset.close();
                 stmt.close();
 
-                STMT = "INSERT INTO Bateau VALUES (" + boatID[i] + ",'" + game.getGameID() + "','" + boatList.get(i).getSize() + "','" + owner.getPseudo() + "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "','" + boatList.get(i).getOrientation() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "')";
+                STMT = "INSERT INTO Bateau VALUES (" + boatID[i] + ",'" + boatList.get(i).getGameID() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getOwner()+ "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "','" + boatList.get(i).getOrientation() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "')";
                 stmt = conn.createStatement();
                 stmt.executeUpdate(STMT);
                 stmt.close();
