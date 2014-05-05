@@ -68,7 +68,7 @@ public class JDBCAsker implements DataBaseAsker {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
-        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '"+game.getGameID() +"' AND Proprietaire ='" +player.getPseudo() + "'";
+        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" + game.getGameID() + "' AND Proprietaire ='" + player.getPseudo() + "'";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         boolean placed = rset.next();

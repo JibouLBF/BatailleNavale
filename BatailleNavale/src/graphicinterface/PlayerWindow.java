@@ -278,7 +278,7 @@ public class PlayerWindow extends GameWindow {
         consoleField.setText("Boat | Pos | Life | Move\n");
         for (int i = 0; i < gm.getPlayerBoatList().size(); i++) {
             playerGrid[gm.getPlayerBoatList().get(i).getPosX() - 1][gm.getPlayerBoatList().get(i).getPosY() - 1].setBackground(Color.ORANGE);
-            consoleField.append("Boat" + (i + 1) + " : (" +gm.getPlayerBoatList().get(i).getPosX() +"," +gm.getPlayerBoatList().get(i).getPosY() +") | " + gm.getPlayerBoatList().get(i).getLife()+ " | " + gm.getPlayerBoatList().get(i).getNbCoupRestant() + "\n");
+            consoleField.append("Boat" + (i + 1) + " : (" + gm.getPlayerBoatList().get(i).getPosX() + "," + gm.getPlayerBoatList().get(i).getPosY() + ") | " + gm.getPlayerBoatList().get(i).getLife() + " | " + gm.getPlayerBoatList().get(i).getNbCoupRestant() + "\n");
             switch (gm.getPlayerBoatList().get(i).getOrientation()) {
                 case "N":
                     for (int j = 1; j < gm.getPlayerBoatList().get(i).getSize(); j++) {

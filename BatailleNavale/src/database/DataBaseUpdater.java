@@ -24,7 +24,7 @@ public interface DataBaseUpdater {
 
     public void addPlayer(Player player);
 
-    public void addBoats(Game game, Player owner, ArrayList<Boat>boatList) throws SQLIntegrityConstraintViolationException, SQLException;
+    public void addBoats(Game game, Player owner, ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException;
 
     public void addMove(Game game, Boat boat, Sens s);
 
@@ -32,7 +32,7 @@ public interface DataBaseUpdater {
 
     public void changeTurn(Game game, Player player);
 
-    public void turnBoat(Game game, Boat boat,String orientation) throws SQLIntegrityConstraintViolationException, SQLException;
+    public void turnBoat(Game game, Boat boat, String orientation) throws SQLIntegrityConstraintViolationException, SQLException;
 
     public void moveBoat(Game game, Boat boat, int posX, int posY) throws SQLIntegrityConstraintViolationException, SQLException;
 

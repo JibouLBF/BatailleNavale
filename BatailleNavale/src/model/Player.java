@@ -56,7 +56,6 @@ public class Player {
         return birthday;
     }
 
-    
     public Player(String pseudo, String firstname, String surname, String email, int streetNumber, String streetName, String postcode, String city, String birthday) {
         this.pseudo = pseudo;
         this.firstname = firstname;
@@ -72,7 +71,5 @@ public class Player {
     public Player(String pseudo) {
         this.pseudo = pseudo;
     }
-    
-    
-    
+
 }

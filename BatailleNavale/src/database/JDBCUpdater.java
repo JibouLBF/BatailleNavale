@@ -63,12 +63,12 @@ public class JDBCUpdater implements DataBaseUpdater {
             }
 
             conn.commit();
-            
-            for(int i = 0; i< boatList.size(); i++){
+
+            for (int i = 0; i < boatList.size(); i++) {
                 boatList.get(i).setBoatID(boatID[i]);
                 boatList.get(i).setLife(i);
             }
-            
+
         } catch (SQLIntegrityConstraintViolationException e) {
             Logger.getLogger(JDBCUpdater.class.getName()).log(Level.SEVERE, null, e);
             conn.rollback();

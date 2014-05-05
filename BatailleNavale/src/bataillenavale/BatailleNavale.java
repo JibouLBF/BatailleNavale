@@ -16,32 +16,23 @@ import model.MenuModel;
  * @author abikhatv
  */
 public class BatailleNavale {
+
     private GameWindow gw;
     private GameModel gm;
-    
+
     private MenuWindow mw;
     private MenuModel mm;
-    
-    public BatailleNavale () {
-       mm = new MenuModel ();
-       
-       mw = new MenuWindow (mm);
+
+    public BatailleNavale() {
+        mm = new MenuModel();
+
+        mw = new MenuWindow(mm);
     }
-    
-    public void createGame (){
-        gm = new GameModel(true);
-        gw = new PlayerWindow (gm);
-    }
-    
-    public void createObserver (){
-        gm = new GameModel(false);
-        gw = new PlayerWindow (gm);
-    }
-    
-    public static void main (String [] args){
+
+    public static void main(String[] args) {
         new BatailleNavale();
-        
-       // new PlayerWindow();
-       // new ObserverWindow();
+
+        // new PlayerWindow();
+        // new ObserverWindow();
     }
 }

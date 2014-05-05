@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controler;
 
 import java.awt.event.MouseEvent;
@@ -13,22 +12,22 @@ import javax.swing.JButton;
  *
  * @author Vincent
  */
-public class ObserverControler extends GameControler{
+public class ObserverControler extends GameControler {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JButton but = (JButton)e.getSource();
-        switch (but.getName()){
-            case "Live" :
+        JButton but = (JButton) e.getSource();
+        switch (but.getName()) {
+            case "Live":
                 System.out.println("live");
                 break;
-            case "Init" :
+            case "Init":
                 System.out.println("init");
                 break;
-            case "Next" :
+            case "Next":
                 System.out.println("next");
                 break;
-            case "Prec" :
+            case "Prec":
                 System.out.println("prec");
                 break;
         }
@@ -53,5 +52,5 @@ public class ObserverControler extends GameControler{
     public void mouseExited(MouseEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

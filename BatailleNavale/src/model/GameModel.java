@@ -21,58 +21,56 @@ import javax.swing.JComboBox;
  *
  * @author harbalk
  */
-public class GameModel extends Observable {
+public abstract class GameModel extends Observable {
 
-    private final DataFactory factory;
-    private final DataBaseAsker asker;
-    private final DataBaseUpdater updater;
-    private boolean playerGame;
-    private Game game;
-    private Player player;
-    private Player opponent;
-    private boolean isStarted = false;
-    private boolean isMyTurn = false;
-    private ArrayList<Boat> playerBoatList;
-    private ArrayList<Boat> opponentBoatList;
-    private boolean isPlayer2;
+    protected DataFactory factory;
+    protected DataBaseAsker asker;
+    protected DataBaseUpdater updater;
+    protected boolean playerGame;
+    protected Game game;
+    protected Player player;
+    protected Player opponent;
+    protected boolean isStarted = false;
+    protected boolean isMyTurn = false;
+    protected ArrayList<Boat> playerBoatList;
+    protected ArrayList<Boat> opponentBoatList;
+    protected boolean isPlayer2;
 
-    public GameModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
-        this.playerGame = playerGame;
-        this.player = player;
-        this.opponent = opponent;
-        this.game = game;
-        this.isPlayer2 = isPlayer2;
-        factory = new JDBCFactory();
-        asker = new JDBCAsker();
-        updater = new JDBCUpdater();
-        playerBoatList = new ArrayList<Boat>();
-        opponentBoatList = new ArrayList<Boat>();
-    }
+    /*  public GameModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
+     this.playerGame = playerGame;
+     this.player = player;
+     this.opponent = opponent;
+     this.game = game;
+     this.isPlayer2 = isPlayer2;
+     factory = new JDBCFactory();
+     asker = new JDBCAsker();
+     updater = new JDBCUpdater();
+     playerBoatList = new ArrayList<Boat>();
+     opponentBoatList = new ArrayList<Boat>();
+     }
     
-    public GameModel(boolean playerGame, Game game) {//pour l'observeur
-        this.playerGame = playerGame;
-        this.game = game;
-        this.player = game.getPlayer1();
-        this.opponent = game.getPlayer2();
-        factory = new JDBCFactory();
-        asker = new JDBCAsker();
-        updater = new JDBCUpdater();
-        playerBoatList = new ArrayList<Boat>();
-        opponentBoatList = new ArrayList<Boat>();
-    }
-
+     public GameModel(boolean playerGame, Game game) {//pour l'observeur
+     this.playerGame = playerGame;
+     this.game = game;
+     this.player = game.getPlayer1();
+     this.opponent = game.getPlayer2();
+     factory = new JDBCFactory();
+     asker = new JDBCAsker();
+     updater = new JDBCUpdater();
+     playerBoatList = new ArrayList<Boat>();
+     opponentBoatList = new ArrayList<Boat>();
+     }*/
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
-    public GameModel(boolean b) {
-        playerGame = b;
-        factory = new JDBCFactory();
-        asker = new JDBCAsker();
-        updater = new JDBCUpdater();
-    }
+   /* public GameModel(boolean b) {
+     playerGame = b;
+     factory = new JDBCFactory();
+     asker = new JDBCAsker();
+     updater = new JDBCUpdater();
+     }*/
 
-    public boolean isPlayerGame() {
-        return playerGame;
-    }
-
+    /*public boolean isPlayerGame() {
+     return playerGame;
+     }*/
     /**
      * Renvoie le bateau du joueur placé à la position (x,y) Renvoie NULL si il
      * n'y pas de bateau à cette position
@@ -81,156 +79,13 @@ public class GameModel extends Observable {
      * @param y
      * @return Bateau boat
      */
-    private Boat getPlayerBoat(int x, int y) {
-        for (int i = 0; i < playerBoatList.size(); i++) {
-            if (playerBoatList.get(i).getPosX() == x && playerBoatList.get(i).getPosY() == y) {
-                return playerBoatList.get(i);
-            }
-        }
-        return null;
-    }
+    protected abstract Boat getPlayerBoat(int x, int y);
 
-    public void moveBoat(int x, int y, Sens s) {
-        System.out.println("move " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(x, y);
-        if (boat != null && boat.getNbCoupRestant() > 0) {
-            try {
-                switch (s.getName()) {
-                    case "A":
-                        switch (boat.getOrientation()) {
-                            case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
-                                boat.incrPosY();
-                                break;
-                            case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
-                                boat.decrPosY();
-                                break;
-                            case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
-                                boat.incrPosX();
-                                break;
-                            case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
-                                boat.decrPosX();
-                                break;
-                        }
-                        break;
-                    case "R":
-                        switch (boat.getOrientation()) {
-                            case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
-                                boat.decrPosY();
-                                break;
-                            case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
-                                boat.incrPosY();
-                                break;
-                            case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
-                                boat.decrPosX();
-                                break;
-                            case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
-                                boat.incrPosX();
-                                break;
-                        }
-                        break;
-                }
-                updater.addMove(game, boat, s);
-                boat.decrNbCoupRestant();
-                notifyChanges("refreshWindow");
-            } catch (SQLIntegrityConstraintViolationException ex) {
-                Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("invalid move");
-            } catch (SQLException ex) {
-                Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("SQLException");
-            }
-        } else if (boat != null && boat.getNbCoupRestant() == 0) {
-            notifyChanges("no more moves");
-        } else {
-            notifyChanges("invalid boat selection");
-        }
+    public abstract void moveBoat(int x, int y, Sens s);
 
-    }
+    public abstract void turnBoat(int x, int y, Sens s);
 
-    public void turnBoat(int x, int y, Sens s) {
-        System.out.println("turn " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(x, y);
-        if (boat != null && boat.getNbCoupRestant() > 0) {
-            try {
-                switch (s.getName()) {
-                    case "G":
-                        switch (boat.getOrientation()) {
-                            case "N":
-                                updater.turnBoat(game, boat, "O");
-                                boat.setOrientation("O");
-                                break;
-                            case "S":
-                                updater.turnBoat(game, boat, "E");
-                                boat.setOrientation("E");
-                                break;
-                            case "E":
-                                updater.turnBoat(game, boat, "N");
-                                boat.setOrientation("N");
-                                break;
-                            case "O":
-                                updater.turnBoat(game, boat, "S");
-                                boat.setOrientation("S");
-                                break;
-                        }
-                        break;
-                    case "D":
-                        switch (boat.getOrientation()) {
-                            case "N":
-                                updater.turnBoat(game, boat, "E");
-                                boat.setOrientation("E");
-                                break;
-                            case "S":
-                                updater.turnBoat(game, boat, "O");
-                                boat.setOrientation("O");
-                                break;
-                            case "E":
-                                updater.turnBoat(game, boat, "S");
-                                boat.setOrientation("S");
-                                break;
-                            case "O":
-                                updater.turnBoat(game, boat, "N");
-                                boat.setOrientation("N");
-                                break;
-                        }
-                        break;
-                }
-                updater.addMove(game, boat, s);
-                boat.decrNbCoupRestant();
-                notifyChanges("refreshWindow");
-            } catch (SQLIntegrityConstraintViolationException e) {
-                Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
-                notifyChanges("invalid move");
-            } catch (SQLException ex) {
-                Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("SQLException");
-            }
-        } else if (boat != null && boat.getNbCoupRestant() == 0) {
-            notifyChanges("no more moves");
-        } else {
-            notifyChanges("invalid boat selection");
-        }
-    }
-
-    public void fire(int boatX, int boatY, int shotX, int shotY) {
-        Boat boat = getPlayerBoat(boatX, boatY);
-        if (boat != null && boat.getNbCoupRestant() > 0) {
-            updater.addShot(game, boat, shotX, shotY);
-            boat.decrNbCoupRestant();
-            notifyChanges("shot added");
-        } else if (boat != null && boat.getNbCoupRestant() == 0) {
-            notifyChanges("no more moves");
-        } else {
-            notifyChanges("invalid boat selection");
-        }
-    }
+    public abstract void fire(int boatX, int boatY, int shotX, int shotY);
 
     public void validate() {
         updater.changeTurn(game, opponent);
@@ -306,7 +161,7 @@ public class GameModel extends Observable {
         return isMyTurn;
     }
 
-    private void notifyChanges(String s) { //PATTERN OBSERVER
+    protected void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub
         //System.err.println("notification...");
         setChanged();

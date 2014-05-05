@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package database;
 
 import java.sql.SQLException;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import model.Boat;
 import model.Player;
 import model.Game;
+
 /**
  *
  * @author jb

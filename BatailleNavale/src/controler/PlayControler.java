@@ -149,7 +149,7 @@ public class PlayControler extends GameControler {
             default:
                 if (pw.getGameModel().isStarted()) {
                     ButtonGrid tmpButtonGrid = ((ButtonGrid) (tmp));
-                    tmpButtonGrid.setText(String.valueOf((char)(tmpButtonGrid.getPosX() + 64)) + "" + tmpButtonGrid.getPosY());
+                    tmpButtonGrid.setText(String.valueOf((char) (tmpButtonGrid.getPosX() + 64)) + "" + tmpButtonGrid.getPosY());
                 }
         }
     }

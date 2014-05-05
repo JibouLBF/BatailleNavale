@@ -15,7 +15,7 @@ import model.GameModel;
  * @author abikhatv
  */
 public abstract class GameControler implements MouseListener {
-    
+
     protected PlayerWindow pw;
     protected ObserverWindow ow;
 

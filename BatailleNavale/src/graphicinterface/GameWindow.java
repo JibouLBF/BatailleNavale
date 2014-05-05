@@ -26,7 +26,7 @@ import model.GameModel;
  *
  * @author abikhatv
  */
-public abstract class GameWindow extends JFrame implements Observer{
+public abstract class GameWindow extends JFrame implements Observer {
 
     private final int WIDTH = 900;
     private final int HEIGHT = 800;
@@ -36,22 +36,22 @@ public abstract class GameWindow extends JFrame implements Observer{
     protected GameModel gm;
     protected GameControler gc;
     protected JButton refresh;
-    protected JLabel turnLabel = new JLabel ("Turn", JLabel.CENTER);
-    
+    protected JLabel turnLabel = new JLabel("Turn", JLabel.CENTER);
+
     public GameWindow(String windowName) {
         super(windowName);
         try {
-            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        refresh = new JButton ("Refresh");
+        refresh = new JButton("Refresh");
         turnLabel.setOpaque(true);
         setSize(WIDTH, HEIGHT);
-        
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        mainPanelRight = new JPanel(new GridLayout(2,1, 30, 10));
+
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        mainPanelRight = new JPanel(new GridLayout(2, 1, 30, 10));
 
         player = new JPanel(new GridLayout(10, 10));
         player.setName("player");
@@ -62,43 +62,44 @@ public abstract class GameWindow extends JFrame implements Observer{
         console = new JPanel(new GridLayout(1, 1));
 
         mainPanelRight.add(opponent);
-        mainPanelRight.add(player);  
+        mainPanelRight.add(player);
     }
-    
-    public void addToFrame(){
-        js = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanelLeft, mainPanelRight){
-		    private final int location = 200;//largeur du JFrameMenu
-		    {
-		        setDividerLocation( location );
-		    }
-		    @Override
-		    public int getDividerLocation() {
-		        return location ;
-		    }
-		    @Override
-		    public int getLastDividerLocation() {
-		        return location ;
-		    }
-		};
-        
-        this.add(js,0);
+
+    public void addToFrame() {
+        js = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanelLeft, mainPanelRight) {
+            private final int location = 200;//largeur du JFrameMenu
+
+            {
+                setDividerLocation(location);
+            }
+
+            @Override
+            public int getDividerLocation() {
+                return location;
+            }
+
+            @Override
+            public int getLastDividerLocation() {
+                return location;
+            }
+        };
+
+        this.add(js, 0);
         setVisible(true);
         this.invalidate();
         this.validate();
         this.repaint();
     }
-    
+
     public abstract void drawBoat();
 
     public GameModel getGameModel() {
         return gm;
     }
 
-    
-    
     public static void main(String[] agrs) {
-       // GameWindow g1 = new ObserverWindow();
-       // GameWindow g2 = new PlayerWindow();
-       // new MenuWindow();
+        // GameWindow g1 = new ObserverWindow();
+        // GameWindow g2 = new PlayerWindow();
+        // new MenuWindow();
     }
 }

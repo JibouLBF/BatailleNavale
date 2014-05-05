@@ -9,9 +9,9 @@ import java.util.logging.Logger;
  * @author jb
  */
 public class TheConnection {
-    
+
     private Connection conn;
-    
+
     /**
      * Récupère les drivers JDBC et ouvre la connexion avec la base
      */
@@ -42,6 +42,7 @@ public class TheConnection {
 
     /**
      * Renvoie l'intance de la connexion avec la base
+     *
      * @return Connection DBconnection
      */
     public Connection getConn() {

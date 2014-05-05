@@ -61,7 +61,5 @@ public class Game {
         this.Player1 = Player1;
         this.Player2 = Player2;
     }
-    
-    
 
 }

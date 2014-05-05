@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package model;
 
 /**
@@ -11,8 +10,8 @@ package model;
  * @author jb
  */
 public enum Sens {
-    
-     //Objets directement construits
+
+    //Objets directement construits
     AVANCER("A"),
     RECULER("R"),
     GAUCHE("G"),
