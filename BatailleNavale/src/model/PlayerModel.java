@@ -210,15 +210,24 @@ public class PlayerModel extends GameModel {
     }
     
     public void validate() {
-        updater.changeTurn(game, opponent);
-        notifyChanges("validate");
+        try {
+            updater.changeTurn(game, opponent);
+            notifyChanges("validate");
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     public void startGame() {
         isStarted = true;
         notifyChanges("start");
         if (isPlayer2) {
-            updater.changeTurn(game, opponent);
+            try {
+                updater.changeTurn(game, opponent);
+            } catch (SQLException ex) {
+                Logger.getLogger(PlayerModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         refresh();
         try {
