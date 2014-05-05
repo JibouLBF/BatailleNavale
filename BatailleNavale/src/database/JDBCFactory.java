@@ -11,8 +11,10 @@ import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.AbstractMove;
 import model.Boat;
 import model.Player;
 import model.Game;
@@ -148,6 +150,16 @@ public class JDBCFactory implements DataFactory {
         stmt.close();
         theConnection.close();
         return boatList;
+    }
+
+    @Override
+    public PriorityQueue<AbstractMove> getPlayerLastMoves(Game game, Player player) throws SQLException{
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PriorityQueue<AbstractMove> getGameMoves(Game game) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public JDBCFactory() {

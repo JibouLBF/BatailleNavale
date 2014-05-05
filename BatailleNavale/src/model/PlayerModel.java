@@ -11,6 +11,7 @@ import database.JDBCUpdater;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +20,9 @@ import java.util.logging.Logger;
  * @author Vincent
  */
 public class PlayerModel extends GameModel {
+
+    PriorityQueue<AbstractMove>  opponentLastMoves;
+    
 
     public PlayerModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
         this.playerGame = playerGame;
@@ -31,6 +35,7 @@ public class PlayerModel extends GameModel {
         updater = new JDBCUpdater();
         playerBoatList = new ArrayList<Boat>();
         opponentBoatList = new ArrayList<Boat>();
+        opponentLastMoves = new PriorityQueue<AbstractMove>();
     }
 
     public void addBoats(ArrayList<Boat> boatList) {
@@ -58,19 +63,19 @@ public class PlayerModel extends GameModel {
                     case "A":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1, s);
                                 boat.incrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1, s);
                                 boat.decrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY(), s);
                                 boat.incrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY(), s);
                                 boat.decrPosX();
                                 break;
                         }
@@ -78,25 +83,24 @@ public class PlayerModel extends GameModel {
                     case "R":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1, s);
                                 boat.decrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1, s);
                                 boat.incrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY(), s);
                                 boat.decrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY(), s);
                                 boat.incrPosX();
                                 break;
                         }
                         break;
                 }
-                updater.addMove(game, boat, s);
                 boat.decrNbCoupRestant();
                 notifyChanges("refreshWindow");
             } catch (SQLIntegrityConstraintViolationException ex) {
@@ -123,19 +127,19 @@ public class PlayerModel extends GameModel {
                     case "G":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(game, boat, "O");
+                                updater.turnBoat(game, boat, "O", s);
                                 boat.setOrientation("O");
                                 break;
                             case "S":
-                                updater.turnBoat(game, boat, "E");
+                                updater.turnBoat(game, boat, "E", s);
                                 boat.setOrientation("E");
                                 break;
                             case "E":
-                                updater.turnBoat(game, boat, "N");
+                                updater.turnBoat(game, boat, "N", s);
                                 boat.setOrientation("N");
                                 break;
                             case "O":
-                                updater.turnBoat(game, boat, "S");
+                                updater.turnBoat(game, boat, "S", s);
                                 boat.setOrientation("S");
                                 break;
                         }
@@ -143,25 +147,24 @@ public class PlayerModel extends GameModel {
                     case "D":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(game, boat, "E");
+                                updater.turnBoat(game, boat, "E", s);
                                 boat.setOrientation("E");
                                 break;
                             case "S":
-                                updater.turnBoat(game, boat, "O");
+                                updater.turnBoat(game, boat, "O", s);
                                 boat.setOrientation("O");
                                 break;
                             case "E":
-                                updater.turnBoat(game, boat, "S");
+                                updater.turnBoat(game, boat, "S", s);
                                 boat.setOrientation("S");
                                 break;
                             case "O":
-                                updater.turnBoat(game, boat, "N");
+                                updater.turnBoat(game, boat, "N", s);
                                 boat.setOrientation("N");
                                 break;
                         }
                         break;
                 }
-                updater.addMove(game, boat, s);
                 boat.decrNbCoupRestant();
                 notifyChanges("refreshWindow");
             } catch (SQLIntegrityConstraintViolationException e) {
@@ -181,9 +184,14 @@ public class PlayerModel extends GameModel {
     public void fire(Player player, int boatX, int boatY, int shotX, int shotY) {
         Boat boat = getPlayerBoat(player, boatX, boatY);
         if (boat != null && boat.getNbCoupRestant() > 0) {
-            updater.addShot(game, boat, shotX, shotY);
-            boat.decrNbCoupRestant();
-            notifyChanges("shot added");
+            try {
+                updater.addShot(game, boat, shotX, shotY);
+                boat.decrNbCoupRestant();
+                notifyChanges("shot added");
+            } catch (SQLException ex) {
+                Logger.getLogger(PlayerModel.class.getName()).log(Level.SEVERE, null, ex);
+                notifyChanges("SQL exception");
+            }
         } else if (boat != null && boat.getNbCoupRestant() == 0) {
             notifyChanges("no more moves");
         } else {

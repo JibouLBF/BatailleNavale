@@ -8,9 +8,11 @@ package database;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
+import model.AbstractMove;
 import model.Boat;
-import model.Player;
 import model.Game;
+import model.Player;
 
 /**
  *
@@ -25,4 +27,8 @@ public interface DataFactory {
     public Player findAnOpponent(Player player) throws SQLRecoverableException, SQLException;
 
     public ArrayList<Boat> getAllBoat(Game game, Player player) throws SQLRecoverableException, SQLException;
+    
+    public PriorityQueue<AbstractMove> getPlayerLastMoves(Game game, Player player) throws SQLException;
+    
+    public PriorityQueue<AbstractMove> getGameMoves(Game game) throws SQLException;
 }

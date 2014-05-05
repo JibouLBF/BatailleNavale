@@ -84,8 +84,6 @@ public abstract class GameModel extends Observable {
     public abstract void turnBoat(Player player, int x, int y, Sens s);
     public abstract void fire(Player player, int boatX, int boatY, int shotX, int shotY);
 
-    
-
     public void refresh() {
         try {
             isMyTurn = asker.isTurnOf(game, player);
@@ -98,8 +96,9 @@ public abstract class GameModel extends Observable {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL exception");
+
         }
     }
 

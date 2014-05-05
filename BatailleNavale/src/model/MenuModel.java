@@ -49,20 +49,20 @@ public class MenuModel extends Observable {
         boolean ret = false;
         try {
             ret = asker.playerExist(player);
+            if (!ret) {
+                updater.addPlayer(player);
+                isConnected = false;
+                notifyChanges("sign up");
+            } //s'il est déjà inscrit --> message d'erreur à afficher ?
+            else {
+                notifyChanges("login already used");
+            }
         } catch (SQLRecoverableException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
             notifyChanges("Connection Exception");
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQL Exception");
-        }
-        if (!ret) {
-            updater.addPlayer(player);
-            isConnected = false;
-            notifyChanges("sign up");
-        } //s'il est déjà inscrit --> message d'erreur à afficher ?
-        else {
-            notifyChanges("login already used");
+            notifyChanges("SQLException");
         }
 
     }
@@ -79,7 +79,7 @@ public class MenuModel extends Observable {
                 notifyChanges("Connection Exception");
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("SQL Exception");
+                notifyChanges("SQLException");
             }
             if (ret) {
                 isConnected = true;
@@ -128,7 +128,7 @@ public class MenuModel extends Observable {
                 notifyChanges("Connection Exception");
             } catch (SQLException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-                notifyChanges("SQL Exception");
+                notifyChanges("SQLException");
             }
         }// si on est pas connecté --> affichage d'un message 
         else {
@@ -140,7 +140,7 @@ public class MenuModel extends Observable {
     public void observe() {
         //si on est connecté on lance la partie à observer dans une fenetre
         if (isConnected) {
-            gw = new ObserverWindow();
+           // gw = new ObserverWindow(new ObserverModel());
             notifyChanges("observe");
         } //si on est pas connecté --> affichage d'un message
         else {
