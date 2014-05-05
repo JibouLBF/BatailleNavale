@@ -12,7 +12,7 @@ package database;
  */
 public class ConnectionInfo {
     static final String CONN_URL = "jdbc:oracle:thin:@ensioracle1.imag.fr:1521:ensioracle1";
-    static final String USER = "lavignje";
-    static final String PASSWD = "lavignje";
+    static final String USER = "abikhatv";
+    static final String PASSWD = "abikhatv";
     
 }

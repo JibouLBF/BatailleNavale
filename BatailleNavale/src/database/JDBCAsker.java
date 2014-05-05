@@ -12,6 +12,8 @@ import java.sql.SQLRecoverableException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Player;
+import model.Game;
 
 /**
  *
@@ -22,11 +24,11 @@ public class JDBCAsker implements DataBaseAsker {
     TheConnection theConnection;
 
     @Override
-    public boolean playerExist(String Pseudo) throws SQLRecoverableException, SQLException {
+    public boolean playerExist(Player player) throws SQLRecoverableException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
-        String STMT = "SELECT * FROM Joueur WHERE Pseudo =" + "'" + Pseudo + "'";
+        String STMT = "SELECT * FROM Joueur WHERE Pseudo =" + "'" + player.getPseudo() + "'";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         boolean exist = rset.next();
@@ -34,20 +36,20 @@ public class JDBCAsker implements DataBaseAsker {
         stmt.close();
         theConnection.close();
         if (exist) {
-            System.out.println(Pseudo + " existe dans la BD");
+            System.out.println(player.getPseudo() + " existe dans la BD");
         } else {
-            System.out.println(Pseudo + " n'existe pas dans la BD");
+            System.out.println(player.getPseudo() + " n'existe pas dans la BD");
         }
         return exist;
 
     }
 
     @Override
-    public boolean isTurnOf(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException {
+    public boolean isTurnOf(Game game, Player player) throws SQLRecoverableException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
-        String STMT = "SELECT Tour FROM Partie WHERE IdPartie =" + "'" + IdPartie + "'";
+        String STMT = "SELECT Tour FROM Partie WHERE IdPartie =" + "'" + game.getGameID() + "'";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         rset.next();
@@ -58,15 +60,15 @@ public class JDBCAsker implements DataBaseAsker {
         if (playerName == null) {
             return false;
         } else {
-            return playerName.equals(Pseudo);
+            return playerName.equals(player.getPseudo());
         }
     }
 
-    public boolean hasPlacedBoats(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException {
+    public boolean hasPlacedBoats(Game game, Player player) throws SQLRecoverableException, SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
-        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '"+IdPartie +"' AND Proprietaire ='" + Pseudo + "'";
+        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '"+game.getGameID() +"' AND Proprietaire ='" +player.getPseudo() + "'";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         boolean placed = rset.next();
@@ -74,9 +76,9 @@ public class JDBCAsker implements DataBaseAsker {
         stmt.close();
         theConnection.close();
         if (placed) {
-            System.out.println(Pseudo + " a déjà placé ses bateaux");
+            System.out.println(player.getPseudo() + " a déjà placé ses bateaux");
         } else {
-            System.out.println(Pseudo + " n'a pas encore placé ses bateaux");
+            System.out.println(player.getPseudo() + " n'a pas encore placé ses bateaux");
         }
         return placed;
 

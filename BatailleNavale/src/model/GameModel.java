@@ -27,28 +27,26 @@ public class GameModel extends Observable {
     private final DataBaseAsker asker;
     private final DataBaseUpdater updater;
     private boolean playerGame;
-    private String playerName;
-    private String opponent;
-    private int IdPartie = -1;
+    private Game game;
+    private Player player;
+    private Player opponent;
     private boolean isStarted = false;
     private boolean isMyTurn = false;
-    private String date;
-    private ArrayList<Bateau> playerBoatList;
-    private ArrayList<Bateau> opponentBoatList;
+    private ArrayList<Boat> playerBoatList;
+    private ArrayList<Boat> opponentBoatList;
     private boolean isPlayer2;
     
-    public GameModel(boolean playerGame, int IdPartie, String date, String playerName, String opponent, boolean isPlayer2) {
+    public GameModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
         this.playerGame = playerGame;
-        this.IdPartie = IdPartie;
-        this.playerName = playerName;
+        this.player = player;
         this.opponent = opponent;
-        this.date = date;
+        this.game = game;
         this.isPlayer2 = isPlayer2;
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
-        playerBoatList = new ArrayList<Bateau>();
-        opponentBoatList = new ArrayList<Bateau>();
+        playerBoatList = new ArrayList<Boat>();
+        opponentBoatList = new ArrayList<Boat>();
     }
 
     // POUR QUE CA COMPILE EN ATTENDANT LES MODIFS
@@ -71,7 +69,7 @@ public class GameModel extends Observable {
      * @param y
      * @return Bateau boat
      */
-    private Bateau getPlayerBoat(int x, int y) {
+    private Boat getPlayerBoat(int x, int y) {
         for (int i = 0; i < playerBoatList.size(); i++) {
             if (playerBoatList.get(i).getPosX() == x && playerBoatList.get(i).getPosY() == y) {
                 return playerBoatList.get(i);
@@ -82,26 +80,26 @@ public class GameModel extends Observable {
     
     public void moveBoat(int x, int y, Sens s) {
         System.out.println("move " + x + " " + y + " " + s.toString());
-        Bateau boat = getPlayerBoat(x, y);
+        Boat boat = getPlayerBoat(x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
                 switch (s.getName()) {
                     case "A":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() + 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
                                 boat.incrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() - 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
                                 boat.decrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() + 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
                                 boat.incrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() - 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
                                 boat.decrPosX();
                                 break;
                         }
@@ -109,25 +107,25 @@ public class GameModel extends Observable {
                     case "R":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() - 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1);
                                 boat.decrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX(), boat.getPosY() + 1);
+                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1);
                                 boat.incrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() - 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY());
                                 boat.decrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(IdPartie, boat.getIdBateau(), boat.getPosX() + 1, boat.getPosY());
+                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY());
                                 boat.incrPosX();
                                 break;
                         }
                         break;
                 }
-                updater.addMove(IdPartie, boat.getIdBateau(), s);
+                updater.addMove(game, boat, s);
                 boat.decrNbCoupRestant();
                 notifyChanges("refreshWindow");
             } catch (SQLIntegrityConstraintViolationException ex) {
@@ -147,26 +145,26 @@ public class GameModel extends Observable {
     
     public void turnBoat(int x, int y, Sens s) {
         System.out.println("turn " + x + " " + y + " " + s.toString());
-        Bateau boat = getPlayerBoat(x, y);
+        Boat boat = getPlayerBoat(x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
                 switch (s.getName()) {
                     case "G":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "O");
+                                updater.turnBoat(game, boat, "O");
                                 boat.setOrientation("O");
                                 break;
                             case "S":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "E");
+                                updater.turnBoat(game, boat, "E");
                                 boat.setOrientation("E");
                                 break;
                             case "E":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "N");
+                                updater.turnBoat(game, boat, "N");
                                 boat.setOrientation("N");
                                 break;
                             case "O":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "S");
+                                updater.turnBoat(game, boat, "S");
                                 boat.setOrientation("S");
                                 break;
                         }
@@ -174,25 +172,25 @@ public class GameModel extends Observable {
                     case "D":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "E");
+                                updater.turnBoat(game, boat, "E");
                                 boat.setOrientation("E");
                                 break;
                             case "S":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "O");
+                                updater.turnBoat(game, boat, "O");
                                 boat.setOrientation("O");
                                 break;
                             case "E":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "S");
+                                updater.turnBoat(game, boat, "S");
                                 boat.setOrientation("S");
                                 break;
                             case "O":
-                                updater.turnBoat(IdPartie, boat.getIdBateau(), "N");
+                                updater.turnBoat(game, boat, "N");
                                 boat.setOrientation("N");
                                 break;
                         }
                         break;
                 }
-                updater.addMove(IdPartie, boat.getIdBateau(), s);
+                updater.addMove(game, boat, s);
                 boat.decrNbCoupRestant();
                 notifyChanges("refreshWindow");
             } catch (SQLIntegrityConstraintViolationException e) {
@@ -210,9 +208,9 @@ public class GameModel extends Observable {
     }
     
     public void fire(int boatX, int boatY, int shotX, int shotY) {
-        Bateau boat = getPlayerBoat(boatX, boatY);
+        Boat boat = getPlayerBoat(boatX, boatY);
         if (boat != null && boat.getNbCoupRestant() > 0) {
-            updater.addShot(IdPartie, boat.getIdBateau(), shotX, shotY);
+            updater.addShot(game, boat, shotX, shotY);
             boat.decrNbCoupRestant();
             notifyChanges("shot added");
         } else if (boat != null && boat.getNbCoupRestant() == 0) {
@@ -223,7 +221,7 @@ public class GameModel extends Observable {
     }
     
     public void validate() {
-        updater.changeTurn(IdPartie, opponent);
+        updater.changeTurn(game, opponent);
         notifyChanges("validate");
     }
     
@@ -231,11 +229,11 @@ public class GameModel extends Observable {
         isStarted = true;
         notifyChanges("start");
         if (isPlayer2) {
-            updater.changeTurn(IdPartie, opponent);
+            updater.changeTurn(game, opponent);
         }
         refresh();
         try {
-            playerBoatList = factory.getAllBoat(IdPartie, playerName);
+            playerBoatList = factory.getAllBoat(game, player);
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -243,10 +241,10 @@ public class GameModel extends Observable {
         
     }
     
-    public void addBoats(int boatX1, int boatY1, String orientation1, int size1, int boatX2, int boatY2, String orientation2, int size2, int boatX3, int boatY3, String orientation3, int size3) throws SQLIntegrityConstraintViolationException, SQLException {
+    public void addBoats(ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException {
         try {
-            updater.addBoats(IdPartie, playerName, boatX1, boatY1, size1, orientation1, boatX2, boatY2, size2, orientation2, boatX3, boatY3, size3, orientation3);
-            playerBoatList = factory.getAllBoat(IdPartie, playerName);
+            updater.addBoats(game, player, boatList);
+            playerBoatList = boatList;
             notifyChanges("boat added");
             
         } catch (SQLIntegrityConstraintViolationException e) {
@@ -265,16 +263,16 @@ public class GameModel extends Observable {
         return isStarted;
     }
     
-    public String getOpponent() {
+    public Player getOpponent() {
         return opponent;
     }
     
     public void refresh() {
         try {
-            isMyTurn = asker.isTurnOf(IdPartie, playerName);
+            isMyTurn = asker.isTurnOf(game, player);
             if (isMyTurn) {
-                playerBoatList = factory.getAllBoat(IdPartie, playerName);
-                opponentBoatList = factory.getAllBoat(IdPartie, opponent);
+                playerBoatList = factory.getAllBoat(game, player);
+                opponentBoatList = factory.getAllBoat(game, opponent);
                 notifyChanges("your turn");
             } else {
                 notifyChanges("opponent turn");
@@ -286,11 +284,11 @@ public class GameModel extends Observable {
         }
     }
     
-    public ArrayList<Bateau> getPlayerBoatList() {
+    public ArrayList<Boat> getPlayerBoatList() {
         return playerBoatList;
     }
     
-    public ArrayList<Bateau> getOpponentBoatList() {
+    public ArrayList<Boat> getOpponentBoatList() {
         return opponentBoatList;
     }
     

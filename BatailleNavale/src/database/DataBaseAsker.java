@@ -7,6 +7,8 @@ package database;
 
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
+import model.Player;
+import model.Game;
 
 /**
  *
@@ -14,33 +16,10 @@ import java.sql.SQLRecoverableException;
  */
 public interface DataBaseAsker {
 
-    /**
-     * Interroge la BD et renvoie True si le joueur "Pseudo" existe
-     * et False sinon
-     *
-     * @param Pseudo
-     * @return Boolean
-     * @throws SQLRecoverableException
-     * @throws SQLException
-     */
-    public boolean playerExist(String Pseudo) throws SQLRecoverableException, SQLException;
+    public boolean playerExist(Player player) throws SQLRecoverableException, SQLException;
 
-    /**
-     * Interroge la BD et renvoie True si c'est effectivement au tour du joueur "Pseudo" de jouer et False sinon
-     * @param IdPartie
-     * @param Pseudo
-     * @return boolean
-     * @throws SQLRecoverableException
-     * @throws SQLException
-     */
-    public boolean isTurnOf(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException;
-    
-    /**
-     * Interroge la BD et renvoie True si le joueur "Pseudo" à déjà placé ses bateaux dans la partie IdPartie (utile dans la cas d'une reprise de partie)
-     * @param IdPartie
-     * @param Pseudo
-     * @return boolean
-     */
-    public boolean hasPlacedBoats(int IdPartie, String Pseudo) throws SQLRecoverableException, SQLException;
+    public boolean isTurnOf(Game game, Player player) throws SQLRecoverableException, SQLException;
+
+    public boolean hasPlacedBoats(Game game, Player player) throws SQLRecoverableException, SQLException;
 
 }

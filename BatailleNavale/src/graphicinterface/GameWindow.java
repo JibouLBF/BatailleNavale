@@ -90,6 +90,12 @@ public abstract class GameWindow extends JFrame implements Observer{
     
     public abstract void drawBoat();
 
+    public GameModel getGameModel() {
+        return gm;
+    }
+
+    
+    
     public static void main(String[] agrs) {
        // GameWindow g1 = new ObserverWindow();
        // GameWindow g2 = new PlayerWindow();

@@ -32,8 +32,8 @@ public class MenuModel extends Observable {
     private final DataBaseAsker asker;
     private final DataBaseUpdater updater;
     private boolean isConnected = false;
-    private String pseudo;
-    private ArrayList<Partie> gamesInProgress;
+    private Player player;
+    private ArrayList<Game> gamesInProgress;
     private GameWindow gw;
     private GameModel gm;
 
@@ -43,13 +43,12 @@ public class MenuModel extends Observable {
         updater = new JDBCUpdater();
     }
 
-    public void inscription(String Pseudo, String Nom, String Prenom, String Email, int Numero, String Rue, String CodePostal, String Ville, String DateNaissance) {
-        System.out.println(Pseudo + " " + Nom + " " + Prenom + " " + Email + " " + Numero + " " + Rue + " " + CodePostal + " " + Ville + " " + DateNaissance);
+    public void inscription(Player player) {
 
         // si le joueur n'est pas déjà inscrit
         boolean ret = false;
         try {
-            ret = asker.playerExist(Pseudo);
+            ret = asker.playerExist(player);
         } catch (SQLRecoverableException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
             notifyChanges("Connection Exception");
@@ -58,7 +57,7 @@ public class MenuModel extends Observable {
             notifyChanges("SQL Exception");
         }
         if (!ret) {
-            updater.addPlayer(Pseudo, Nom, Prenom, Email, Numero, Rue, CodePostal, Ville, DateNaissance);
+            updater.addPlayer(player);
             isConnected = false;
             notifyChanges("sign up");
         } //s'il est déjà inscrit --> message d'erreur à afficher ?
@@ -68,13 +67,13 @@ public class MenuModel extends Observable {
 
     }
 
-    public void connection(String Pseudo) {
+    public void connection(Player player) {
         // si on est pas déjà connecté
         if (!isConnected) {
             // si le pseudo est bien inscrit --> on affiche logged
             boolean ret = false;
             try {
-                ret = asker.playerExist(Pseudo);
+                ret = asker.playerExist(player);
             } catch (SQLRecoverableException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
@@ -84,7 +83,7 @@ public class MenuModel extends Observable {
             }
             if (ret) {
                 isConnected = true;
-                pseudo = Pseudo;
+                this.player = player;
                 notifyChanges("connected");
             } // si on est pas inscrit --> affichage d'un message 
             else {
@@ -101,26 +100,27 @@ public class MenuModel extends Observable {
         //si on est connecté on lance une partie avec un autre joueur
         if (isConnected) {
             try {
-                Partie game = factory.getCurrentGame(pseudo);
+                Game game = factory.getCurrentGame(player);
                 // s'il n'a pas de partie en cours on cherche un adversaire libre
                 if (game == null) {
-                    Joueur opponent = factory.findAnOpponent(pseudo);
+                    Player opponent = factory.findAnOpponent(player);
                     // si on a pas trouvé d'adversaire libre --> message
                     if (opponent == null) {
                         notifyChanges("no opponent");
                         return;
                     }
-                    updater.addGame(pseudo, opponent.getPseudo());
-                    game = factory.getCurrentGame(pseudo);
+                    game = new Game(player, opponent);
+                    updater.addGame(game);
+                    //game = factory.getCurrentGame(pseudo);
                 }
                 // Instanciation du modèle et de la fenetre de jeu
-                if (game.getPlayer1().equals(pseudo)) {
-                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer2(), false);
+                if (game.getPlayer1().getPseudo().equals(player.getPseudo())) {
+                    gm = new GameModel(true, game, player, game.getPlayer2(), false);
                 } else {
-                    gm = new GameModel(true, game.getiDPartie(), game.getDate(), pseudo, game.getPlayer1(), true);
+                    gm = new GameModel(true, game, player, game.getPlayer1(), true);
                 }
                 gw = new PlayerWindow(gm);
-                if (asker.hasPlacedBoats(game.getiDPartie(), pseudo)) {
+                if (asker.hasPlacedBoats(game, player)) {
                     gm.startGame();
                 }
             } catch (SQLRecoverableException ex) {
@@ -151,7 +151,7 @@ public class MenuModel extends Observable {
 
     public void disconnect() {
         isConnected = false;
-        pseudo = null;
+        player = null;
         notifyChanges("disconnect");
     }
 
@@ -162,7 +162,7 @@ public class MenuModel extends Observable {
         notifyObservers(s);
     }
 
-    public ArrayList<Partie> getGameInProgress() {
+    public ArrayList<Game> getGameInProgress() {
         gamesInProgress = factory.getAllGames();
         return gamesInProgress;
     }
@@ -171,8 +171,8 @@ public class MenuModel extends Observable {
         return isConnected;
     }
 
-    public String getPseudo() {
-        return pseudo;
+    public Player getPlayer() {
+        return player;
     }
 
 }

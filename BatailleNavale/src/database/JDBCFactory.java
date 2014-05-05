@@ -13,9 +13,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Bateau;
-import model.Joueur;
-import model.Partie;
+import model.Boat;
+import model.Player;
+import model.Game;
 
 /**
  *
@@ -26,8 +26,8 @@ public class JDBCFactory implements DataFactory {
     TheConnection theConnection;
 
     @Override
-    public ArrayList<Partie> getAllGames() {
-        ArrayList<Partie> gameList = new ArrayList<Partie>();
+    public ArrayList<Game> getAllGames() {
+        ArrayList<Game> gameList = new ArrayList<Game>();
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
@@ -35,7 +35,7 @@ public class JDBCFactory implements DataFactory {
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
             while (rset.next()) {
-                gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), null));
+                gameList.add(new Game(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), new Player(rset.getString("Joueur1")), new Player(rset.getString("Joueur2")), null));
             }
             rset.close();
             stmt.close();
@@ -44,14 +44,14 @@ public class JDBCFactory implements DataFactory {
             stmt = conn.createStatement();
             rset = stmt.executeQuery(STMT);
             while (rset.next()) {
-                gameList.add(new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), rset.getString("Vainqueur")));
+                gameList.add(new Game(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), new Player(rset.getString("Joueur1")), new Player(rset.getString("Joueur2")), new Player(rset.getString("Vainqueur"))));;
             }
             rset.close();
             stmt.close();
             return gameList;
         } catch (SQLException ex) {
             Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+        } finally {
             theConnection.close();
         }
 
@@ -59,29 +59,29 @@ public class JDBCFactory implements DataFactory {
     }
 
     @Override
-    public Partie getCurrentGame(String Pseudo) throws SQLRecoverableException, SQLException {
-        Partie game = null;
+    public Game getCurrentGame(Player player) throws SQLRecoverableException, SQLException {
+        Game game = null;
         theConnection.open();
         Connection conn = theConnection.getConn();
 
         // On regarde si on est pas déjà dans une partie en cours
-        String STMT = "SELECT * FROM Partie WHERE IdPartie NOT IN (SELECT IdPartie FROM AGagne) AND (Joueur1 = '" + Pseudo + "' OR Joueur2 = '" + Pseudo + "')";
+        String STMT = "SELECT * FROM Partie WHERE IdPartie NOT IN (SELECT IdPartie FROM AGagne) AND (Joueur1 = '" + player.getPseudo() + "' OR Joueur2 = '" + player.getPseudo() + "')";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         // Si c'est le cas on renvoie les infos de cette partie
         if (rset.next()) {
-            game = new Partie(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), rset.getString("Joueur1"), rset.getString("Joueur2"), null);
+            game = new Game(rset.getInt("IdPartie"), rset.getString("DateDemarrage"), new Player(rset.getString("Joueur1")), new Player(rset.getString("Joueur2")), null);
         }
         rset.close();
         stmt.close();
         theConnection.close();
         return game;
-        
+
     }
 
     @Override
-    public Joueur findAnOpponent(String Pseudo) throws SQLRecoverableException, SQLException {
-        Joueur opponent = null;
+    public Player findAnOpponent(Player player) throws SQLRecoverableException, SQLException {
+        Player opponent = null;
         theConnection.open();
         Connection conn = theConnection.getConn();
 
@@ -118,12 +118,12 @@ public class JDBCFactory implements DataFactory {
         // Si on a trouvé un adversaire
         if (rset.next()) {
             // Si c'est nous on va voir la suite
-            if (rset.getString("Pseudo").equals(Pseudo)) {
+            if (rset.getString("Pseudo").equals(player.getPseudo())) {
                 if (rset.next()) {
-                    opponent = new Joueur(rset.getString("Pseudo"));
+                    opponent = new Player(rset.getString("Pseudo"));
                 }
             } else {
-                opponent = new Joueur(rset.getString("Pseudo"));
+                opponent = new Player(rset.getString("Pseudo"));
             }
 
         }
@@ -134,15 +134,15 @@ public class JDBCFactory implements DataFactory {
     }
 
     @Override
-    public ArrayList<Bateau> getAllBoat(int IdPartie, String player) throws SQLRecoverableException, SQLException {
-        ArrayList<Bateau> boatList = new ArrayList<Bateau>();
+    public ArrayList<Boat> getAllBoat(Game game, Player player) throws SQLRecoverableException, SQLException {
+        ArrayList<Boat> boatList = new ArrayList<Boat>();
         theConnection.open();
         Connection conn = theConnection.getConn();
-        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" + IdPartie + "' AND Proprietaire = '" + player + "'";
+        String STMT = "SELECT * FROM Bateau WHERE IdPartie = '" + game.getGameID() + "' AND Proprietaire = '" + player.getPseudo() + "'";
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         while (rset.next()) {
-            boatList.add(new Bateau(rset.getInt("IdBateau"), IdPartie, rset.getInt("Taille"), rset.getString("Proprietaire"), rset.getInt("PosX"), rset.getInt("PosY"), rset.getString("Orientation"), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+            boatList.add(new Boat(game, rset.getInt("IdBateau"), rset.getInt("Taille"), new Player(rset.getString("Proprietaire")), rset.getInt("PosX"), rset.getInt("PosY"), rset.getString("Orientation"), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
         }
         rset.close();
         stmt.close();

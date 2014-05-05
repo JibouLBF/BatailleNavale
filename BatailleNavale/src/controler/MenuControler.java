@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JButton;
+import model.Player;
 
 /**
  *
@@ -33,11 +34,11 @@ public class MenuControler implements ActionListener {
                 mw.getMenuModel().play();
                 break;
             case "Sign Up":
-                mw.getMenuModel().inscription(mw.getPseudo().getText(), mw.getFirstName().getText(), mw.getLastName().getText(),
-                        mw.getEmail().getText(), Integer.parseInt(mw.getNumero().getText()), mw.getStreet().getText(), mw.getCodePostal().getText(), mw.getVille().getText(), mw.getBirthday().getText());
+                mw.getMenuModel().inscription(new Player(mw.getPseudo().getText(), mw.getLastName().getText(), mw.getFirstName().getText(),
+                        mw.getEmail().getText(), Integer.parseInt(mw.getNumero().getText()), mw.getStreet().getText(), mw.getCodePostal().getText(), mw.getVille().getText(), mw.getBirthday().getText()));
                 break;
             case "Sign in":
-                mw.getMenuModel().connection(mw.getPseudoSignIn().getText());
+                mw.getMenuModel().connection(new Player(mw.getPseudoSignIn().getText()));
                 break;
             case "Observer":
                 //iD de la partie à observer à passer en paramètre peut être ???

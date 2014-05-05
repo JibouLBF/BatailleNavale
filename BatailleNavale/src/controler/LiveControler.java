@@ -11,10 +11,12 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import model.Boat;
 import model.GameModel;
 import model.Sens;
 
@@ -27,8 +29,7 @@ public class LiveControler extends GameControler {
     private ButtonGrid selectedButtonPlayer;
     private ButtonGrid selectedButtonOpponent;
 
-    public LiveControler(GameModel gm, PlayerWindow pw) {
-        this.gm = gm;
+    public LiveControler(PlayerWindow pw) {
         this.pw = pw;
     }
 
@@ -39,9 +40,15 @@ public class LiveControler extends GameControler {
             switch (but.getText()) {
                 case "Start":
                     try {
-                        gm.addBoats(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3, Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(), 2, Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString(), 2);
-                        gm.startGame();
-                        gm.refreshWindow();
+                        ArrayList<Boat> boatList = new ArrayList<Boat>();
+                        boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat1().getText()), Integer.parseInt(pw.getPosYBoat1().getText()), pw.getBoatOrientation1().getSelectedItem().toString(), 3));
+                        boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat2().getText()), Integer.parseInt(pw.getPosYBoat2().getText()), pw.getBoatOrientation2().getSelectedItem().toString(), 2));
+                        if (Integer.parseInt(pw.getPosXBoat3().getText()) != 0 || Integer.parseInt(pw.getPosYBoat3().getText()) != 0) {
+                            boatList.add(new Boat(Integer.parseInt(pw.getPosXBoat3().getText()), Integer.parseInt(pw.getPosYBoat3().getText()), pw.getBoatOrientation3().getSelectedItem().toString(), 2));
+                        }
+                        pw.getGameModel().addBoats(boatList);
+                        pw.getGameModel().startGame();
+                        pw.getGameModel().refreshWindow();
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
                     } catch (SQLException ex) {
@@ -51,9 +58,9 @@ public class LiveControler extends GameControler {
                 case "Turn":
                     if (selectedButtonPlayer != null) {
                         if (pw.getBoatTurning().getSelectedItem().toString() == "Droite") {
-                            gm.turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.DROITE);
+                            pw.getGameModel().turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.DROITE);
                         } else if (pw.getBoatTurning().getSelectedItem().toString() == "Gauche") {
-                            gm.turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.GAUCHE);
+                            pw.getGameModel().turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.GAUCHE);
                         } else {
                             JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -65,9 +72,9 @@ public class LiveControler extends GameControler {
                 case "Move":
                     if (selectedButtonPlayer != null) {
                         if (pw.getBoatMoving().getSelectedItem().toString() == "Avancer") {
-                            gm.moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.AVANCER);
+                            pw.getGameModel().moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.AVANCER);
                         } else if (pw.getBoatMoving().getSelectedItem().toString() == "Reculer") {
-                            gm.moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.RECULER);
+                            pw.getGameModel().moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.RECULER);
                         } else {
                             JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -78,20 +85,20 @@ public class LiveControler extends GameControler {
                     break;
                 case "Shoot":
                     if (selectedButtonOpponent != null && selectedButtonPlayer != null) {
-                        gm.fire(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), selectedButtonOpponent.getPosX(), selectedButtonOpponent.getPosY());
+                        pw.getGameModel().fire(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), selectedButtonOpponent.getPosX(), selectedButtonOpponent.getPosY());
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a case in the up grid", "error", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case "Refresh":
-                    gm.refresh();
+                    pw.getGameModel().refresh();
                     break;
                 case "Validate":
-                    gm.validate();
+                    pw.getGameModel().validate();
                     break;
                 default:
-                    if (gm.isStarted()) {
-                        gm.refreshWindow();
+                    if (pw.getGameModel().isStarted()) {
+                        pw.getGameModel().refreshWindow();
                         but.setBackground(Color.GREEN);
                         switch (but.getParent().getName()) {
                             case "player":
@@ -142,7 +149,7 @@ public class LiveControler extends GameControler {
             case "Validate":
                 break;
             default:
-                if (gm.isStarted()) {
+                if (pw.getGameModel().isStarted()) {
                     ButtonGrid tmpButtonGrid = ((ButtonGrid) (tmp));
                     tmpButtonGrid.setText(tmpButtonGrid.getPosX() + ", " + tmpButtonGrid.getPosY());
                 }
@@ -165,7 +172,7 @@ public class LiveControler extends GameControler {
             case "Validate":
                 break;
             default:
-                if (gm.isStarted()) {
+                if (pw.getGameModel().isStarted()) {
                     ((JButton) (e.getSource())).setText("");
                 }
         }

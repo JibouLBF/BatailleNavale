@@ -8,34 +8,34 @@ package model;
  *
  * @author harbalk
  */
-public class Bateau {
+public class Boat {
 
-    private int IdBateau;
-    private int IdPartie;
-    private int Taille;
-    private String Proprietaire;
+    private int boatID;
+    private Game game;
+    private int size;
+    private Player owner;
     private int PosX;
     private int PosY;
     private String orientation;
-    private int Vie;
+    private int life;
     private int PosXInit;
     private int PosYInit;
     private int nbCoupRestant;
 
-    public int getIdBateau() {
-        return IdBateau;
+    public int getBoatID() {
+        return boatID;
     }
 
-    public int getIdPartie() {
-        return IdPartie;
+    public Game getGameID() {
+        return game;
     }
 
-    public int getTaille() {
-        return Taille;
+    public int getSize() {
+        return size;
     }
 
-    public String getProprietaire() {
-        return Proprietaire;
+    public Player getOwner() {
+        return owner;
     }
 
     public int getPosX() {
@@ -50,8 +50,8 @@ public class Bateau {
         return orientation;
     }
 
-    public int getVie() {
-        return Vie;
+    public int getLife() {
+        return life;
     }
 
     public int getPosXInit() {
@@ -62,16 +62,20 @@ public class Bateau {
         return PosYInit;
     }
 
+    public void setBoatID(int boatID) {
+        this.boatID = boatID;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
     public void setPosX(int PosX) {
         this.PosX = PosX;
     }
 
     public void setPosY(int PosY) {
         this.PosY = PosY;
-    }
-
-    public void setVie(int Vie) {
-        this.Vie = Vie;
     }
 
     public int getNbCoupRestant() {
@@ -102,18 +106,36 @@ public class Bateau {
         orientation = o;
     }
 
-    public Bateau(int IdBateau, int IdPartie, int Taille, String Proprietaire, int PosX, int PosY, String orientation, int Vie, int PosXInit, int PosYInit) {
-        this.IdBateau = IdBateau;
-        this.IdPartie = IdPartie;
-        this.Taille = Taille;
-        this.Proprietaire = Proprietaire;
+    public Boat(Game game, int size, Player owner, int PosX, int PosY, String orientation) {
+        this.game = game;
+        this.size = size;
+        this.owner = owner;
         this.PosX = PosX;
         this.PosY = PosY;
         this.orientation = orientation;
-        this.Vie = Vie;
+    }
+
+    public Boat(int PosX, int PosY, String orientation, int size) {
+        this.size = size;
+        this.PosX = PosX;
+        this.PosY = PosY;
+        this.orientation = orientation;
+        this.life = size;
+        this.nbCoupRestant = size;
+    }
+
+    public Boat(Game game, int boatID, int size, Player owner, int PosX, int PosY, String orientation, int life, int PosXInit, int PosYInit) {
+        this.boatID = boatID;
+        this.game = game;
+        this.size = size;
+        this.owner = owner;
+        this.PosX = PosX;
+        this.PosY = PosY;
+        this.orientation = orientation;
+        this.life = life;
         this.PosXInit = PosXInit;
         this.PosYInit = PosYInit;
-        this.nbCoupRestant = Vie;
+        this.nbCoupRestant = life;
     }
 
 }

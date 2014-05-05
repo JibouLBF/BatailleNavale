@@ -43,7 +43,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import model.MenuModel;
-import model.Partie;
+import model.Game;
 
 /**
  *
@@ -199,11 +199,8 @@ public class MenuWindow extends JFrame implements Observer {
     public void createRightPanel() {
         dm = new DefaultTableModel();
 
-        dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
+        dm.setColumnIdentifiers(new Object[]{"GameID", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
 
-        /*dm.setDataVector(new Object[][]{{"1","JB", "KEKE", "01/01/01", "", "Observe"},
-         {"2","Tekitel", "bibi", "01/01/01", "", "Observe"}}, new Object[]{"IdPartie","Pseudo player 1", "Pseudo player 1", "Date", "Winner", ""});
-         */
         tableGame = new JTable(dm);
         tableGame.getColumn("Replay").setCellRenderer(new ButtonRenderer());
         tableGame.getColumn("Replay").setCellEditor(new ButtonEditor(new JCheckBox(), this));
@@ -288,9 +285,6 @@ public class MenuWindow extends JFrame implements Observer {
             case "already connected":
                 JOptionPane.showMessageDialog(this, "You are already connected", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
-            /*case "play":
-                JOptionPane.showMessageDialog(this, "You are going to play against", "Info", JOptionPane.INFORMATION_MESSAGE);
-                break;*/
             case "no opponent":
                 JOptionPane.showMessageDialog(this, "There are no avalaible players.\n Please come back later.", "Info", JOptionPane.WARNING_MESSAGE);
                 break;
@@ -313,15 +307,19 @@ public class MenuWindow extends JFrame implements Observer {
         System.out.println("obervé!!");
         if (mm.isIsConnected()) {
             // changement du texte logged
-            stateConnection.setText("Logged as " + mm.getPseudo());
+            stateConnection.setText("Logged as " + mm.getPlayer().getPseudo());
 
             // mise à jour de la table des parties
             dm = new DefaultTableModel();
-            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
-            ArrayList<Partie> listGame = mm.getGameInProgress();
+            dm.setColumnIdentifiers(new Object[]{"GameID", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
+            ArrayList<Game> listGame = mm.getGameInProgress();
             if (!listGame.isEmpty()) {
-                for (Partie curGame : listGame) {
-                    dm.addRow(new Object[]{curGame.getiDPartie(), curGame.getPlayer1(), curGame.getPlayer2(), curGame.getDate(), curGame.getWinner(), "Replay", "Live"});
+                for (Game curGame : listGame) {
+                    if (curGame.getWinner() != null) {
+                        dm.addRow(new Object[]{curGame.getGameID(), curGame.getPlayer1().getPseudo(), curGame.getPlayer2().getPseudo(), curGame.getDate(), curGame.getWinner().getPseudo(), "Replay", "Live"});
+                    } else {
+                        dm.addRow(new Object[]{curGame.getGameID(), curGame.getPlayer1().getPseudo(), curGame.getPlayer2().getPseudo(), curGame.getDate(), null, "Replay", "Live"});
+                    }
 
                 }
             }
@@ -335,7 +333,7 @@ public class MenuWindow extends JFrame implements Observer {
         else {
             stateConnection.setText("Unlogged");
             dm = new DefaultTableModel();
-            dm.setColumnIdentifiers(new Object[]{"IdPartie", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
+            dm.setColumnIdentifiers(new Object[]{"GameID", "Player 1", "Player 2", "Date", "Winner", "Replay", "Live"});
             tableGame.setModel(dm);
         }
 
