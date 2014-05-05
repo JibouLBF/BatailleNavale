@@ -91,7 +91,7 @@ public class PlayControler extends GameControler {
                     pw.getGameModel().validate();
                     break;
                 default:
-                    if (pw.getGameModel().isStarted()) {
+                    //if (pw.getGameModel().isStarted()) {
                         pw.getGameModel().refreshWindow();
                         but.setBackground(Color.GREEN);
                         switch (but.getParent().getName()) {
@@ -108,7 +108,7 @@ public class PlayControler extends GameControler {
                                 selectedButtonOpponent = (ButtonGrid) but;
                                 break;
                         }
-                    }
+                    //}
                     break;
             }
         }

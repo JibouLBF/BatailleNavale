@@ -115,9 +115,9 @@ public class MenuModel extends Observable {
                 }
                 // Instanciation du modèle et de la fenetre de jeu
                 if (game.getPlayer1().getPseudo().equals(player.getPseudo())) {
-                    gm = new PlayerModel(true, game, player, game.getPlayer2(), false);
+                    gm = new PlayerModel(game, player, game.getPlayer2(), false);
                 } else {
-                    gm = new PlayerModel(true, game, player, game.getPlayer1(), true);
+                    gm = new PlayerModel(game, player, game.getPlayer1(), true);
                 }
                 gw = new PlayerWindow(gm);
                 if (asker.hasPlacedBoats(game, player)) {

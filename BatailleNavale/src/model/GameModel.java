@@ -26,15 +26,7 @@ public abstract class GameModel extends Observable {
     protected DataFactory factory;
     protected DataBaseAsker asker;
     protected DataBaseUpdater updater;
-    protected boolean playerGame;
     protected Game game;
-    protected Player player;
-    protected Player opponent;
-    protected boolean isStarted = false;
-    protected boolean isMyTurn = false;
-    protected ArrayList<Boat> playerBoatList;
-    protected ArrayList<Boat> opponentBoatList;
-    protected boolean isPlayer2;
 
     /*  public GameModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
      this.playerGame = playerGame;
@@ -74,35 +66,7 @@ public abstract class GameModel extends Observable {
 
 
 
-    public abstract void refresh(); {
-        try {
-            isMyTurn = asker.isTurnOf(game, player);
-            if (isMyTurn) {
-                playerBoatList = factory.getAllBoat(game, player);
-                opponentBoatList = factory.getAllBoat(game, opponent);
-                notifyChanges("your turn");
-            } else {
-                notifyChanges("opponent turn");
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQL exception");
-
-        }
-    }
-
-    public ArrayList<Boat> getPlayerBoatList() {
-        return playerBoatList;
-    }
-
-    public ArrayList<Boat> getOpponentBoatList() {
-        return opponentBoatList;
-    }
-
-    public boolean isMyTurn() {
-        return isMyTurn;
-    }
+    public abstract void refresh();
 
     protected void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub

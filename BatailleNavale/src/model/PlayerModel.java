@@ -21,10 +21,15 @@ import java.util.logging.Logger;
  */
 public class PlayerModel extends GameModel {
 
-    PriorityQueue<AbstractMove> opponentLastMoves;
+    private Player player;
+    private Player opponent;
+    protected boolean isPlayer2;
+    private PriorityQueue<AbstractMove> opponentLastMoves;
+    private boolean isStarted = false;
+    private boolean isMyTurn = false;
+    private ArrayList<Boat> playerBoatList;
 
-    public PlayerModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
-        this.playerGame = playerGame;
+    public PlayerModel(Game game, Player player, Player opponent, boolean isPlayer2) {
         this.player = player;
         this.opponent = opponent;
         this.game = game;
@@ -33,7 +38,6 @@ public class PlayerModel extends GameModel {
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
         playerBoatList = new ArrayList<Boat>();
-        opponentBoatList = new ArrayList<Boat>();
         opponentLastMoves = new PriorityQueue<AbstractMove>();
     }
 
@@ -66,7 +70,6 @@ public class PlayerModel extends GameModel {
             isMyTurn = asker.isTurnOf(game, player);
             if (isMyTurn) {
                 playerBoatList = factory.getAllBoat(game, player);
-                opponentBoatList = factory.getAllBoat(game, opponent);
                 notifyChanges("your turn");
             } else {
                 notifyChanges("opponent turn");
@@ -267,6 +270,11 @@ public class PlayerModel extends GameModel {
         return isStarted;
     }
 
+    public ArrayList<Boat> getPlayerBoatList() {
+        return playerBoatList;
+    }
+
+    
     public Player getOpponent() {
         return opponent;
     }

@@ -16,16 +16,11 @@ import java.util.ArrayList;
  */
 public class ObserverModel extends GameModel {
 
-    public ObserverModel(boolean playerGame, Game game) {//pour l'observeur
-        this.playerGame = playerGame;
+    public ObserverModel(Game game) {//pour l'observeur
         this.game = game;
-        this.player = game.getPlayer1();
-        this.opponent = game.getPlayer2();
         factory = new JDBCFactory();
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
-        playerBoatList = new ArrayList<Boat>();
-        opponentBoatList = new ArrayList<Boat>();
     }
 
     @Override
