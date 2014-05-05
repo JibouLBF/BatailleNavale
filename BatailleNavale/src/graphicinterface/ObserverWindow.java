@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.util.Observable;
 import javax.swing.*;
 import model.GameModel;
+import model.ObserverModel;
 
 /**
  *
@@ -23,10 +24,11 @@ public class ObserverWindow extends GameWindow {
     JButton begin = new JButton("Begin");
     JButton next = new JButton("Next");
     JButton prec = new JButton("Prec");
+    private ObserverModel om;
 
-    public ObserverWindow() {
+    public ObserverWindow(GameModel gm) {
         super("Observer Window");
-        //gm = new Obserber(false);
+        om = (ObserverModel)gm;
         //gc = new LiveControler(gm);
         mainPanelLeft = new JPanel(new GridLayout(3, 1, 30, 10));
         control = new JPanel(new GridLayout(4, 1));
@@ -72,7 +74,7 @@ public class ObserverWindow extends GameWindow {
     }
 
     public static void main(String args[]) {
-        GameWindow gw = new ObserverWindow();
+        //GameWindow gw = new ObserverWindow();
     }
 
     @Override

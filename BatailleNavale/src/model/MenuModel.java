@@ -140,7 +140,7 @@ public class MenuModel extends Observable {
     public void observe() {
         //si on est connecté on lance la partie à observer dans une fenetre
         if (isConnected) {
-            gw = new ObserverWindow();
+           // gw = new ObserverWindow(new ObserverModel());
             notifyChanges("observe");
         } //si on est pas connecté --> affichage d'un message
         else {

@@ -71,74 +71,10 @@ public abstract class GameModel extends Observable {
     /*public boolean isPlayerGame() {
      return playerGame;
      }*/
-    /**
-     * Renvoie le bateau du joueur placé à la position (x,y) Renvoie NULL si il
-     * n'y pas de bateau à cette position
-     *
-     * @param x
-     * @param y
-     * @return Bateau boat
-     */
-    protected abstract Boat getPlayerBoat(int x, int y);
 
-    public abstract void moveBoat(int x, int y, Sens s);
 
-    public abstract void turnBoat(int x, int y, Sens s);
 
-    public abstract void fire(int boatX, int boatY, int shotX, int shotY);
-
-    public void validate() {
-        try {
-            updater.changeTurn(game, opponent);
-            notifyChanges("validate");
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQLException");
-        }
-    }
-
-    public void startGame() {
-        try {
-            isStarted = true;
-            notifyChanges("start");
-            if (isPlayer2) {
-                updater.changeTurn(game, opponent);
-            }
-            refresh();
-            playerBoatList = factory.getAllBoat(game, player);
-            notifyChanges("refreshWindow");
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQLException");
-        }
-
-    }
-
-    public void addBoats(ArrayList<Boat> boatList) {
-        try {
-            updater.addBoats(boatList);
-            playerBoatList = boatList;
-            notifyChanges("boat added");
-
-        } catch (SQLIntegrityConstraintViolationException e) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
-            notifyChanges("invalid position");
-
-        } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
-            notifyChanges("SQL exception");
-        }
-    }
-
-    public boolean isStarted() {
-        return isStarted;
-    }
-
-    public Player getOpponent() {
-        return opponent;
-    }
-
-    public void refresh() {
+    public abstract void refresh(); {
         try {
             isMyTurn = asker.isTurnOf(game, player);
             if (isMyTurn) {
@@ -174,6 +110,8 @@ public abstract class GameModel extends Observable {
         setChanged();
         notifyObservers(s);
     }
+    
+    public abstract void startGame();
 
     public void refreshWindow() {
         notifyChanges("refreshWindow");

@@ -60,9 +60,28 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    public void moveBoat(int x, int y, Sens s) {
+    @Override
+    public void refresh() {
+        try {
+            isMyTurn = asker.isTurnOf(game, player);
+            if (isMyTurn) {
+                playerBoatList = factory.getAllBoat(game, player);
+                opponentBoatList = factory.getAllBoat(game, opponent);
+                notifyChanges("your turn");
+            } else {
+                notifyChanges("opponent turn");
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL exception");
+
+        }
+    }
+
+    public void moveBoat(Player player, int x, int y, Sens s) {
         System.out.println("move " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(x, y);
+        Boat boat = getPlayerBoat(player, x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
                 switch (s.getName()) {
@@ -124,9 +143,9 @@ public class PlayerModel extends GameModel {
 
     }
 
-    public void turnBoat(int x, int y, Sens s) {
+    public void turnBoat(Player player, int x, int y, Sens s) {
         System.out.println("turn " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(x, y);
+        Boat boat = getPlayerBoat(player, x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
                 switch (s.getName()) {
@@ -187,8 +206,8 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    public void fire(int boatX, int boatY, int shotX, int shotY) {
-        Boat boat = getPlayerBoat(boatX, boatY);
+    public void fire(Player player, int boatX, int boatY, int shotX, int shotY) {
+        Boat boat = getPlayerBoat(player, boatX, boatY);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
                 updater.addShot(game, boat, shotX, shotY);
@@ -205,13 +224,50 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    @Override
-    protected Boat getPlayerBoat(int x, int y) {
+    protected Boat getPlayerBoat(Player player, int x, int y) {
         for (int i = 0; i < playerBoatList.size(); i++) {
             if (playerBoatList.get(i).getPosX() == x && playerBoatList.get(i).getPosY() == y) {
                 return playerBoatList.get(i);
             }
         }
         return null;
+    }
+
+    public void validate() {
+        try {
+            updater.changeTurn(game, opponent);
+            notifyChanges("validate");
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void startGame() {
+        isStarted = true;
+        notifyChanges("start");
+        if (isPlayer2) {
+            try {
+                updater.changeTurn(game, opponent);
+            } catch (SQLException ex) {
+                Logger.getLogger(PlayerModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        refresh();
+        try {
+            playerBoatList = factory.getAllBoat(game, player);
+        } catch (SQLException ex) {
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        notifyChanges("refreshWindow");
+
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public Player getOpponent() {
+        return opponent;
     }
 }

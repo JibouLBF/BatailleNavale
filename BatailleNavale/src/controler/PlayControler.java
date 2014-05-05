@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.Boat;
 import model.GameModel;
+import model.PlayerModel;
 import model.Sens;
 
 /**
@@ -28,6 +29,7 @@ public class PlayControler extends GameControler {
 
     private ButtonGrid selectedButtonPlayer;
     private ButtonGrid selectedButtonOpponent;
+    private PlayerWindow pw;
 
     public PlayControler(PlayerWindow pw) {
         this.pw = pw;
@@ -50,9 +52,9 @@ public class PlayControler extends GameControler {
                 case "Turn":
                     if (selectedButtonPlayer != null) {
                         if (pw.getBoatTurning().getSelectedItem().toString() == "Droite") {
-                            pw.getGameModel().turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.DROITE);
+                            pw.getGameModel().turnBoat(null, selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.DROITE);
                         } else if (pw.getBoatTurning().getSelectedItem().toString() == "Gauche") {
-                            pw.getGameModel().turnBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.GAUCHE);
+                            pw.getGameModel().turnBoat(null, selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.GAUCHE);
                         } else {
                             JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -64,9 +66,9 @@ public class PlayControler extends GameControler {
                 case "Move":
                     if (selectedButtonPlayer != null) {
                         if (pw.getBoatMoving().getSelectedItem().toString() == "Avancer") {
-                            pw.getGameModel().moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.AVANCER);
+                            pw.getGameModel().moveBoat(null, selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.AVANCER);
                         } else if (pw.getBoatMoving().getSelectedItem().toString() == "Reculer") {
-                            pw.getGameModel().moveBoat(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.RECULER);
+                            pw.getGameModel().moveBoat(null, selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), Sens.RECULER);
                         } else {
                             JOptionPane.showMessageDialog(pw, "Select a sens of moving", "error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -77,7 +79,7 @@ public class PlayControler extends GameControler {
                     break;
                 case "Shoot":
                     if (selectedButtonOpponent != null && selectedButtonPlayer != null) {
-                        pw.getGameModel().fire(selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), selectedButtonOpponent.getPosX(), selectedButtonOpponent.getPosY());
+                        pw.getGameModel().fire(null, selectedButtonPlayer.getPosX(), selectedButtonPlayer.getPosY(), selectedButtonOpponent.getPosX(), selectedButtonOpponent.getPosY());
                     } else {
                         JOptionPane.showMessageDialog(pw, "Select a case in the up grid", "error", JOptionPane.ERROR_MESSAGE);
                     }
