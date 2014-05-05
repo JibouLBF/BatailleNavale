@@ -22,7 +22,7 @@ import javax.swing.JComboBox;
  * @author harbalk
  */
 public class GameModel extends Observable {
-    
+
     private final DataFactory factory;
     private final DataBaseAsker asker;
     private final DataBaseUpdater updater;
@@ -35,7 +35,7 @@ public class GameModel extends Observable {
     private ArrayList<Boat> playerBoatList;
     private ArrayList<Boat> opponentBoatList;
     private boolean isPlayer2;
-    
+
     public GameModel(boolean playerGame, Game game, Player player, Player opponent, boolean isPlayer2) {
         this.playerGame = playerGame;
         this.player = player;
@@ -56,7 +56,7 @@ public class GameModel extends Observable {
         asker = new JDBCAsker();
         updater = new JDBCUpdater();
     }
-    
+
     public boolean isPlayerGame() {
         return playerGame;
     }
@@ -77,7 +77,7 @@ public class GameModel extends Observable {
         }
         return null;
     }
-    
+
     public void moveBoat(int x, int y, Sens s) {
         System.out.println("move " + x + " " + y + " " + s.toString());
         Boat boat = getPlayerBoat(x, y);
@@ -140,9 +140,9 @@ public class GameModel extends Observable {
         } else {
             notifyChanges("invalid boat selection");
         }
-        
+
     }
-    
+
     public void turnBoat(int x, int y, Sens s) {
         System.out.println("turn " + x + " " + y + " " + s.toString());
         Boat boat = getPlayerBoat(x, y);
@@ -206,7 +206,7 @@ public class GameModel extends Observable {
             notifyChanges("invalid boat selection");
         }
     }
-    
+
     public void fire(int boatX, int boatY, int shotX, int shotY) {
         Boat boat = getPlayerBoat(boatX, boatY);
         if (boat != null && boat.getNbCoupRestant() > 0) {
@@ -219,12 +219,12 @@ public class GameModel extends Observable {
             notifyChanges("invalid boat selection");
         }
     }
-    
+
     public void validate() {
         updater.changeTurn(game, opponent);
         notifyChanges("validate");
     }
-    
+
     public void startGame() {
         isStarted = true;
         notifyChanges("start");
@@ -238,35 +238,33 @@ public class GameModel extends Observable {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         notifyChanges("refreshWindow");
-        
+
     }
-    
-    public void addBoats(ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException {
+
+    public void addBoats(ArrayList<Boat> boatList) {
         try {
             updater.addBoats(game, player, boatList);
             playerBoatList = boatList;
             notifyChanges("boat added");
-            
+
         } catch (SQLIntegrityConstraintViolationException e) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, e);
             notifyChanges("invalid position");
-            throw new SQLIntegrityConstraintViolationException();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
             notifyChanges("SQL exception");
-            throw new SQLException();
         }
     }
-    
+
     public boolean isStarted() {
         return isStarted;
     }
-    
+
     public Player getOpponent() {
         return opponent;
     }
-    
+
     public void refresh() {
         try {
             isMyTurn = asker.isTurnOf(game, player);
@@ -276,35 +274,35 @@ public class GameModel extends Observable {
                 notifyChanges("your turn");
             } else {
                 notifyChanges("opponent turn");
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public ArrayList<Boat> getPlayerBoatList() {
         return playerBoatList;
     }
-    
+
     public ArrayList<Boat> getOpponentBoatList() {
         return opponentBoatList;
     }
-    
+
     public boolean isMyTurn() {
         return isMyTurn;
     }
-    
+
     private void notifyChanges(String s) { //PATTERN OBSERVER
         // TODO Auto-generated method stub
         //System.err.println("notification...");
         setChanged();
         notifyObservers(s);
     }
-    
+
     public void refreshWindow() {
         notifyChanges("refreshWindow");
     }
-    
+
 }

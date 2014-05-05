@@ -51,8 +51,6 @@ public class LiveControler extends GameControler {
                         pw.getGameModel().refreshWindow();
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(pw, "Error to read position number", "Parsing Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(LiveControler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
                 case "Turn":
