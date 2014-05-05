@@ -24,7 +24,7 @@ public class JDBCAsker implements DataBaseAsker {
     TheConnection theConnection;
 
     @Override
-    public boolean playerExist(Player player) throws SQLRecoverableException, SQLException {
+    public boolean playerExist(Player player) throws SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
@@ -45,7 +45,7 @@ public class JDBCAsker implements DataBaseAsker {
     }
 
     @Override
-    public boolean isTurnOf(Game game, Player player) throws SQLRecoverableException, SQLException {
+    public boolean isTurnOf(Game game, Player player) throws SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 
@@ -64,7 +64,7 @@ public class JDBCAsker implements DataBaseAsker {
         }
     }
 
-    public boolean hasPlacedBoats(Game game, Player player) throws SQLRecoverableException, SQLException {
+    public boolean hasPlacedBoats(Game game, Player player) throws SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
 

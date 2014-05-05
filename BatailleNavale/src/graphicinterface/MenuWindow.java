@@ -297,7 +297,7 @@ public class MenuWindow extends JFrame implements Observer {
             case "disconnect":
                 JOptionPane.showMessageDialog(this, "You are now unlogged", "Info", JOptionPane.INFORMATION_MESSAGE);
                 break;
-            case "SQL Exception":
+            case "SQLException":
                 JOptionPane.showMessageDialog(this, "SQL problem. Sorry", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             case "Connection Exception":

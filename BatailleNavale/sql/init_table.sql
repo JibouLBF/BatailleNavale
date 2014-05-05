@@ -32,7 +32,8 @@ CREATE TABLE Partie (
 	Tour varchar(20),
 	CONSTRAINT fk_joueur1_partie FOREIGN KEY (Joueur1) REFERENCES Joueur(Pseudo),
 	CONSTRAINT fk_joueur2_partie FOREIGN KEY (Joueur2) REFERENCES Joueur(Pseudo),
-	CONSTRAINT fk_tour_partie FOREIGN KEY (Tour) REFERENCES Joueur(Pseudo)
+	CONSTRAINT fk_tour_partie FOREIGN KEY (Tour) REFERENCES Joueur(Pseudo),
+	CONSTRAINT j1_diff_j2 CHECK(Joueur1 != Joueur2)
 );
 
 
@@ -47,6 +48,7 @@ CREATE TABLE Bateau (
 	Vie int NOT NULL, CHECK(Vie >= 0 AND Vie <= Taille),
 	PosXInit int NOT NULL, CHECK( (PosXInit >= 1) AND (PosXInit <= 10)),
 	PosYInit int NOT NULL, CHECK( (PosYInit >= 1) AND (PosYInit <= 10)),
+	NbCoupRestant int NOT NULL, CHECK (NbCoupRestant <= Vie),
 	PRIMARY KEY(IdBateau, IdPartie),
 	CONSTRAINT fk_bateau_joueur FOREIGN KEY (Proprietaire) REFERENCES Joueur(Pseudo),
 	CONSTRAINT orientation_values CHECK(Orientation IN('N','S','E','O')),

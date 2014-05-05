@@ -20,20 +20,18 @@ import model.Sens;
  */
 public interface DataBaseUpdater {
 
-    public void addGame(Game game);
+    public void addGame(Game game) throws SQLException;
 
-    public void addPlayer(Player player);
+    public void addPlayer(Player player) throws SQLException;
 
     public void addBoats(Game game, Player owner, ArrayList<Boat> boatList) throws SQLIntegrityConstraintViolationException, SQLException;
 
-    public void addMove(Game game, Boat boat, Sens s);
+    public void addShot(Game game, Boat boat, int x, int y) throws SQLException;
 
-    public void addShot(Game game, Boat boat, int x, int y);
+    public void changeTurn(Game game, Player player) throws SQLException;
 
-    public void changeTurn(Game game, Player player);
+    public void turnBoat(Game game, Boat boat, String orientation, Sens s) throws SQLIntegrityConstraintViolationException, SQLException;
 
-    public void turnBoat(Game game, Boat boat, String orientation) throws SQLIntegrityConstraintViolationException, SQLException;
-
-    public void moveBoat(Game game, Boat boat, int posX, int posY) throws SQLIntegrityConstraintViolationException, SQLException;
+    public void moveBoat(Game game, Boat boat, int posX, int posY, Sens s) throws SQLIntegrityConstraintViolationException, SQLException;
 
 }

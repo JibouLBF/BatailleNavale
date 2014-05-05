@@ -88,23 +88,29 @@ public abstract class GameModel extends Observable {
     public abstract void fire(int boatX, int boatY, int shotX, int shotY);
 
     public void validate() {
-        updater.changeTurn(game, opponent);
-        notifyChanges("validate");
+        try {
+            updater.changeTurn(game, opponent);
+            notifyChanges("validate");
+        } catch (SQLException ex) {
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQLException");
+        }
     }
 
     public void startGame() {
-        isStarted = true;
-        notifyChanges("start");
-        if (isPlayer2) {
-            updater.changeTurn(game, opponent);
-        }
-        refresh();
         try {
+            isStarted = true;
+            notifyChanges("start");
+            if (isPlayer2) {
+                updater.changeTurn(game, opponent);
+            }
+            refresh();
             playerBoatList = factory.getAllBoat(game, player);
+            notifyChanges("refreshWindow");
         } catch (SQLException ex) {
             Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQLException");
         }
-        notifyChanges("refreshWindow");
 
     }
 
@@ -144,8 +150,9 @@ public abstract class GameModel extends Observable {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(GameModel.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameModel.class.getName()).log(Level.SEVERE, null, ex);
+            notifyChanges("SQL exception");
+
         }
     }
 
