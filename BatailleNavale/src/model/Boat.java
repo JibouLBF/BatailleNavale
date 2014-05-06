@@ -26,7 +26,7 @@ public class Boat {
         return boatID;
     }
 
-    public Game getGameID() {
+    public Game getGame() {
         return game;
     }
 
@@ -113,18 +113,14 @@ public class Boat {
         this.PosX = PosX;
         this.PosY = PosY;
         this.orientation = orientation;
-    }
-
-    public Boat(int PosX, int PosY, String orientation, int size) {
-        this.size = size;
-        this.PosX = PosX;
-        this.PosY = PosY;
-        this.orientation = orientation;
         this.life = size;
         this.nbCoupRestant = size;
+        this.PosXInit = PosX;
+        this.PosYInit = PosY;
     }
 
-    public Boat(Game game, int boatID, int size, Player owner, int PosX, int PosY, String orientation, int life, int PosXInit, int PosYInit) {
+
+    public Boat(Game game, int boatID, int size, Player owner, int PosX, int PosY, String orientation, int life, int PosXInit, int PosYInit, int NbCoupRestant) {
         this.boatID = boatID;
         this.game = game;
         this.size = size;
@@ -135,7 +131,13 @@ public class Boat {
         this.life = life;
         this.PosXInit = PosXInit;
         this.PosYInit = PosYInit;
-        this.nbCoupRestant = life;
+        this.nbCoupRestant = NbCoupRestant;
     }
+
+    public Boat(int boatID) {
+        this.boatID = boatID;
+    }
+    
+    
 
 }

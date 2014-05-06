@@ -11,9 +11,9 @@ package model;
  */
 public abstract class AbstractMove implements Comparable<AbstractMove>{
 
-    private Game game;
-    private int moveID;
-    private Boat boat;
+    protected Game game;
+    protected int moveID;
+    protected Boat boat;
 
     public Game getGame() {
         return game;
@@ -42,5 +42,12 @@ public abstract class AbstractMove implements Comparable<AbstractMove>{
         this.moveID = moveID;
         this.boat = boat;
     }
+
+    public AbstractMove(Game game, Boat boat) {
+        this.game = game;
+        this.boat = boat;
+    }
+    
+    
 
 }

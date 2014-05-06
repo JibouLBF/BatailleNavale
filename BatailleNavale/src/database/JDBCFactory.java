@@ -5,6 +5,7 @@
  */
 package database;
 
+import java.util.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.AbstractMove;
 import model.Boat;
-import model.Player;
 import model.Game;
+import model.Move;
+import model.Player;
+import model.Sens;
+import model.Shot;
 
 /**
  *
@@ -144,7 +148,7 @@ public class JDBCFactory implements DataFactory {
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery(STMT);
         while (rset.next()) {
-            boatList.add(new Boat(game, rset.getInt("IdBateau"), rset.getInt("Taille"), new Player(rset.getString("Proprietaire")), rset.getInt("PosX"), rset.getInt("PosY"), rset.getString("Orientation"), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit")));
+            boatList.add(new Boat(game, rset.getInt("IdBateau"), rset.getInt("Taille"), new Player(rset.getString("Proprietaire")), rset.getInt("PosX"), rset.getInt("PosY"), rset.getString("Orientation"), rset.getInt("Vie"), rset.getInt("PosXInit"), rset.getInt("PosYInit"), rset.getInt("NbCoupRestant")));
         }
         rset.close();
         stmt.close();
@@ -153,13 +157,55 @@ public class JDBCFactory implements DataFactory {
     }
 
     @Override
-    public PriorityQueue<AbstractMove> getPlayerLastMoves(Game game, Player player) throws SQLException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PriorityQueue<AbstractMove> getPlayerLastMoves(Game game, Player player) throws SQLException {
+        PriorityQueue<AbstractMove> moveList = new PriorityQueue<AbstractMove>();
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        String STMT = "SELECT Coup.IdCoup, Coup.IdBateau, Deplacement.Sens, Tir.PosX, Tir.PosY, Bateau.Proprietaire\n"
+                + "FROM (((Coup LEFT OUTER JOIN Deplacement ON Coup.IdCoup = Deplacement.IdCoup AND Coup.IdPartie = Deplacement.IdPartie) \n"
+                + "	LEFT OUTER JOIN Tir ON Coup.IdCoup = Tir.IdCoup AND Coup.IdPartie = Tir.IdPartie) LEFT OUTER JOIN Bateau ON Coup.IdBateau = Bateau.IdBateau)\n"
+                + "WHERE Coup.IdPartie = " + game.getGameID() + "\n"
+                + "ORDER BY Coup.IdCoup DESC ;";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        while (rset.next() && rset.getString(6).equals(player.getPseudo())) {
+            if (rset.getString(3) == null) {
+                moveList.add(new Shot(game, rset.getInt(1), new Boat(rset.getInt(2)), rset.getInt(4), rset.getInt(5)));
+            } else {
+                moveList.add(new Move(game, rset.getInt(1), new Boat(rset.getInt(2)), Sens.getSens(rset.getString(3))));
+            }
+
+        }
+        rset.close();
+        stmt.close();
+
+        return moveList;
     }
 
     @Override
     public PriorityQueue<AbstractMove> getGameMoves(Game game) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PriorityQueue<AbstractMove> moveList = new PriorityQueue<AbstractMove>();
+        theConnection.open();
+        Connection conn = theConnection.getConn();
+        String STMT = "SELECT Coup.IdCoup, Coup.IdBateau, Sens FROM Coup,Deplacement WHERE Coup.IdPartie = '" + game.getGameID() + "' AND Deplacement.IdPartie = '" + game.getGameID() + "' AND Coup.IdCoup = Deplacement.IdCoup";
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery(STMT);
+        while (rset.next()) {
+            moveList.add(new Move(game, rset.getInt(1), new Boat(rset.getInt(2)), Sens.getSens(rset.getString(3))));
+        }
+        rset.close();
+        stmt.close();
+        STMT = "SELECT Coup.IdCoup, Coup.IdBateau, PosX, PosY FROM Coup,Tir WHERE Coup.IdPartie = '" + game.getGameID() + "' AND Tir.IdPartie = '" + game.getGameID() + "' AND Coup.IdCoup = Tir.IdCoup";
+        stmt = conn.createStatement();
+        rset = stmt.executeQuery(STMT);
+        while (rset.next()) {
+            moveList.add(new Shot(game, rset.getInt(1), new Boat(rset.getInt(2)), rset.getInt(3), rset.getInt(4)));
+        }
+        rset.close();
+        stmt.close();
+
+        theConnection.close();
+        return moveList;
     }
 
     public JDBCFactory() {

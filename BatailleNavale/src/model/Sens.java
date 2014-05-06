@@ -27,6 +27,22 @@ public enum Sens {
     public String getName() {
         return this.name;
     }
+    
+    public static Sens getSens(String s){
+        switch(s){
+            case "A":
+                return Sens.AVANCER;
+            case "R":
+                return Sens.RECULER;
+            case "G":
+                return Sens.GAUCHE;
+            case "D":
+                return Sens.DROITE;
+            default:
+                return null;
+                
+        }
+    }
 
     public String toString() {
         return "  " + name.toUpperCase();

@@ -232,4 +232,8 @@ GROUP BY Pseudo;
 
 
 
-
+SELECT Coup.IdCoup, Coup.IdBateau, Deplacement.Sens, Tir.PosX, Tir.PosY, Bateau.Proprietaire
+FROM (((Coup LEFT OUTER JOIN Deplacement ON Coup.IdCoup = Deplacement.IdCoup AND Coup.IdPartie = Deplacement.IdPartie) 
+	LEFT OUTER JOIN Tir ON Coup.IdCoup = Tir.IdCoup AND Coup.IdPartie = Tir.IdPartie) LEFT OUTER JOIN Bateau ON Coup.IdBateau = Bateau.IdBateau)
+WHERE Coup.IdPartie = 4
+ORDER BY Coup.IdCoup DESC ;

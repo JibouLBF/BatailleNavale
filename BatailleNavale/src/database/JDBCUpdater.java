@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Boat;
-import model.Player;
 import model.Game;
+import model.Move;
+import model.Player;
 import model.Sens;
+import model.Shot;
 
 /**
  *
@@ -53,15 +55,15 @@ public class JDBCUpdater implements DataBaseUpdater {
             conn.setAutoCommit(false);
 
             for (int i = 0; i < boatList.size(); i++) {
-                String STMT = "SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + boatList.get(i).getGameID() + "'";
+                String STMT = "SELECT COUNT(*) FROM Bateau WHERE IdPartie = '" + boatList.get(i).getGame().getGameID() + "'";;
                 Statement stmt = conn.createStatement();
                 ResultSet rset = stmt.executeQuery(STMT);
                 rset.next();
                 boatID[i] = rset.getInt(1);
                 rset.close();
                 stmt.close();
-
-                STMT = "INSERT INTO Bateau VALUES (" + boatID[i] + ",'" + boatList.get(i).getGameID() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getOwner()+ "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "','" + boatList.get(i).getOrientation() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "')";
+                System.out.println("BOAT ID "+ boatID[i]);
+                STMT = "INSERT INTO Bateau VALUES (" + boatID[i] + ",'" + boatList.get(i).getGame().getGameID() + "','" + boatList.get(i).getSize() + "','" + boatList.get(i).getOwner().getPseudo() + "','" + boatList.get(i).getPosX() + "','" + boatList.get(i).getPosY() + "','" + boatList.get(i).getOrientation() + "','" + boatList.get(i).getLife() + "','" + boatList.get(i).getPosXInit() + "','" + boatList.get(i).getPosYInit() + "','" + boatList.get(i).getNbCoupRestant() + "')";
                 stmt = conn.createStatement();
                 stmt.executeUpdate(STMT);
                 stmt.close();
@@ -71,7 +73,6 @@ public class JDBCUpdater implements DataBaseUpdater {
 
             for (int i = 0; i < boatList.size(); i++) {
                 boatList.get(i).setBoatID(boatID[i]);
-                boatList.get(i).setLife(i);
             }
 
         } catch (SQLIntegrityConstraintViolationException e) {
@@ -90,12 +91,12 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void addShot(Game game, Boat boat, int x, int y) throws SQLException {
+    public void addShot(Shot shot) throws SQLException {
         theConnection.open();
         Connection conn = theConnection.getConn();
         try {
             conn.setAutoCommit(false);
-            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + game.getGameID() + "')";
+            String STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + shot.getGame().getGameID() + "'";
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
             rset.next();
@@ -103,12 +104,17 @@ public class JDBCUpdater implements DataBaseUpdater {
             rset.close();
             stmt.close();
 
-            STMT = "INSERT INTO Coup VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + boat.getBoatID() + "')";
+            STMT = "INSERT INTO Coup VALUES ('" + shot.getGame().getGameID() + "','" + IdCoup + "','" + shot.getBoat().getBoatID() + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
 
-            STMT = "INSERT INTO Tir VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + x + "','" + y + "')";
+            STMT = "INSERT INTO Tir VALUES ('" + shot.getGame().getGameID() + "','" + IdCoup + "','" + shot.getPosX() + "','" + shot.getPosY() + "')";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(STMT);
+            stmt.close();
+            
+            STMT = "UPDATE Bateau SET NbCoupRestant =" +(shot.getBoat().getNbCoupRestant()-1) +"WHERE IdPartie = " + shot.getGame().getGameID() + " AND IdBateau =" + shot.getBoat().getBoatID();
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
@@ -189,17 +195,52 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void turnBoat(Game game, Boat boat, String orientation, Sens s) throws SQLIntegrityConstraintViolationException, SQLException {
+    public void turnBoat(Move move) throws SQLIntegrityConstraintViolationException, SQLException {
+        String orientation = null;
+        switch (move.getSens().getName()) {
+            case "G":
+                switch (move.getBoat().getOrientation()) {
+                    case "N":
+                        orientation = "O";
+                        break;
+                    case "S":
+                        orientation = "E";
+                        break;
+                    case "E":
+                        orientation = "N";
+                        break;
+                    case "O":
+                        orientation = "S";
+                        break;
+                }
+                break;
+            case "D":
+                switch (move.getBoat().getOrientation()) {
+                    case "N":
+                        orientation = "E";
+                        break;
+                    case "S":
+                        orientation = "O";
+                        break;
+                    case "E":
+                        orientation = "S";
+                        break;
+                    case "O":
+                        orientation = "N";
+                        break;
+                }
+                break;
+        }
         theConnection.open();
         Connection conn = theConnection.getConn();
         conn.setAutoCommit(false);
         try {
-            String STMT = "UPDATE Bateau SET Orientation = '" + orientation + "' WHERE IdPartie = " + game.getGameID() + " AND IdBateau =" + boat.getBoatID();
+            String STMT = "UPDATE Bateau SET Orientation = '" + orientation + "', NbCoupRestant =" +(move.getBoat().getNbCoupRestant()-1) +"WHERE IdPartie = " + move.getGame().getGameID() + " AND IdBateau =" + move.getBoat().getBoatID();
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
 
-            STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + game.getGameID() + "'";
+            STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + move.getGame().getGameID() + "'";
             stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
             rset.next();
@@ -207,12 +248,12 @@ public class JDBCUpdater implements DataBaseUpdater {
             rset.close();
             stmt.close();
 
-            STMT = "INSERT INTO Coup VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + boat.getBoatID() + "')";
+            STMT = "INSERT INTO Coup VALUES ('" + move.getGame().getGameID() + "','" + IdCoup + "','" + move.getBoat().getBoatID() + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
 
-            STMT = "INSERT INTO Deplacement VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + s.getName() + "')";
+            STMT = "INSERT INTO Deplacement VALUES ('" + move.getGame().getGameID() + "','" + IdCoup + "','" + move.getSens().getName() + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
@@ -234,16 +275,59 @@ public class JDBCUpdater implements DataBaseUpdater {
     }
 
     @Override
-    public void moveBoat(Game game, Boat boat, int posX, int posY, Sens s) throws SQLIntegrityConstraintViolationException, SQLException {
+    public void moveBoat(Move move) throws SQLIntegrityConstraintViolationException, SQLException {
+        int posX = 0, posY = 0;
+        switch (move.getSens().getName()) {
+            case "A":
+                switch (move.getBoat().getOrientation()) {
+                    case "N":
+                        posX = move.getBoat().getPosX();
+                        posY = move.getBoat().getPosY() + 1;
+                        break;
+                    case "S":
+                        posX = move.getBoat().getPosX();
+                        posY = move.getBoat().getPosY() - 1;
+                        break;
+                    case "E":
+                        posX = move.getBoat().getPosX() + 1;
+                        posY = move.getBoat().getPosY();
+                        break;
+                    case "O":
+                        posX = move.getBoat().getPosX() - 1;
+                        posY = move.getBoat().getPosY();
+                        break;
+                }
+                break;
+            case "R":
+                switch (move.getBoat().getOrientation()) {
+                    case "N":
+                        posX = move.getBoat().getPosX();
+                        posY = move.getBoat().getPosY() - 1;
+                        break;
+                    case "S":
+                        posX = move.getBoat().getPosX();
+                        posY = move.getBoat().getPosY() + 1;
+                        break;
+                    case "E":
+                        posX = move.getBoat().getPosX() - 1;
+                        posY = move.getBoat().getPosY();
+                        break;
+                    case "O":
+                        posX = move.getBoat().getPosX() + 1;
+                        posY = move.getBoat().getPosY();
+                        break;
+                }
+                break;
+        }
         theConnection.open();
         Connection conn = theConnection.getConn();
         conn.setAutoCommit(false);
         try {
-            String STMT = "UPDATE Bateau SET PosX =" + posX + ", PosY =" + posY + ", NbCoupRestant =" + (boat.getNbCoupRestant() - 1) + "WHERE IdPartie = " + game.getGameID() + " AND IdBateau =" + boat.getBoatID();
+            String STMT = "UPDATE Bateau SET PosX =" + posX + ", PosY =" + posY + ", NbCoupRestant =" + (move.getBoat().getNbCoupRestant() - 1) + "WHERE IdPartie = " + move.getGame().getGameID() + " AND IdBateau =" + move.getBoat().getBoatID();
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
 
-            STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + game.getGameID() + "'";
+            STMT = "SELECT COUNT(*) FROM Coup WHERE IdPartie ='" + move.getGame().getGameID() + "'";
             stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery(STMT);
             rset.next();
@@ -251,12 +335,12 @@ public class JDBCUpdater implements DataBaseUpdater {
             rset.close();
             stmt.close();
 
-            STMT = "INSERT INTO Coup VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + boat.getBoatID() + "')";
+            STMT = "INSERT INTO Coup VALUES ('" + move.getGame().getGameID() + "','" + IdCoup + "','" + move.getBoat().getBoatID() + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();
 
-            STMT = "INSERT INTO Deplacement VALUES ('" + game.getGameID() + "','" + IdCoup + "','" + s.getName() + "')";
+            STMT = "INSERT INTO Deplacement VALUES ('" + move.getGame().getGameID() + "','" + IdCoup + "','" + move.getSens().getName() + "')";
             stmt = conn.createStatement();
             stmt.executeUpdate(STMT);
             stmt.close();

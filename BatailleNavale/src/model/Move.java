@@ -11,15 +11,24 @@ package model;
  */
 public class Move extends AbstractMove {
 
-    private Sens s;
+    private Sens sens;
 
-    public Sens getS() {
-        return s;
+    public Sens getSens() {
+        return sens;
     }
 
-    public Move(Game game, int moveID, Boat boat, Sens s) {
+    public Move(Game game, int moveID, Boat boat, Sens sens) {
         super(game, moveID, boat);
-        this.s = s;
+        this.sens = sens;
     }
 
+    public Move(Game game, Boat boat,Sens sens) {
+        super(game, boat);
+        this.sens = sens;
+    }
+
+    @Override
+    public String toString(){
+        return "Boat " + this.boat.getBoatID() + " move "+sens.getName();
+    }
 }

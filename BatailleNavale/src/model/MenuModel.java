@@ -119,10 +119,13 @@ public class MenuModel extends Observable {
                 } else {
                     gm = new PlayerModel(game, player, game.getPlayer1(), true);
                 }
-                gw = new PlayerWindow(gm);
                 if (asker.hasPlacedBoats(game, player)) {
+                    gw = new PlayerWindow(gm);
                     gm.startGame();
+                } else {
+                    gw = new PlayerWindow(gm);
                 }
+
             } catch (SQLRecoverableException ex) {
                 Logger.getLogger(JDBCFactory.class.getName()).log(Level.SEVERE, null, ex);
                 notifyChanges("Connection Exception");
@@ -140,7 +143,7 @@ public class MenuModel extends Observable {
     public void observe() {
         //si on est connecté on lance la partie à observer dans une fenetre
         if (isConnected) {
-           // gw = new ObserverWindow(new ObserverModel());
+            // gw = new ObserverWindow(new ObserverModel());
             notifyChanges("observe");
         } //si on est pas connecté --> affichage d'un message
         else {

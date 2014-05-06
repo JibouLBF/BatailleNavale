@@ -28,4 +28,15 @@ public class Shot extends AbstractMove {
         this.posY = posY;
     }
 
+    public Shot(Game game, Boat boat, int posX, int posY) {
+        super(game, boat);
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    @Override
+    public String toString() {
+        return "Boat " + this.boat.getBoatID() + " shot (" + posX + "," + posY + ")";
+    }
+
 }

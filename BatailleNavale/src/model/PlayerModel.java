@@ -46,7 +46,7 @@ public class PlayerModel extends GameModel {
             playerBoatList.add(new Boat(game, sizeB1, player, posXB1, posYB1, orientationB1));
             playerBoatList.add(new Boat(game, sizeB2, player, posXB2, posYB2, orientationB2));
             if (posXB3 != 0 || posYB3 != 0) {
-                playerBoatList.add(new Boat(game, sizeB2, player, posXB2, posYB2, orientationB2));
+                playerBoatList.add(new Boat(game, sizeB3, player, posXB3, posYB3, orientationB3));
             }
 
             updater.addBoats(playerBoatList);
@@ -69,7 +69,7 @@ public class PlayerModel extends GameModel {
         try {
             isMyTurn = asker.isTurnOf(game, player);
             if (isMyTurn) {
-                playerBoatList = factory.getAllBoat(game, player);
+                opponentLastMoves = factory.getPlayerLastMoves(game, opponent);
                 notifyChanges("your turn");
             } else {
                 notifyChanges("opponent turn");
@@ -82,28 +82,26 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    public void moveBoat(Player player, int x, int y, Sens s) {
+    public void moveBoat(int x, int y, Sens s) {
         System.out.println("move " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(player, x, y);
+        Boat boat = getPlayerBoat(x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
+                updater.moveBoat(new Move(game, boat, s));
+
                 switch (s.getName()) {
                     case "A":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1, s);
                                 boat.incrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1, s);
                                 boat.decrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY(), s);
                                 boat.incrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY(), s);
                                 boat.decrPosX();
                                 break;
                         }
@@ -111,19 +109,15 @@ public class PlayerModel extends GameModel {
                     case "R":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() - 1, s);
                                 boat.decrPosY();
                                 break;
                             case "S":
-                                updater.moveBoat(game, boat, boat.getPosX(), boat.getPosY() + 1, s);
                                 boat.incrPosY();
                                 break;
                             case "E":
-                                updater.moveBoat(game, boat, boat.getPosX() - 1, boat.getPosY(), s);
                                 boat.decrPosX();
                                 break;
                             case "O":
-                                updater.moveBoat(game, boat, boat.getPosX() + 1, boat.getPosY(), s);
                                 boat.incrPosX();
                                 break;
                         }
@@ -146,28 +140,25 @@ public class PlayerModel extends GameModel {
 
     }
 
-    public void turnBoat(Player player, int x, int y, Sens s) {
+    public void turnBoat(int x, int y, Sens s) {
         System.out.println("turn " + x + " " + y + " " + s.toString());
-        Boat boat = getPlayerBoat(player, x, y);
+        Boat boat = getPlayerBoat(x, y);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
+                updater.turnBoat(new Move(game, boat, s));
                 switch (s.getName()) {
                     case "G":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(game, boat, "O", s);
                                 boat.setOrientation("O");
                                 break;
                             case "S":
-                                updater.turnBoat(game, boat, "E", s);
                                 boat.setOrientation("E");
                                 break;
                             case "E":
-                                updater.turnBoat(game, boat, "N", s);
                                 boat.setOrientation("N");
                                 break;
                             case "O":
-                                updater.turnBoat(game, boat, "S", s);
                                 boat.setOrientation("S");
                                 break;
                         }
@@ -175,19 +166,15 @@ public class PlayerModel extends GameModel {
                     case "D":
                         switch (boat.getOrientation()) {
                             case "N":
-                                updater.turnBoat(game, boat, "E", s);
                                 boat.setOrientation("E");
                                 break;
                             case "S":
-                                updater.turnBoat(game, boat, "O", s);
                                 boat.setOrientation("O");
                                 break;
                             case "E":
-                                updater.turnBoat(game, boat, "S", s);
                                 boat.setOrientation("S");
                                 break;
                             case "O":
-                                updater.turnBoat(game, boat, "N", s);
                                 boat.setOrientation("N");
                                 break;
                         }
@@ -209,11 +196,11 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    public void fire(Player player, int boatX, int boatY, int shotX, int shotY) {
-        Boat boat = getPlayerBoat(player, boatX, boatY);
+    public void fire(int boatX, int boatY, int shotX, int shotY) {
+        Boat boat = getPlayerBoat(boatX, boatY);
         if (boat != null && boat.getNbCoupRestant() > 0) {
             try {
-                updater.addShot(game, boat, shotX, shotY);
+                updater.addShot(new Shot(game, boat, shotX, shotY));
                 boat.decrNbCoupRestant();
                 notifyChanges("shot added");
             } catch (SQLException ex) {
@@ -227,7 +214,7 @@ public class PlayerModel extends GameModel {
         }
     }
 
-    protected Boat getPlayerBoat(Player player, int x, int y) {
+    private Boat getPlayerBoat(int x, int y) {
         for (int i = 0; i < playerBoatList.size(); i++) {
             if (playerBoatList.get(i).getPosX() == x && playerBoatList.get(i).getPosY() == y) {
                 return playerBoatList.get(i);
@@ -274,7 +261,6 @@ public class PlayerModel extends GameModel {
         return playerBoatList;
     }
 
-    
     public Player getOpponent() {
         return opponent;
     }
